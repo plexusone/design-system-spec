@@ -1,6 +1,6 @@
-# Binaries
-generate
-dss
+# Binaries (root level only)
+/generate
+/dss
 *.exe
 *.exe~
 *.dll
