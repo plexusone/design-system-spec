@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/plexusone/design-system-spec/sdk/go/accessibility",
+  "$ref": "#/$defs/Accessibility",
+  "$defs": {
+    "Accessibility": {
+      "properties": {
+        "wcagLevel": {
+          "type": "string",
+          "enum": [
+            "A",
+            "AA",
+            "AAA"
+          ]
+        },
+        "wcagVersion": {
+          "type": "string"
+        },
+        "colorContrast": {
+          "$ref": "#/$defs/ColorContrastRequirements"
+        },
+        "keyboard": {
+          "$ref": "#/$defs/KeyboardRequirements"
+        },
+        "screenReader": {
+          "$ref": "#/$defs/ScreenReaderRequirements"
+        },
+        "motion": {
+          "$ref": "#/$defs/MotionRequirements"
+        },
+        "touchTarget": {
+          "$ref": "#/$defs/TouchTargetRequirements"
+        },
+        "guidelines": {
+          "items": {
+            "$ref": "#/$defs/AccessibilityGuideline"
+          },
+          "type": "array"
+        },
+        "testingRequirements": {
+          "items": {
+            "$ref": "#/$defs/TestingRequirement"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "AccessibilityGuideline": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "wcagCriteria": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "examples": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ColorContrastRequirements": {
+      "properties": {
+        "normalTextRatio": {
+          "type": "number"
+        },
+        "largeTextRatio": {
+          "type": "number"
+        },
+        "nonTextRatio": {
+          "type": "number"
+        },
+        "largeTextThreshold": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "KeyboardRequirements": {
+      "properties": {
+        "focusVisible": {
+          "type": "boolean"
+        },
+        "focusOrder": {
+          "type": "boolean"
+        },
+        "noKeyboardTrap": {
+          "type": "boolean"
+        },
+        "skipLinks": {
+          "type": "boolean"
+        },
+        "focusIndicatorMinSize": {
+          "type": "integer"
+        },
+        "shortcutConflicts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "MotionRequirements": {
+      "properties": {
+        "reducedMotion": {
+          "type": "boolean"
+        },
+        "noAutoPlay": {
+          "type": "boolean"
+        },
+        "pauseControl": {
+          "type": "boolean"
+        },
+        "flashingThreshold": {
+          "type": "integer",
+          "maximum": 3
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ScreenReaderRequirements": {
+      "properties": {
+        "semanticHtml": {
+          "type": "boolean"
+        },
+        "ariaLabels": {
+          "type": "boolean"
+        },
+        "liveRegions": {
+          "type": "boolean"
+        },
+        "headingStructure": {
+          "type": "boolean"
+        },
+        "supportedReaders": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TestingRequirement": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "tools": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "frequency": {
+          "type": "string"
+        },
+        "coverage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TouchTargetRequirements": {
+      "properties": {
+        "minSize": {
+          "type": "string"
+        },
+        "minSpacing": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

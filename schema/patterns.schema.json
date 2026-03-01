@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/plexusone/design-system-spec/sdk/go/pattern",
+  "$ref": "#/$defs/Pattern",
+  "$defs": {
+    "LLMContext": {
+      "properties": {
+        "intent": {
+          "type": "string"
+        },
+        "allowedContexts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "forbiddenContexts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "exampleUsage": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "antiPatterns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "semanticMeaning": {
+          "type": "string"
+        },
+        "relatedElements": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "priorityScore": {
+          "type": "integer",
+          "maximum": 100,
+          "minimum": 1
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Pattern": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "components": {
+          "items": {
+            "$ref": "#/$defs/PatternComponent"
+          },
+          "type": "array"
+        },
+        "layout": {
+          "$ref": "#/$defs/PatternLayout"
+        },
+        "behavior": {
+          "type": "string"
+        },
+        "variations": {
+          "items": {
+            "$ref": "#/$defs/PatternVariation"
+          },
+          "type": "array"
+        },
+        "accessibility": {
+          "$ref": "#/$defs/PatternA11y"
+        },
+        "llm": {
+          "$ref": "#/$defs/LLMContext"
+        },
+        "documentationUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PatternA11y": {
+      "properties": {
+        "landmarkRole": {
+          "type": "string"
+        },
+        "focusOrder": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "liveRegions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PatternComponent": {
+      "properties": {
+        "componentId": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "quantity": {
+          "type": "string"
+        },
+        "configuration": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PatternLayout": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "direction": {
+          "type": "string"
+        },
+        "alignment": {
+          "type": "string"
+        },
+        "spacing": {
+          "type": "string"
+        },
+        "responsive": {
+          "items": {
+            "$ref": "#/$defs/ResponsiveLayout"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PatternVariation": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "componentChanges": {
+          "items": {
+            "$ref": "#/$defs/PatternComponent"
+          },
+          "type": "array"
+        },
+        "layoutChanges": {
+          "$ref": "#/$defs/PatternLayout"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ResponsiveLayout": {
+      "properties": {
+        "breakpoint": {
+          "type": "string"
+        },
+        "changes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

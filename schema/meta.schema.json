@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/plexusone/design-system-spec/sdk/go/meta",
+  "$ref": "#/$defs/Meta",
+  "$defs": {
+    "Maintainer": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Meta": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "maturityLevel": {
+          "type": "integer",
+          "maximum": 5,
+          "minimum": 1
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri"
+        },
+        "documentation": {
+          "type": "string",
+          "format": "uri"
+        },
+        "maintainers": {
+          "items": {
+            "$ref": "#/$defs/Maintainer"
+          },
+          "type": "array"
+        },
+        "license": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

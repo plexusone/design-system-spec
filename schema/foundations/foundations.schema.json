@@ -1,0 +1,439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/plexusone/design-system-spec/sdk/go/foundations",
+  "$ref": "#/$defs/Foundations",
+  "$defs": {
+    "BorderRadiusToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "BorderWidthToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Breakpoint": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "minWidth": {
+          "type": "string"
+        },
+        "maxWidth": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ColorToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        },
+        "contrast": {
+          "$ref": "#/$defs/Contrast"
+        },
+        "lightModeValue": {
+          "type": "string"
+        },
+        "darkModeValue": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Contrast": {
+      "properties": {
+        "onLight": {
+          "type": "string"
+        },
+        "onDark": {
+          "type": "string"
+        },
+        "ratio": {
+          "type": "number"
+        },
+        "wcagLevel": {
+          "type": "string",
+          "enum": [
+            "AA",
+            "AAA"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DurationToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "EasingToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ElevationToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FontFamily": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FontSize": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "pixelValue": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FontWeight": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer",
+          "maximum": 900,
+          "minimum": 100
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Foundations": {
+      "properties": {
+        "colors": {
+          "items": {
+            "$ref": "#/$defs/ColorToken"
+          },
+          "type": "array"
+        },
+        "typography": {
+          "$ref": "#/$defs/Typography"
+        },
+        "spacing": {
+          "$ref": "#/$defs/SpacingScale"
+        },
+        "elevation": {
+          "items": {
+            "$ref": "#/$defs/ElevationToken"
+          },
+          "type": "array"
+        },
+        "motion": {
+          "$ref": "#/$defs/MotionSystem"
+        },
+        "grid": {
+          "$ref": "#/$defs/GridSystem"
+        },
+        "breakpoints": {
+          "items": {
+            "$ref": "#/$defs/Breakpoint"
+          },
+          "type": "array"
+        },
+        "borderRadius": {
+          "items": {
+            "$ref": "#/$defs/BorderRadiusToken"
+          },
+          "type": "array"
+        },
+        "borderWidth": {
+          "items": {
+            "$ref": "#/$defs/BorderWidthToken"
+          },
+          "type": "array"
+        },
+        "opacity": {
+          "items": {
+            "$ref": "#/$defs/OpacityToken"
+          },
+          "type": "array"
+        },
+        "zIndex": {
+          "items": {
+            "$ref": "#/$defs/ZIndexToken"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "GridSystem": {
+      "properties": {
+        "columns": {
+          "type": "integer"
+        },
+        "gutterWidth": {
+          "type": "string"
+        },
+        "marginWidth": {
+          "type": "string"
+        },
+        "maxWidth": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "LetterSpacing": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "LineHeight": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "MotionSystem": {
+      "properties": {
+        "durations": {
+          "items": {
+            "$ref": "#/$defs/DurationToken"
+          },
+          "type": "array"
+        },
+        "easings": {
+          "items": {
+            "$ref": "#/$defs/EasingToken"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "OpacityToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SpacingScale": {
+      "properties": {
+        "baseUnit": {
+          "type": "string"
+        },
+        "scale": {
+          "items": {
+            "$ref": "#/$defs/SpacingToken"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SpacingToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "pixelValue": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TypeStyle": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "fontFamily": {
+          "type": "string"
+        },
+        "fontSize": {
+          "type": "string"
+        },
+        "fontWeight": {
+          "type": "string"
+        },
+        "lineHeight": {
+          "type": "string"
+        },
+        "letterSpacing": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Typography": {
+      "properties": {
+        "fontFamilies": {
+          "items": {
+            "$ref": "#/$defs/FontFamily"
+          },
+          "type": "array"
+        },
+        "fontSizes": {
+          "items": {
+            "$ref": "#/$defs/FontSize"
+          },
+          "type": "array"
+        },
+        "fontWeights": {
+          "items": {
+            "$ref": "#/$defs/FontWeight"
+          },
+          "type": "array"
+        },
+        "lineHeights": {
+          "items": {
+            "$ref": "#/$defs/LineHeight"
+          },
+          "type": "array"
+        },
+        "letterSpacings": {
+          "items": {
+            "$ref": "#/$defs/LetterSpacing"
+          },
+          "type": "array"
+        },
+        "typeScale": {
+          "items": {
+            "$ref": "#/$defs/TypeStyle"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ZIndexToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

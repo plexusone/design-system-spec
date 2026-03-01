@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/plexusone/design-system-spec/sdk/go/template",
+  "$ref": "#/$defs/Template",
+  "$defs": {
+    "LLMContext": {
+      "properties": {
+        "intent": {
+          "type": "string"
+        },
+        "allowedContexts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "forbiddenContexts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "exampleUsage": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "antiPatterns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "semanticMeaning": {
+          "type": "string"
+        },
+        "relatedElements": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "priorityScore": {
+          "type": "integer",
+          "maximum": 100,
+          "minimum": 1
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ResponsiveTemplate": {
+      "properties": {
+        "breakpoint": {
+          "type": "string"
+        },
+        "gridChanges": {
+          "$ref": "#/$defs/TemplateGrid"
+        },
+        "hiddenRegions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "regionChanges": {
+          "items": {
+            "$ref": "#/$defs/TemplateRegionChange"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Template": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "regions": {
+          "items": {
+            "$ref": "#/$defs/TemplateRegion"
+          },
+          "type": "array"
+        },
+        "grid": {
+          "$ref": "#/$defs/TemplateGrid"
+        },
+        "patterns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "responsive": {
+          "items": {
+            "$ref": "#/$defs/ResponsiveTemplate"
+          },
+          "type": "array"
+        },
+        "llm": {
+          "$ref": "#/$defs/LLMContext"
+        },
+        "documentationUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "previewUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TemplateGrid": {
+      "properties": {
+        "areas": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "string"
+        },
+        "rows": {
+          "type": "string"
+        },
+        "gap": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TemplateRegion": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "gridArea": {
+          "type": "string"
+        },
+        "minHeight": {
+          "type": "string"
+        },
+        "maxHeight": {
+          "type": "string"
+        },
+        "sticky": {
+          "type": "boolean"
+        },
+        "allowedPatterns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "allowedComponents": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TemplateRegionChange": {
+      "properties": {
+        "regionId": {
+          "type": "string"
+        },
+        "changes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

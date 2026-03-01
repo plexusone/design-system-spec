@@ -1,0 +1,1868 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/plexusone/design-system-spec/sdk/go/design-system",
+  "$ref": "#/$defs/DesignSystem",
+  "$defs": {
+    "Accessibility": {
+      "properties": {
+        "wcagLevel": {
+          "type": "string",
+          "enum": [
+            "A",
+            "AA",
+            "AAA"
+          ]
+        },
+        "wcagVersion": {
+          "type": "string"
+        },
+        "colorContrast": {
+          "$ref": "#/$defs/ColorContrastRequirements"
+        },
+        "keyboard": {
+          "$ref": "#/$defs/KeyboardRequirements"
+        },
+        "screenReader": {
+          "$ref": "#/$defs/ScreenReaderRequirements"
+        },
+        "motion": {
+          "$ref": "#/$defs/MotionRequirements"
+        },
+        "touchTarget": {
+          "$ref": "#/$defs/TouchTargetRequirements"
+        },
+        "guidelines": {
+          "items": {
+            "$ref": "#/$defs/AccessibilityGuideline"
+          },
+          "type": "array"
+        },
+        "testingRequirements": {
+          "items": {
+            "$ref": "#/$defs/TestingRequirement"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "AccessibilityGuideline": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "wcagCriteria": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "examples": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "BorderRadiusToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "BorderWidthToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Breakpoint": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "minWidth": {
+          "type": "string"
+        },
+        "maxWidth": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ColorContrastRequirements": {
+      "properties": {
+        "normalTextRatio": {
+          "type": "number"
+        },
+        "largeTextRatio": {
+          "type": "number"
+        },
+        "nonTextRatio": {
+          "type": "number"
+        },
+        "largeTextThreshold": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ColorToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        },
+        "contrast": {
+          "$ref": "#/$defs/Contrast"
+        },
+        "lightModeValue": {
+          "type": "string"
+        },
+        "darkModeValue": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Component": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "variants": {
+          "items": {
+            "$ref": "#/$defs/Variant"
+          },
+          "type": "array"
+        },
+        "states": {
+          "items": {
+            "$ref": "#/$defs/State"
+          },
+          "type": "array"
+        },
+        "props": {
+          "items": {
+            "$ref": "#/$defs/Prop"
+          },
+          "type": "array"
+        },
+        "slots": {
+          "items": {
+            "$ref": "#/$defs/Slot"
+          },
+          "type": "array"
+        },
+        "tokensUsed": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "constraints": {
+          "$ref": "#/$defs/Constraints"
+        },
+        "accessibility": {
+          "$ref": "#/$defs/ComponentA11y"
+        },
+        "llm": {
+          "$ref": "#/$defs/LLMContext"
+        },
+        "documentationUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "figmaUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ComponentA11y": {
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "requiredAttributes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "keyboardSupport": {
+          "items": {
+            "$ref": "#/$defs/KeyboardInteraction"
+          },
+          "type": "array"
+        },
+        "screenReaderNotes": {
+          "type": "string"
+        },
+        "focusManagement": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Constraints": {
+      "properties": {
+        "minWidth": {
+          "type": "string"
+        },
+        "maxWidth": {
+          "type": "string"
+        },
+        "maxChildren": {
+          "type": "integer"
+        },
+        "requiredParent": {
+          "type": "string"
+        },
+        "forbiddenChildren": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "responsiveBehavior": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Content": {
+      "properties": {
+        "voice": {
+          "$ref": "#/$defs/VoiceGuidelines"
+        },
+        "tone": {
+          "items": {
+            "$ref": "#/$defs/ToneGuideline"
+          },
+          "type": "array"
+        },
+        "terminology": {
+          "$ref": "#/$defs/Terminology"
+        },
+        "microcopy": {
+          "items": {
+            "$ref": "#/$defs/MicrocopyGuideline"
+          },
+          "type": "array"
+        },
+        "writingStyle": {
+          "$ref": "#/$defs/WritingStyle"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Contrast": {
+      "properties": {
+        "onLight": {
+          "type": "string"
+        },
+        "onDark": {
+          "type": "string"
+        },
+        "ratio": {
+          "type": "number"
+        },
+        "wcagLevel": {
+          "type": "string",
+          "enum": [
+            "AA",
+            "AAA"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ContributionPolicy": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "guidelines": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "workflow": {
+          "$ref": "#/$defs/ContributionWorkflow"
+        },
+        "templates": {
+          "items": {
+            "$ref": "#/$defs/ContributionTemplate"
+          },
+          "type": "array"
+        },
+        "codeOfConductUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ContributionTemplate": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ContributionWorkflow": {
+      "properties": {
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/WorkflowStep"
+          },
+          "type": "array"
+        },
+        "requiredReviewers": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "automatedChecks": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DecisionProcess": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "rfcRequired": {
+          "type": "boolean"
+        },
+        "approvalRequired": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "decisionRecordLocation": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DeprecatedItem": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "deprecatedSince": {
+          "type": "string"
+        },
+        "removalDate": {
+          "type": "string"
+        },
+        "replacement": {
+          "type": "string"
+        },
+        "migrationGuideUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DeprecationPolicy": {
+      "properties": {
+        "warningPeriod": {
+          "type": "string"
+        },
+        "notificationChannels": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "migrationGuideRequired": {
+          "type": "boolean"
+        },
+        "deprecatedItems": {
+          "items": {
+            "$ref": "#/$defs/DeprecatedItem"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DesignSystem": {
+      "properties": {
+        "meta": {
+          "$ref": "#/$defs/Meta"
+        },
+        "principles": {
+          "items": {
+            "$ref": "#/$defs/Principle"
+          },
+          "type": "array"
+        },
+        "foundations": {
+          "$ref": "#/$defs/Foundations"
+        },
+        "components": {
+          "items": {
+            "$ref": "#/$defs/Component"
+          },
+          "type": "array"
+        },
+        "patterns": {
+          "items": {
+            "$ref": "#/$defs/Pattern"
+          },
+          "type": "array"
+        },
+        "templates": {
+          "items": {
+            "$ref": "#/$defs/Template"
+          },
+          "type": "array"
+        },
+        "content": {
+          "$ref": "#/$defs/Content"
+        },
+        "accessibility": {
+          "$ref": "#/$defs/Accessibility"
+        },
+        "governance": {
+          "$ref": "#/$defs/Governance"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "DurationToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "EasingToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ElevationToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FontFamily": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FontSize": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "pixelValue": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "FontWeight": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer",
+          "maximum": 900,
+          "minimum": 100
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Foundations": {
+      "properties": {
+        "colors": {
+          "items": {
+            "$ref": "#/$defs/ColorToken"
+          },
+          "type": "array"
+        },
+        "typography": {
+          "$ref": "#/$defs/Typography"
+        },
+        "spacing": {
+          "$ref": "#/$defs/SpacingScale"
+        },
+        "elevation": {
+          "items": {
+            "$ref": "#/$defs/ElevationToken"
+          },
+          "type": "array"
+        },
+        "motion": {
+          "$ref": "#/$defs/MotionSystem"
+        },
+        "grid": {
+          "$ref": "#/$defs/GridSystem"
+        },
+        "breakpoints": {
+          "items": {
+            "$ref": "#/$defs/Breakpoint"
+          },
+          "type": "array"
+        },
+        "borderRadius": {
+          "items": {
+            "$ref": "#/$defs/BorderRadiusToken"
+          },
+          "type": "array"
+        },
+        "borderWidth": {
+          "items": {
+            "$ref": "#/$defs/BorderWidthToken"
+          },
+          "type": "array"
+        },
+        "opacity": {
+          "items": {
+            "$ref": "#/$defs/OpacityToken"
+          },
+          "type": "array"
+        },
+        "zIndex": {
+          "items": {
+            "$ref": "#/$defs/ZIndexToken"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Governance": {
+      "properties": {
+        "versioning": {
+          "$ref": "#/$defs/VersioningPolicy"
+        },
+        "contribution": {
+          "$ref": "#/$defs/ContributionPolicy"
+        },
+        "deprecation": {
+          "$ref": "#/$defs/DeprecationPolicy"
+        },
+        "decisionProcess": {
+          "$ref": "#/$defs/DecisionProcess"
+        },
+        "ownership": {
+          "items": {
+            "$ref": "#/$defs/OwnershipRecord"
+          },
+          "type": "array"
+        },
+        "supportPolicy": {
+          "$ref": "#/$defs/SupportPolicy"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "GridSystem": {
+      "properties": {
+        "columns": {
+          "type": "integer"
+        },
+        "gutterWidth": {
+          "type": "string"
+        },
+        "marginWidth": {
+          "type": "string"
+        },
+        "maxWidth": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "KeyboardInteraction": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "KeyboardRequirements": {
+      "properties": {
+        "focusVisible": {
+          "type": "boolean"
+        },
+        "focusOrder": {
+          "type": "boolean"
+        },
+        "noKeyboardTrap": {
+          "type": "boolean"
+        },
+        "skipLinks": {
+          "type": "boolean"
+        },
+        "focusIndicatorMinSize": {
+          "type": "integer"
+        },
+        "shortcutConflicts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "LLMContext": {
+      "properties": {
+        "intent": {
+          "type": "string"
+        },
+        "allowedContexts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "forbiddenContexts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "exampleUsage": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "antiPatterns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "semanticMeaning": {
+          "type": "string"
+        },
+        "relatedElements": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "priorityScore": {
+          "type": "integer",
+          "maximum": 100,
+          "minimum": 1
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "LetterSpacing": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "LineHeight": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Maintainer": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Meta": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "maturityLevel": {
+          "type": "integer",
+          "maximum": 5,
+          "minimum": 1
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri"
+        },
+        "documentation": {
+          "type": "string",
+          "format": "uri"
+        },
+        "maintainers": {
+          "items": {
+            "$ref": "#/$defs/Maintainer"
+          },
+          "type": "array"
+        },
+        "license": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "MicrocopyGuideline": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "template": {
+          "type": "string"
+        },
+        "variables": {
+          "items": {
+            "$ref": "#/$defs/MicrocopyVariable"
+          },
+          "type": "array"
+        },
+        "examples": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "MicrocopyVariable": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "examples": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "MotionRequirements": {
+      "properties": {
+        "reducedMotion": {
+          "type": "boolean"
+        },
+        "noAutoPlay": {
+          "type": "boolean"
+        },
+        "pauseControl": {
+          "type": "boolean"
+        },
+        "flashingThreshold": {
+          "type": "integer",
+          "maximum": 3
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "MotionSystem": {
+      "properties": {
+        "durations": {
+          "items": {
+            "$ref": "#/$defs/DurationToken"
+          },
+          "type": "array"
+        },
+        "easings": {
+          "items": {
+            "$ref": "#/$defs/EasingToken"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "OpacityToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "OwnershipRecord": {
+      "properties": {
+        "area": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "contactEmail": {
+          "type": "string",
+          "format": "email"
+        },
+        "slackChannel": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Pattern": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "components": {
+          "items": {
+            "$ref": "#/$defs/PatternComponent"
+          },
+          "type": "array"
+        },
+        "layout": {
+          "$ref": "#/$defs/PatternLayout"
+        },
+        "behavior": {
+          "type": "string"
+        },
+        "variations": {
+          "items": {
+            "$ref": "#/$defs/PatternVariation"
+          },
+          "type": "array"
+        },
+        "accessibility": {
+          "$ref": "#/$defs/PatternA11y"
+        },
+        "llm": {
+          "$ref": "#/$defs/LLMContext"
+        },
+        "documentationUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PatternA11y": {
+      "properties": {
+        "landmarkRole": {
+          "type": "string"
+        },
+        "focusOrder": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "liveRegions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PatternComponent": {
+      "properties": {
+        "componentId": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "quantity": {
+          "type": "string"
+        },
+        "configuration": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PatternLayout": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "direction": {
+          "type": "string"
+        },
+        "alignment": {
+          "type": "string"
+        },
+        "spacing": {
+          "type": "string"
+        },
+        "responsive": {
+          "items": {
+            "$ref": "#/$defs/ResponsiveLayout"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PatternVariation": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "componentChanges": {
+          "items": {
+            "$ref": "#/$defs/PatternComponent"
+          },
+          "type": "array"
+        },
+        "layoutChanges": {
+          "$ref": "#/$defs/PatternLayout"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Principle": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "examples": {
+          "items": {
+            "$ref": "#/$defs/PrincipleExample"
+          },
+          "type": "array"
+        },
+        "order": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PrincipleExample": {
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "good": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Prop": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "default": true,
+        "enumValues": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ResponsiveLayout": {
+      "properties": {
+        "breakpoint": {
+          "type": "string"
+        },
+        "changes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ResponsiveTemplate": {
+      "properties": {
+        "breakpoint": {
+          "type": "string"
+        },
+        "gridChanges": {
+          "$ref": "#/$defs/TemplateGrid"
+        },
+        "hiddenRegions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "regionChanges": {
+          "items": {
+            "$ref": "#/$defs/TemplateRegionChange"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ScreenReaderRequirements": {
+      "properties": {
+        "semanticHtml": {
+          "type": "boolean"
+        },
+        "ariaLabels": {
+          "type": "boolean"
+        },
+        "liveRegions": {
+          "type": "boolean"
+        },
+        "headingStructure": {
+          "type": "boolean"
+        },
+        "supportedReaders": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Slot": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "allowedComponents": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SpacingScale": {
+      "properties": {
+        "baseUnit": {
+          "type": "string"
+        },
+        "scale": {
+          "items": {
+            "$ref": "#/$defs/SpacingToken"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SpacingToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "pixelValue": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "State": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tokenOverrides": {
+          "items": {
+            "$ref": "#/$defs/TokenOverride"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SupportPolicy": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "supportedVersions": {
+          "items": {
+            "$ref": "#/$defs/SupportedVersion"
+          },
+          "type": "array"
+        },
+        "supportChannels": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "responseTimeTargets": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SupportedVersion": {
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "endOfLifeDate": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Template": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "regions": {
+          "items": {
+            "$ref": "#/$defs/TemplateRegion"
+          },
+          "type": "array"
+        },
+        "grid": {
+          "$ref": "#/$defs/TemplateGrid"
+        },
+        "patterns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "responsive": {
+          "items": {
+            "$ref": "#/$defs/ResponsiveTemplate"
+          },
+          "type": "array"
+        },
+        "llm": {
+          "$ref": "#/$defs/LLMContext"
+        },
+        "documentationUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "previewUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TemplateGrid": {
+      "properties": {
+        "areas": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "string"
+        },
+        "rows": {
+          "type": "string"
+        },
+        "gap": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TemplateRegion": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "gridArea": {
+          "type": "string"
+        },
+        "minHeight": {
+          "type": "string"
+        },
+        "maxHeight": {
+          "type": "string"
+        },
+        "sticky": {
+          "type": "boolean"
+        },
+        "allowedPatterns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "allowedComponents": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TemplateRegionChange": {
+      "properties": {
+        "regionId": {
+          "type": "string"
+        },
+        "changes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TermDefinition": {
+      "properties": {
+        "term": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        },
+        "alternatives": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Terminology": {
+      "properties": {
+        "preferredTerms": {
+          "items": {
+            "$ref": "#/$defs/TermDefinition"
+          },
+          "type": "array"
+        },
+        "avoidedTerms": {
+          "items": {
+            "$ref": "#/$defs/TermDefinition"
+          },
+          "type": "array"
+        },
+        "glossary": {
+          "items": {
+            "$ref": "#/$defs/TermDefinition"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TestingRequirement": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "tools": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "frequency": {
+          "type": "string"
+        },
+        "coverage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TokenOverride": {
+      "properties": {
+        "tokenId": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ToneGuideline": {
+      "properties": {
+        "context": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "attributes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "examples": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TouchTargetRequirements": {
+      "properties": {
+        "minSize": {
+          "type": "string"
+        },
+        "minSpacing": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TypeStyle": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "fontFamily": {
+          "type": "string"
+        },
+        "fontSize": {
+          "type": "string"
+        },
+        "fontWeight": {
+          "type": "string"
+        },
+        "lineHeight": {
+          "type": "string"
+        },
+        "letterSpacing": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Typography": {
+      "properties": {
+        "fontFamilies": {
+          "items": {
+            "$ref": "#/$defs/FontFamily"
+          },
+          "type": "array"
+        },
+        "fontSizes": {
+          "items": {
+            "$ref": "#/$defs/FontSize"
+          },
+          "type": "array"
+        },
+        "fontWeights": {
+          "items": {
+            "$ref": "#/$defs/FontWeight"
+          },
+          "type": "array"
+        },
+        "lineHeights": {
+          "items": {
+            "$ref": "#/$defs/LineHeight"
+          },
+          "type": "array"
+        },
+        "letterSpacings": {
+          "items": {
+            "$ref": "#/$defs/LetterSpacing"
+          },
+          "type": "array"
+        },
+        "typeScale": {
+          "items": {
+            "$ref": "#/$defs/TypeStyle"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Variant": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "tokenOverrides": {
+          "items": {
+            "$ref": "#/$defs/TokenOverride"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "VersioningPolicy": {
+      "properties": {
+        "strategy": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "breakingChangePolicy": {
+          "type": "string"
+        },
+        "releaseSchedule": {
+          "type": "string"
+        },
+        "changelogLocation": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "VoiceAttribute": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "doExamples": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "dontExamples": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "VoiceExample": {
+      "properties": {
+        "context": {
+          "type": "string"
+        },
+        "example": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "VoiceGuidelines": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "attributes": {
+          "items": {
+            "$ref": "#/$defs/VoiceAttribute"
+          },
+          "type": "array"
+        },
+        "examples": {
+          "items": {
+            "$ref": "#/$defs/VoiceExample"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "WorkflowStep": {
+      "properties": {
+        "order": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "assignee": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "WritingStyle": {
+      "properties": {
+        "capitalization": {
+          "type": "string"
+        },
+        "punctuation": {
+          "type": "string"
+        },
+        "contractions": {
+          "type": "string"
+        },
+        "numbers": {
+          "type": "string"
+        },
+        "dateTimeFormat": {
+          "type": "string"
+        },
+        "activeVoice": {
+          "type": "boolean"
+        },
+        "maxSentenceLength": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ZIndexToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer"
+        },
+        "usage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

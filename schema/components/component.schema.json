@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/plexusone/design-system-spec/sdk/go/component",
+  "$ref": "#/$defs/Component",
+  "$defs": {
+    "Component": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "variants": {
+          "items": {
+            "$ref": "#/$defs/Variant"
+          },
+          "type": "array"
+        },
+        "states": {
+          "items": {
+            "$ref": "#/$defs/State"
+          },
+          "type": "array"
+        },
+        "props": {
+          "items": {
+            "$ref": "#/$defs/Prop"
+          },
+          "type": "array"
+        },
+        "slots": {
+          "items": {
+            "$ref": "#/$defs/Slot"
+          },
+          "type": "array"
+        },
+        "tokensUsed": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "constraints": {
+          "$ref": "#/$defs/Constraints"
+        },
+        "accessibility": {
+          "$ref": "#/$defs/ComponentA11y"
+        },
+        "llm": {
+          "$ref": "#/$defs/LLMContext"
+        },
+        "documentationUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "figmaUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ComponentA11y": {
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "requiredAttributes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "keyboardSupport": {
+          "items": {
+            "$ref": "#/$defs/KeyboardInteraction"
+          },
+          "type": "array"
+        },
+        "screenReaderNotes": {
+          "type": "string"
+        },
+        "focusManagement": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Constraints": {
+      "properties": {
+        "minWidth": {
+          "type": "string"
+        },
+        "maxWidth": {
+          "type": "string"
+        },
+        "maxChildren": {
+          "type": "integer"
+        },
+        "requiredParent": {
+          "type": "string"
+        },
+        "forbiddenChildren": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "responsiveBehavior": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "KeyboardInteraction": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "LLMContext": {
+      "properties": {
+        "intent": {
+          "type": "string"
+        },
+        "allowedContexts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "forbiddenContexts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "exampleUsage": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "antiPatterns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "semanticMeaning": {
+          "type": "string"
+        },
+        "relatedElements": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "priorityScore": {
+          "type": "integer",
+          "maximum": 100,
+          "minimum": 1
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Prop": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "default": true,
+        "enumValues": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Slot": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "allowedComponents": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "State": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tokenOverrides": {
+          "items": {
+            "$ref": "#/$defs/TokenOverride"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TokenOverride": {
+      "properties": {
+        "tokenId": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Variant": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "tokenOverrides": {
+          "items": {
+            "$ref": "#/$defs/TokenOverride"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}
