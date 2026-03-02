@@ -1,0 +1,90 @@
+# Release Notes - v0.1.0
+
+**Release Date:** 2026-03-01
+
+## Highlights
+
+- Declarative specification framework for defining complete design systems as machine-readable, LLM-optimized code
+- Go SDK with types for 9 canonical layers: Meta, Principles, Foundations, Components, Patterns, Templates, Content, Accessibility, Governance
+
+## What's New
+
+### Go SDK (`sdk/go`)
+
+A complete type system for expressing design systems declaratively:
+
+- **Meta** - System metadata (name, version, maturity, maintainers)
+- **Principles** - Design philosophy and brand values
+- **Foundations** - Design tokens: colors, typography, spacing, elevation, motion, grid, breakpoints, borders, opacity, z-index
+- **Components** - UI elements with variants, states, props, slots, and constraints
+- **Patterns** - Multi-component UX solutions with layouts
+- **Templates** - Page-level layouts with regions
+- **Content** - Voice, tone, terminology, and microcopy guidelines
+- **Accessibility** - WCAG requirements, keyboard, and screen reader support
+- **Governance** - Versioning, contribution, and deprecation policies
+
+### LLM Optimization
+
+`LLMContext` type for AI code generation with:
+- Intent descriptions
+- Allowed/forbidden contexts
+- Anti-patterns
+- Example usage
+- Semantic meaning
+- Priority scoring
+
+### Tools
+
+- **Schema Generator** (`tools/generate`) - Produces JSON Schema files from Go types
+- **File Loader** - Load specs from JSON/YAML files or directory structures
+- **Makefile** - Build targets for testing, linting, and schema generation
+
+### JSON Schemas
+
+Pre-generated schemas in `schema/` directory:
+- `design-system.schema.json` (root)
+- `meta.schema.json`
+- `foundations/foundations.schema.json`
+- `components/component.schema.json`
+- `patterns.schema.json`
+- `templates.schema.json`
+- `accessibility.schema.json`
+- `governance.schema.json`
+
+## Installation
+
+```bash
+go get github.com/plexusone/design-system-spec/sdk/go@v0.1.0
+```
+
+## Quick Start
+
+```go
+import dss "github.com/plexusone/design-system-spec/sdk/go"
+
+ds := dss.DesignSystem{
+    Meta: dss.Meta{
+        Name:    "My Design System",
+        Version: "1.0.0",
+    },
+    Foundations: dss.Foundations{
+        Colors: []dss.ColorToken{
+            {ID: "primary-500", Value: "#0066CC", Semantic: "primary"},
+        },
+    },
+}
+```
+
+## What's Next
+
+See [TASKS.md](TASKS.md) for the roadmap:
+
+- **Phase 3** - CLI tool (`dss validate`, `dss lint`, `dss generate`)
+- **Phase 4** - Agent team for validation
+- **Phase 5** - Examples & documentation
+
+## Links
+
+- [Documentation](README.md)
+- [Product Requirements](PRD.md)
+- [Changelog](CHANGELOG.md)
