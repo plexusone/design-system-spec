@@ -21,7 +21,7 @@ func run() error {
 	// Default output directory
 	outputDir := "schema"
 	if len(os.Args) > 1 {
-		outputDir = os.Args[1]
+		outputDir = filepath.Clean(os.Args[1])
 	}
 
 	// Ensure output directories exist
@@ -31,7 +31,8 @@ func run() error {
 		filepath.Join(outputDir, "components"),
 	}
 	for _, dir := range dirs {
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		// #nosec G703 -- CLI tool with user-provided output path; path is cleaned above
+		if err := os.MkdirAll(dir, 0750); err != nil {
 			return fmt.Errorf("create directory %s: %w", dir, err)
 		}
 	}
@@ -40,7 +41,7 @@ func run() error {
 	schemas := []struct {
 		name   string
 		path   string
-		schema interface{}
+		schema any
 	}{
 		{
 			name:   "DesignSystem",
