@@ -5,6 +5,14 @@
   "versioning": "semver",
   "commitConvention": "conventional",
   "maintainers": ["plexusone"],
+  "unreleased": {
+    "added": [
+      { "description": "Minimal design system example in `examples/minimal-system/` demonstrating spec format", "commit": "4c705f1" }
+    ],
+    "tests": [
+      { "description": "Loader test validating example loads correctly", "commit": "4c705f1" }
+    ]
+  },
   "releases": [
     {
       "version": "v0.1.1",
