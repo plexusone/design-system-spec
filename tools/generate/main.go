@@ -90,7 +90,7 @@ func run() error {
 			return fmt.Errorf("marshal %s schema: %w", s.name, err)
 		}
 
-		if err := os.WriteFile(s.path, data, 0644); err != nil {
+		if err := os.WriteFile(s.path, data, 0600); err != nil {
 			return fmt.Errorf("write %s schema: %w", s.name, err)
 		}
 
