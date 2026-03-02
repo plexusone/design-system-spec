@@ -6,11 +6,11 @@ A declarative, machine-readable specification for defining complete design syste
 
 Design System Spec (DSS) provides a canonical framework for expressing design systems (like Material Design, Carbon, Fluent) in a structured, version-controlled, LLM-optimized format. It enables:
 
-- **Declarative definitions** - Define tokens, components, patterns as data
-- **Multi-format support** - JSON/YAML for tokens, Markdown for documentation
-- **LLM optimization** - Explicit intent, contexts, and constraints for AI code generation
-- **Validation** - Schema-based validation at multiple layers
-- **Go-first approach** - Go structs as source of truth, generating JSON Schema
+- 📋 **Declarative definitions** - Define tokens, components, patterns as data
+- 📁 **Multi-format support** - JSON/YAML for tokens, Markdown for documentation
+- 🤖 **LLM optimization** - Explicit intent, contexts, and constraints for AI code generation
+- ✅ **Validation** - Schema-based validation at multiple layers
+- 🔷 **Go-first approach** - Go structs as source of truth, generating JSON Schema
 
 ## Installation
 
