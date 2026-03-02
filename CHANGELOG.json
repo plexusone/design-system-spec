@@ -1,0 +1,44 @@
+{
+  "irVersion": "1.0",
+  "project": "design-system-spec",
+  "repository": "https://github.com/plexusone/design-system-spec",
+  "versioning": "semver",
+  "commitConvention": "conventional",
+  "maintainers": ["plexusone"],
+  "releases": [
+    {
+      "version": "v0.1.0",
+      "date": "2026-03-01",
+      "highlights": [
+        { "description": "Declarative specification framework for defining complete design systems as machine-readable, LLM-optimized code" },
+        { "description": "Go SDK with types for 9 canonical layers: Meta, Principles, Foundations, Components, Patterns, Templates, Content, Accessibility, Governance" }
+      ],
+      "added": [
+        { "description": "Go SDK (`sdk/go`) as nested module with complete type system", "commit": "7b0d3a8" },
+        { "description": "`Meta` type for system metadata (name, version, maturity, maintainers)", "commit": "7b0d3a8" },
+        { "description": "`Principles` type for design philosophy and brand values", "commit": "7b0d3a8" },
+        { "description": "`Foundations` type for design tokens: colors, typography, spacing, elevation, motion, grid, breakpoints, borders, opacity, z-index", "commit": "7b0d3a8" },
+        { "description": "`Component` type with variants, states, props, slots, and constraints", "commit": "7b0d3a8" },
+        { "description": "`Pattern` type for multi-component UX solutions with layouts", "commit": "7b0d3a8" },
+        { "description": "`Template` type for page-level layouts with regions", "commit": "7b0d3a8" },
+        { "description": "`Content` type for voice, tone, terminology, and microcopy guidelines", "commit": "7b0d3a8" },
+        { "description": "`Accessibility` type for WCAG requirements, keyboard, and screen reader support", "commit": "7b0d3a8" },
+        { "description": "`Governance` type for versioning, contribution, and deprecation policies", "commit": "7b0d3a8" },
+        { "description": "`LLMContext` type for AI code generation optimization (intent, allowed/forbidden contexts, anti-patterns)", "commit": "7b0d3a8" },
+        { "description": "`LoadDesignSystem()` for loading specs from JSON/YAML files or directory structures", "commit": "7b0d3a8" },
+        { "description": "`GenerateSchema()` and layer-specific schema generation functions", "commit": "7b0d3a8" },
+        { "description": "Schema generator tool (`tools/generate`) producing JSON Schema files from Go types", "commit": "5dabd6f" },
+        { "description": "Generated JSON schemas for all layers in `schema/` directory", "commit": "1a366c8" },
+        { "description": "Makefile with targets: build, test, generate-schema, verify-schema, lint-schema", "commit": "f1d5eb0" }
+      ],
+      "documentation": [
+        { "description": "README with installation, quick start, canonical layers reference, and LLM optimization guide", "commit": "3593e6e" },
+        { "description": "Product Requirements Document (PRD.md) with problem statement, requirements, and roadmap", "commit": "3593e6e" },
+        { "description": "Implementation tasks tracking (TASKS.md) for all 5 phases", "commit": "2e6f1ec" }
+      ],
+      "tests": [
+        { "description": "Unit tests for DesignSystem validation, JSON serialization, and schema generation", "commit": "4b4de11" }
+      ]
+    }
+  ]
+}
