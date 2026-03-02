@@ -1,6 +1,7 @@
-version: "2"
 run:
   go: "1.23"
+  timeout: 3m
+
 linters:
   enable:
     - dogsled
@@ -12,28 +13,15 @@ linters:
     - unconvert
     - unparam
     - whitespace
-  exclusions:
-    generated: lax
-    presets:
-      - comments
-      - common-false-positives
-      - legacy
-      - std-error-handling
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
-  settings:
-    staticcheck:
-      checks:
-        - "-QF1008" # Disable the "could remove embedded field" check
-formatters:
-  enable:
-    - gofmt
-    - goimports
-  exclusions:
-    generated: lax
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
+
+linters-settings:
+  staticcheck:
+    checks:
+      - "all"
+      - "-QF1008"
+
+issues:
+  exclude-dirs:
+    - third_party
+    - examples
+  exclude-generated: lax
