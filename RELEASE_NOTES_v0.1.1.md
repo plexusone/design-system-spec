@@ -1,0 +1,34 @@
+# Release Notes - v0.1.1
+
+**Release Date:** 2026-03-01
+
+## Summary
+
+Patch release with CI improvements, lint fixes, and documentation updates. Adds MIT LICENSE for proper pkg.go.dev indexing.
+
+## Fixed
+
+- Resolve gosec G703 path traversal warning in schema generator
+- Upgrade to golangci-lint-action@v9 for v2 config support
+
+## Build
+
+- Add golangci-lint v2 configuration
+- Enable Dependabot for GitHub Actions
+- Bump github/codeql-action from 3 to 4
+
+## Documentation
+
+- Add README badges for Go Reference, CI, and license
+- Add MIT LICENSE file for pkg.go.dev indexing
+
+## Installation
+
+```bash
+go get github.com/plexusone/design-system-spec/sdk/go@v0.1.1
+```
+
+## Links
+
+- [Full Changelog](CHANGELOG.md)
+- [v0.1.0 Release Notes](RELEASE_NOTES_v0.1.0.md)

@@ -7,6 +7,23 @@
   "maintainers": ["plexusone"],
   "releases": [
     {
+      "version": "v0.1.1",
+      "date": "2026-03-01",
+      "fixed": [
+        { "description": "Resolve gosec G703 path traversal warning in schema generator", "commit": "f990758" },
+        { "description": "Upgrade to golangci-lint-action@v9 for v2 config support", "commit": "b750c39" }
+      ],
+      "build": [
+        { "description": "Add golangci-lint v2 configuration", "commit": "c702ef5" },
+        { "description": "Enable Dependabot for GitHub Actions", "commit": "f4036b1" },
+        { "description": "Bump github/codeql-action from 3 to 4", "commit": "929c245" }
+      ],
+      "documentation": [
+        { "description": "Add README badges for Go Reference, CI, and license", "commit": "04083af" },
+        { "description": "Add MIT LICENSE file for pkg.go.dev indexing", "commit": "99c7156" }
+      ]
+    },
+    {
       "version": "v0.1.0",
       "date": "2026-03-01",
       "highlights": [
