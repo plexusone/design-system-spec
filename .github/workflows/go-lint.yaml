@@ -35,14 +35,14 @@ jobs:
         go-version: '1.23.x'
 
     - name: Lint SDK
-      uses: golangci/golangci-lint-action@v6
+      uses: golangci/golangci-lint-action@v9
       with:
         version: latest
         working-directory: sdk/go
         args: --timeout 3m --verbose
 
     - name: Lint Root
-      uses: golangci/golangci-lint-action@v6
+      uses: golangci/golangci-lint-action@v9
       with:
         version: latest
         args: --timeout 3m --verbose
