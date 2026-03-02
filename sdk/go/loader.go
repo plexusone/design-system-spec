@@ -227,5 +227,5 @@ func SaveDesignSystem(ds *DesignSystem, path string) error {
 	if err != nil {
 		return fmt.Errorf("marshal: %w", err)
 	}
-	return os.WriteFile(path, data, 0644)
+	return os.WriteFile(path, data, 0600)
 }
