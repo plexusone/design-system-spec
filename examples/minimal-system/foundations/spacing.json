@@ -1,0 +1,14 @@
+{
+  "baseUnit": "4px",
+  "scale": [
+    { "id": "0", "value": "0", "pixelValue": 0 },
+    { "id": "1", "value": "0.25rem", "pixelValue": 4 },
+    { "id": "2", "value": "0.5rem", "pixelValue": 8 },
+    { "id": "3", "value": "0.75rem", "pixelValue": 12 },
+    { "id": "4", "value": "1rem", "pixelValue": 16 },
+    { "id": "6", "value": "1.5rem", "pixelValue": 24 },
+    { "id": "8", "value": "2rem", "pixelValue": 32 },
+    { "id": "12", "value": "3rem", "pixelValue": 48 },
+    { "id": "16", "value": "4rem", "pixelValue": 64 }
+  ]
+}

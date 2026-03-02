@@ -1,0 +1,74 @@
+{
+  "fontFamilies": [
+    {
+      "id": "sans",
+      "name": "Sans Serif",
+      "value": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "usage": "Primary font for UI text and body content"
+    },
+    {
+      "id": "mono",
+      "name": "Monospace",
+      "value": "'JetBrains Mono', 'Fira Code', Consolas, monospace",
+      "usage": "Code blocks, technical content, tabular data"
+    }
+  ],
+  "fontSizes": [
+    { "id": "xs", "value": "0.75rem", "pixelValue": 12 },
+    { "id": "sm", "value": "0.875rem", "pixelValue": 14 },
+    { "id": "base", "value": "1rem", "pixelValue": 16 },
+    { "id": "lg", "value": "1.125rem", "pixelValue": 18 },
+    { "id": "xl", "value": "1.25rem", "pixelValue": 20 },
+    { "id": "2xl", "value": "1.5rem", "pixelValue": 24 },
+    { "id": "3xl", "value": "2rem", "pixelValue": 32 }
+  ],
+  "fontWeights": [
+    { "id": "normal", "value": 400 },
+    { "id": "medium", "value": 500 },
+    { "id": "semibold", "value": 600 },
+    { "id": "bold", "value": 700 }
+  ],
+  "lineHeights": [
+    { "id": "tight", "value": "1.25" },
+    { "id": "normal", "value": "1.5" },
+    { "id": "relaxed", "value": "1.75" }
+  ],
+  "typeScale": [
+    {
+      "id": "h1",
+      "name": "Heading 1",
+      "fontFamily": "sans",
+      "fontSize": "3xl",
+      "fontWeight": "bold",
+      "lineHeight": "tight",
+      "usage": "Page titles, hero sections"
+    },
+    {
+      "id": "h2",
+      "name": "Heading 2",
+      "fontFamily": "sans",
+      "fontSize": "2xl",
+      "fontWeight": "semibold",
+      "lineHeight": "tight",
+      "usage": "Section headings"
+    },
+    {
+      "id": "body",
+      "name": "Body",
+      "fontFamily": "sans",
+      "fontSize": "base",
+      "fontWeight": "normal",
+      "lineHeight": "normal",
+      "usage": "Default body text"
+    },
+    {
+      "id": "caption",
+      "name": "Caption",
+      "fontFamily": "sans",
+      "fontSize": "sm",
+      "fontWeight": "normal",
+      "lineHeight": "normal",
+      "usage": "Helper text, labels, metadata"
+    }
+  ]
+}

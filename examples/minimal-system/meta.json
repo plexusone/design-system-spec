@@ -1,0 +1,15 @@
+{
+  "name": "Minimal Design System",
+  "version": "1.0.0",
+  "description": "A minimal example design system demonstrating the spec format",
+  "maturityLevel": 3,
+  "repository": "https://github.com/example/minimal-system",
+  "documentation": "https://example.com/docs",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "Design Team",
+      "email": "design@example.com"
+    }
+  ]
+}

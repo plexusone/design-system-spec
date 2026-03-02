@@ -1,0 +1,50 @@
+[
+  {
+    "id": "primary-500",
+    "value": "#0066CC",
+    "semantic": "primary",
+    "usage": "Primary brand color for main CTAs and key interactive elements",
+    "contrast": {
+      "onLight": "#FFFFFF",
+      "onDark": "#FFFFFF",
+      "ratio": 4.5,
+      "wcagLevel": "AA"
+    }
+  },
+  {
+    "id": "primary-600",
+    "value": "#0052A3",
+    "semantic": "primary",
+    "usage": "Darker primary for hover states"
+  },
+  {
+    "id": "secondary-500",
+    "value": "#6B7280",
+    "semantic": "secondary",
+    "usage": "Secondary actions and less prominent UI elements"
+  },
+  {
+    "id": "success-500",
+    "value": "#10B981",
+    "semantic": "success",
+    "usage": "Success states, confirmations, and positive feedback"
+  },
+  {
+    "id": "danger-500",
+    "value": "#EF4444",
+    "semantic": "danger",
+    "usage": "Error states, destructive actions, and warnings"
+  },
+  {
+    "id": "neutral-100",
+    "value": "#F3F4F6",
+    "semantic": "neutral",
+    "usage": "Backgrounds, subtle separators"
+  },
+  {
+    "id": "neutral-900",
+    "value": "#111827",
+    "semantic": "neutral",
+    "usage": "Primary text color"
+  }
+]

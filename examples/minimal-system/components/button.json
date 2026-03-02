@@ -1,0 +1,137 @@
+{
+  "id": "button",
+  "name": "Button",
+  "description": "Interactive button component for triggering actions",
+  "category": "inputs",
+  "variants": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "description": "High-emphasis button for primary actions",
+      "isDefault": true
+    },
+    {
+      "id": "secondary",
+      "name": "Secondary",
+      "description": "Medium-emphasis button for secondary actions"
+    },
+    {
+      "id": "outline",
+      "name": "Outline",
+      "description": "Low-emphasis button with border only"
+    },
+    {
+      "id": "ghost",
+      "name": "Ghost",
+      "description": "Minimal button for tertiary actions"
+    },
+    {
+      "id": "danger",
+      "name": "Danger",
+      "description": "Destructive action button"
+    }
+  ],
+  "states": [
+    { "id": "default", "description": "Normal resting state" },
+    { "id": "hover", "description": "Mouse hovering over button" },
+    { "id": "active", "description": "Button is being pressed" },
+    { "id": "focus", "description": "Button has keyboard focus" },
+    { "id": "disabled", "description": "Button is not interactive" },
+    { "id": "loading", "description": "Action is in progress" }
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "enum",
+      "description": "Visual style variant",
+      "default": "primary",
+      "enumValues": ["primary", "secondary", "outline", "ghost", "danger"]
+    },
+    {
+      "name": "size",
+      "type": "enum",
+      "description": "Button size",
+      "default": "md",
+      "enumValues": ["sm", "md", "lg"]
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Whether the button is disabled",
+      "default": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Whether to show loading state",
+      "default": false
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "description": "Whether button spans full container width",
+      "default": false
+    },
+    {
+      "name": "leftIcon",
+      "type": "string",
+      "description": "Icon to display before label"
+    },
+    {
+      "name": "rightIcon",
+      "type": "string",
+      "description": "Icon to display after label"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "Button label content",
+      "required": true
+    }
+  ],
+  "tokensUsed": [
+    "primary-500",
+    "primary-600",
+    "secondary-500",
+    "danger-500",
+    "neutral-100"
+  ],
+  "accessibility": {
+    "role": "button",
+    "requiredAttributes": ["aria-label (when icon-only)"],
+    "keyboardSupport": [
+      { "key": "Enter", "action": "Activate button" },
+      { "key": "Space", "action": "Activate button" }
+    ],
+    "focusManagement": "Receives focus via Tab key, visible focus ring required"
+  },
+  "llm": {
+    "intent": "Trigger user-initiated actions like form submission, navigation, or commands",
+    "allowedContexts": [
+      "forms",
+      "dialogs",
+      "toolbars",
+      "cards",
+      "page-actions"
+    ],
+    "forbiddenContexts": [
+      "inline-text",
+      "navigation-links"
+    ],
+    "exampleUsage": [
+      "<Button variant=\"primary\">Submit</Button>",
+      "<Button variant=\"secondary\" leftIcon=\"download\">Export</Button>",
+      "<Button variant=\"danger\" onClick={handleDelete}>Delete</Button>"
+    ],
+    "antiPatterns": [
+      "Multiple primary buttons in the same view",
+      "Using button for navigation (use Link instead)",
+      "Ghost buttons for important actions",
+      "Disabled buttons without explanation"
+    ],
+    "semanticMeaning": "Indicates an interactive element that performs an action when activated",
+    "relatedElements": ["link", "icon-button", "button-group"],
+    "priorityScore": 90
+  }
+}

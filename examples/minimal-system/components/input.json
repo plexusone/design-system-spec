@@ -1,0 +1,99 @@
+{
+  "id": "input",
+  "name": "Text Input",
+  "description": "Single-line text input field for user data entry",
+  "category": "inputs",
+  "variants": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Standard text input",
+      "isDefault": true
+    },
+    {
+      "id": "filled",
+      "name": "Filled",
+      "description": "Input with filled background"
+    }
+  ],
+  "states": [
+    { "id": "default", "description": "Normal resting state" },
+    { "id": "hover", "description": "Mouse hovering over input" },
+    { "id": "focus", "description": "Input has keyboard focus" },
+    { "id": "disabled", "description": "Input is not interactive" },
+    { "id": "error", "description": "Input has validation error" },
+    { "id": "success", "description": "Input value is valid" }
+  ],
+  "props": [
+    {
+      "name": "type",
+      "type": "enum",
+      "description": "HTML input type",
+      "default": "text",
+      "enumValues": ["text", "email", "password", "number", "tel", "url"]
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "description": "Input label text"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "Placeholder text when empty"
+    },
+    {
+      "name": "helperText",
+      "type": "string",
+      "description": "Helper text below input"
+    },
+    {
+      "name": "errorMessage",
+      "type": "string",
+      "description": "Error message when invalid"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Whether the input is disabled",
+      "default": false
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "description": "Whether the input is required",
+      "default": false
+    }
+  ],
+  "accessibility": {
+    "role": "textbox",
+    "requiredAttributes": ["aria-label or associated label element"],
+    "keyboardSupport": [
+      { "key": "Tab", "action": "Move focus to/from input" }
+    ],
+    "screenReaderNotes": "Label must be associated via htmlFor/id or aria-labelledby"
+  },
+  "llm": {
+    "intent": "Collect single-line text data from users",
+    "allowedContexts": [
+      "forms",
+      "search",
+      "filters",
+      "dialogs"
+    ],
+    "forbiddenContexts": [
+      "multi-line-content"
+    ],
+    "exampleUsage": [
+      "<Input label=\"Email\" type=\"email\" required />",
+      "<Input label=\"Search\" placeholder=\"Search...\" leftIcon=\"search\" />"
+    ],
+    "antiPatterns": [
+      "Input without label",
+      "Using for multi-line text (use Textarea)",
+      "Placeholder as only label"
+    ],
+    "relatedElements": ["textarea", "select", "form-field"],
+    "priorityScore": 85
+  }
+}
