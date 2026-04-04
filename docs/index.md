@@ -1,0 +1,61 @@
+# Design System Spec
+
+A declarative, machine-readable specification for defining complete design systems as code.
+
+## What is DSS?
+
+Design System Spec (DSS) provides a canonical framework for expressing design systems (like Material Design, Carbon, Fluent) in a structured, version-controlled, LLM-optimized format.
+
+## Key Features
+
+- **Declarative definitions** - Define tokens, components, patterns as data
+- **Multi-format support** - JSON/YAML for tokens, Markdown for documentation
+- **LLM optimization** - Explicit intent, contexts, and constraints for AI code generation
+- **Code generation** - Generate CSS, TypeScript types, and LLM prompts from spec
+- **Compliance validation** - Validate implementations against the spec
+- **Go-first approach** - Go structs as source of truth, generating JSON Schema
+
+## Quick Install
+
+```bash
+# Install CLI
+go install github.com/plexusone/design-system-spec/cmd/dss@latest
+
+# Install Go SDK
+go get github.com/plexusone/design-system-spec/sdk/go
+```
+
+## Quick Example
+
+```bash
+# Show design system info
+dss info
+
+# Generate CSS, TypeScript types, and LLM context
+dss generate --css ./src/index.css --types ./src/lib/types.ts --llm ./DESIGN_CONTEXT.md
+
+# Validate component implementations
+dss validate ./src/components
+```
+
+## Canonical Layers
+
+DSS defines **9 canonical layers** for complete design system specification:
+
+| Layer | Purpose |
+|-------|---------|
+| **Meta** | System metadata (name, version, maintainers) |
+| **Principles** | Design philosophy and guidelines |
+| **Foundations** | Design tokens (colors, typography, spacing) |
+| **Components** | UI elements with variants and states |
+| **Patterns** | Multi-component solutions |
+| **Templates** | Page layouts |
+| **Content** | Voice & tone guidelines |
+| **Accessibility** | WCAG compliance requirements |
+| **Governance** | Versioning and deprecation policies |
+
+## Next Steps
+
+- [Getting Started](getting-started.md) - Create your first design system spec
+- [CLI Reference](cli.md) - Full CLI command documentation
+- [Specification](specification/index.md) - Detailed spec reference

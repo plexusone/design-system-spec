@@ -1,0 +1,63 @@
+site_name: Design System Spec
+site_description: A declarative, machine-readable specification for defining complete design systems as code
+site_url: https://plexusone.github.io/design-system-spec
+repo_url: https://github.com/plexusone/design-system-spec
+repo_name: plexusone/design-system-spec
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: cyan
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: cyan
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - CLI Reference: cli.md
+  - Specification:
+      - Overview: specification/index.md
+      - Meta: specification/meta.md
+      - Principles: specification/principles.md
+      - Foundations: specification/foundations.md
+      - Components: specification/components.md
+      - Patterns: specification/patterns.md
+      - Accessibility: specification/accessibility.md
+  - Go SDK: sdk.md
+  - Examples: examples.md
+  - Case Studies:
+      - PlexusOne: case-studies/plexusone.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/plexusone/design-system-spec
