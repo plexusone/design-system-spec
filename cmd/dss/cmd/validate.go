@@ -328,7 +328,7 @@ func validateAgainstSpec(path string, code string, spec dss.Component, report *C
 	report.Passed = append(report.Passed, fmt.Sprintf("%s: validated against spec", spec.Name))
 }
 
-func checkAntiPatterns(path string, code string, ds *dss.DesignSystem, report *ComplianceReport) {
+func checkAntiPatterns(path string, code string, _ *dss.DesignSystem, report *ComplianceReport) {
 	// Check for multiple primary buttons (anti-pattern)
 	primaryBtnPattern := regexp.MustCompile(`<Button[^>]*variant=["'](?:default|primary)["']`)
 	primaryMatches := primaryBtnPattern.FindAllString(code, -1)

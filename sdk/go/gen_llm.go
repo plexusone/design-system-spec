@@ -251,7 +251,7 @@ func writeComponentSection(b *strings.Builder, c Component, opts LLMPromptOption
 	}
 }
 
-func writePatternSection(b *strings.Builder, p Pattern, opts LLMPromptOptions) {
+func writePatternSection(b *strings.Builder, p Pattern, _ LLMPromptOptions) {
 	b.WriteString(fmt.Sprintf("### %s\n\n", p.Name))
 
 	if p.Description != "" {

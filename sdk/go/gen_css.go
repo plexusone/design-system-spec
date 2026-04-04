@@ -552,6 +552,10 @@ func (ds *DesignSystem) generateMkDocsMaterialCSS(opts CSSGeneratorOptions, b *s
 	b.WriteString(fmt.Sprintf("  border-left-color: %s;\n", warningColor))
 	b.WriteString("}\n\n")
 
+	b.WriteString("[data-md-color-scheme=\"slate\"] .md-typeset .admonition.danger {\n")
+	b.WriteString(fmt.Sprintf("  border-left-color: %s;\n", errorColor))
+	b.WriteString("}\n\n")
+
 	b.WriteString("/* Search */\n")
 	b.WriteString("[data-md-color-scheme=\"slate\"] .md-search__input {\n")
 	b.WriteString(fmt.Sprintf("  background-color: %s;\n", bgSubtle))
@@ -602,27 +606,27 @@ func writeFontFamily(b *strings.Builder, ff FontFamily, opts CSSGeneratorOptions
 	b.WriteString(fmt.Sprintf("  %s: %s;\n", varName, fontValue))
 }
 
-func writeFontSize(b *strings.Builder, fs FontSize, opts CSSGeneratorOptions) {
+func writeFontSize(b *strings.Builder, fs FontSize, _ CSSGeneratorOptions) {
 	varName := fmt.Sprintf("--text-%s", normalizeID(fs.ID))
 	b.WriteString(fmt.Sprintf("  %s: %s;\n", varName, fs.Value))
 }
 
-func writeFontWeight(b *strings.Builder, fw FontWeight, opts CSSGeneratorOptions) {
+func writeFontWeight(b *strings.Builder, fw FontWeight, _ CSSGeneratorOptions) {
 	varName := fmt.Sprintf("--font-weight-%s", normalizeID(fw.ID))
 	b.WriteString(fmt.Sprintf("  %s: %d;\n", varName, fw.Value))
 }
 
-func writeLineHeight(b *strings.Builder, lh LineHeight, opts CSSGeneratorOptions) {
+func writeLineHeight(b *strings.Builder, lh LineHeight, _ CSSGeneratorOptions) {
 	varName := fmt.Sprintf("--leading-%s", normalizeID(lh.ID))
 	b.WriteString(fmt.Sprintf("  %s: %s;\n", varName, lh.Value))
 }
 
-func writeSpacing(b *strings.Builder, s SpacingToken, opts CSSGeneratorOptions) {
+func writeSpacing(b *strings.Builder, s SpacingToken, _ CSSGeneratorOptions) {
 	varName := fmt.Sprintf("--spacing-%s", normalizeID(s.ID))
 	b.WriteString(fmt.Sprintf("  %s: %s;\n", varName, s.Value))
 }
 
-func writeBorderRadius(b *strings.Builder, br BorderRadiusToken, opts CSSGeneratorOptions) {
+func writeBorderRadius(b *strings.Builder, br BorderRadiusToken, _ CSSGeneratorOptions) {
 	varName := fmt.Sprintf("--radius-%s", normalizeID(br.ID))
 	b.WriteString(fmt.Sprintf("  %s: %s;\n", varName, br.Value))
 }
@@ -651,7 +655,7 @@ func writeEasing(b *strings.Builder, e EasingToken, opts CSSGeneratorOptions) {
 	b.WriteString(fmt.Sprintf("  %s: %s;\n", varName, e.Value))
 }
 
-func writeBreakpoint(b *strings.Builder, bp Breakpoint, opts CSSGeneratorOptions) {
+func writeBreakpoint(b *strings.Builder, bp Breakpoint, _ CSSGeneratorOptions) {
 	varName := fmt.Sprintf("--breakpoint-%s", normalizeID(bp.ID))
 	b.WriteString(fmt.Sprintf("  %s: %s;\n", varName, bp.MinWidth))
 }

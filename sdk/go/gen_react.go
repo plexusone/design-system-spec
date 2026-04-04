@@ -53,24 +53,20 @@ func (ds *DesignSystem) GenerateReactTypes(opts ReactGeneratorOptions) (string, 
 		if i > 0 {
 			b.WriteString("\n")
 		}
-		if err := generateComponentTypes(&b, comp, opts); err != nil {
-			return "", fmt.Errorf("error generating types for %s: %w", comp.ID, err)
-		}
+		generateComponentTypes(&b, comp, opts)
 	}
 
 	return b.String(), nil
 }
 
 // GenerateComponentTypes generates TypeScript for a single component.
-func (c *Component) GenerateTypes(opts ReactGeneratorOptions) (string, error) {
+func (c *Component) GenerateTypes(opts ReactGeneratorOptions) string {
 	var b strings.Builder
-	if err := generateComponentTypes(&b, *c, opts); err != nil {
-		return "", err
-	}
-	return b.String(), nil
+	generateComponentTypes(&b, *c, opts)
+	return b.String()
 }
 
-func generateComponentTypes(b *strings.Builder, c Component, opts ReactGeneratorOptions) error {
+func generateComponentTypes(b *strings.Builder, c Component, opts ReactGeneratorOptions) {
 	interfaceName := pascalCase(c.ID) + "Props"
 
 	// Generate variant union type if variants exist
@@ -161,8 +157,6 @@ func generateComponentTypes(b *strings.Builder, c Component, opts ReactGenerator
 		b.WriteString(strings.Join(states, " | "))
 		b.WriteString(";\n")
 	}
-
-	return nil
 }
 
 func writeProp(b *strings.Builder, prop Prop, comp Component, opts ReactGeneratorOptions) {

@@ -395,7 +395,7 @@ func lintTSX(content string, ds *dss.DesignSystem, report *LintReport) {
 	checkAntiPatternsInTSX(content, lines, ds, report)
 }
 
-func checkHardcodedColorsInCSS(content string, lines []string, ds *dss.DesignSystem, report *LintReport) {
+func checkHardcodedColorsInCSS(_ string, lines []string, ds *dss.DesignSystem, report *LintReport) {
 	// Build set of allowed colors from design system
 	allowedColors := make(map[string]bool)
 	for _, c := range ds.Foundations.Colors {
@@ -429,7 +429,7 @@ func checkHardcodedColorsInCSS(content string, lines []string, ds *dss.DesignSys
 	}
 }
 
-func checkAntiPatternsInTSX(content string, lines []string, ds *dss.DesignSystem, report *LintReport) {
+func checkAntiPatternsInTSX(content string, _ []string, _ *dss.DesignSystem, report *LintReport) {
 	// Multiple primary buttons
 	primaryBtnPattern := regexp.MustCompile(`<Button[^>]*variant=["'](?:default|primary)["']`)
 	matches := primaryBtnPattern.FindAllString(content, -1)
