@@ -68,7 +68,7 @@ For visual validation, combine DSS with visual regression testing (Chromatic, Pe
 go install github.com/plexusone/design-system-spec/cmd/dss@latest
 
 # Go SDK
-go get github.com/plexusone/design-system-spec/sdk/go
+go get github.com/plexusone/design-system-spec
 ```
 
 ## Quick Start
