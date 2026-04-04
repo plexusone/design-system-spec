@@ -104,8 +104,18 @@ type FontFamily struct {
 	// Name is a display name for the font family.
 	Name string `json:"name"`
 
-	// Value is the CSS font-family value.
-	Value string `json:"value"`
+	// Stack is the CSS font-family fallback stack (e.g., "'Inter', system-ui, sans-serif").
+	// This is the preferred field for font family values.
+	Stack string `json:"stack,omitempty"`
+
+	// Value is an alias for Stack (deprecated, use Stack instead).
+	Value string `json:"value,omitempty"`
+
+	// Weights lists available font weights (e.g., [400, 500, 600, 700]).
+	Weights []int `json:"weights,omitempty"`
+
+	// Source is the URL to load the font (e.g., Google Fonts URL).
+	Source string `json:"source,omitempty"`
 
 	// Usage describes when to use this font family.
 	Usage string `json:"usage,omitempty"`

@@ -160,6 +160,15 @@ func loadFoundations(dir string, f *Foundations) error {
 	if err := loadLayer(foundationsDir, "border-radius", &f.BorderRadius); err != nil && !os.IsNotExist(err) {
 		return err
 	}
+	if err := loadLayer(foundationsDir, "border-width", &f.BorderWidth); err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	if err := loadLayer(foundationsDir, "opacity", &f.Opacity); err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	if err := loadLayer(foundationsDir, "z-index", &f.ZIndex); err != nil && !os.IsNotExist(err) {
+		return err
+	}
 
 	return nil
 }
