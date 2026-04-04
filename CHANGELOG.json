@@ -5,15 +5,51 @@
   "versioning": "semver",
   "commitConvention": "conventional",
   "maintainers": ["plexusone"],
-  "unreleased": {
-    "added": [
-      { "description": "Minimal design system example in `examples/minimal-system/` demonstrating spec format", "commit": "4c705f1" }
-    ],
-    "tests": [
-      { "description": "Loader test validating example loads correctly", "commit": "4c705f1" }
-    ]
-  },
+  "unreleased": {},
   "releases": [
+    {
+      "version": "v0.2.0",
+      "date": "2026-04-04",
+      "highlights": [
+        { "description": "CLI tool (`dss`) for generating code artifacts and validating implementations" },
+        { "description": "Code generators for CSS (Tailwind v4, CSS vars, SCSS), React TypeScript types, and LLM context prompts" },
+        { "description": "Comprehensive MkDocs documentation site with specification reference" }
+      ],
+      "added": [
+        { "description": "CLI tool (`cmd/dss`) with commands: `generate`, `validate`, `info`, `lint`, `coverage`", "commit": "eeefbde" },
+        { "description": "CSS generator supporting Tailwind v4 @theme, CSS custom properties, SCSS, and MkDocs Material formats", "commit": "4b7582f" },
+        { "description": "React TypeScript generator producing component interfaces with JSDoc and variant unions", "commit": "4b7582f" },
+        { "description": "LLM prompt generator creating Markdown or XML context documents for AI code generation", "commit": "4b7582f" },
+        { "description": "Design-compliance agent specification for automated UI code review", "commit": "b9d074b" },
+        { "description": "`FontFamily.Stack` field for CSS font-family fallback stacks", "commit": "fac6fdd" },
+        { "description": "`FontFamily.Weights` and `FontFamily.Source` fields for font metadata", "commit": "fac6fdd" },
+        { "description": "Loader support for `border-width.json`, `opacity.json`, and `z-index.json` foundations", "commit": "fac6fdd" },
+        { "description": "Minimal design system example in `examples/minimal-system/`", "commit": "4c705f1" }
+      ],
+      "changed": [
+        { "description": "Merge nested `sdk/go` module into root module (import path unchanged)", "commit": "b3a9013" },
+        { "description": "Rewrite README focusing on AI-native development goals and effectiveness assessment", "commit": "c9f3c79" },
+        { "description": "Restructure TASKS.md around AI compliance goals with progress tracking", "commit": "c9f3c79" }
+      ],
+      "fixed": [
+        { "description": "Resolve golangci-lint findings (unused parameters, ineffectual assignments)", "commit": "43b569f" },
+        { "description": "Remove redundant newline in fmt.Println causing go vet error", "commit": "be6bb7c" }
+      ],
+      "documentation": [
+        { "description": "MkDocs documentation site with Material theme (dark/light mode)", "commit": "6809451" },
+        { "description": "Getting started guide, CLI reference, and SDK documentation", "commit": "6809451" },
+        { "description": "Full specification reference for all 9 canonical layers", "commit": "6809451" },
+        { "description": "PlexusOne case study demonstrating real-world usage", "commit": "6809451" },
+        { "description": "Move release notes to `docs/releases/` for MkDocs integration", "commit": "7f534ba" }
+      ],
+      "tests": [
+        { "description": "Loader test validating minimal example loads correctly", "commit": "4c705f1" }
+      ],
+      "build": [
+        { "description": "Add Cobra v1.10.2 dependency for CLI", "commit": "b3a9013" },
+        { "description": "Use shared GitHub Actions workflows", "commit": "9fbe6de" }
+      ]
+    },
     {
       "version": "v0.1.1",
       "date": "2026-03-01",
