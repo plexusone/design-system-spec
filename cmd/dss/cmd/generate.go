@@ -81,7 +81,7 @@ func runGenerate(cmd *cobra.Command, args []string) error {
 	}
 
 	if cssOutput != "" {
-		if err := os.WriteFile(cssOutput, []byte(css), 0644); err != nil {
+		if err := os.WriteFile(cssOutput, []byte(css), 0600); err != nil {
 			return fmt.Errorf("writing CSS: %w", err)
 		}
 		fmt.Fprintf(os.Stderr, "Generated CSS: %s\n", cssOutput)
@@ -99,7 +99,7 @@ func runGenerate(cmd *cobra.Command, args []string) error {
 	}
 
 	if llmOutput != "" {
-		if err := os.WriteFile(llmOutput, []byte(llmPrompt), 0644); err != nil {
+		if err := os.WriteFile(llmOutput, []byte(llmPrompt), 0600); err != nil {
 			return fmt.Errorf("writing LLM prompt: %w", err)
 		}
 		fmt.Fprintf(os.Stderr, "Generated LLM prompt: %s\n", llmOutput)
@@ -117,7 +117,7 @@ func runGenerate(cmd *cobra.Command, args []string) error {
 		}
 
 		if typesOutput != "" {
-			if err := os.WriteFile(typesOutput, []byte(types), 0644); err != nil {
+			if err := os.WriteFile(typesOutput, []byte(types), 0600); err != nil {
 				return fmt.Errorf("writing TypeScript types: %w", err)
 			}
 			fmt.Fprintf(os.Stderr, "Generated TypeScript types: %s\n", typesOutput)

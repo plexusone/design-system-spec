@@ -13,10 +13,10 @@ var coverageJsonOutput bool
 
 // CoverageReport holds spec completeness results
 type CoverageReport struct {
-	DesignSystem string            `json:"designSystem"`
-	Version      string            `json:"version"`
+	DesignSystem string             `json:"designSystem"`
+	Version      string             `json:"version"`
 	Categories   []CategoryCoverage `json:"categories"`
-	Summary      CoverageSummary   `json:"summary"`
+	Summary      CoverageSummary    `json:"summary"`
 }
 
 // CategoryCoverage represents coverage for a DSS category
@@ -25,7 +25,7 @@ type CategoryCoverage struct {
 	Description string         `json:"description"`
 	Required    bool           `json:"required"`
 	Items       []ItemCoverage `json:"items"`
-	Score       float64        `json:"score"` // 0-100
+	Score       float64        `json:"score"`  // 0-100
 	Status      string         `json:"status"` // complete, partial, missing
 }
 
