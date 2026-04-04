@@ -363,7 +363,7 @@ func keys(m map[string]bool) []string {
 }
 
 func printReport(report *ComplianceReport) {
-	fmt.Println("=== Compliance Report ===\n")
+	fmt.Print("=== Compliance Report ===\n\n")
 
 	if len(report.Passed) > 0 {
 		fmt.Println("✓ Passed:")
