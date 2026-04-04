@@ -5,205 +5,264 @@
 [![Go SAST][go-sast-svg]][go-sast-url]
 [![Go Report Card][goreport-svg]][goreport-url]
 [![Docs][docs-godoc-svg]][docs-godoc-url]
-[![Visualization][viz-svg]][viz-url]
 [![License][license-svg]][license-url]
 
-A declarative, machine-readable specification for defining complete design systems as code.
+A declarative, machine-readable specification for defining design systems as code, built for AI-native development.
 
-## Overview
+## Primary Goals
 
-Design System Spec (DSS) provides a canonical framework for expressing design systems (like Material Design, Carbon, Fluent) in a structured, version-controlled, LLM-optimized format. It enables:
+DSS exists to solve two problems in AI-assisted development:
 
-- 📋 **Declarative definitions** - Define tokens, components, patterns as data
-- 📁 **Multi-format support** - JSON/YAML for tokens, Markdown for documentation
-- 🤖 **LLM optimization** - Explicit intent, contexts, and constraints for AI code generation
-- ✅ **Validation** - Schema-based validation at multiple layers
-- 🔷 **Go-first approach** - Go structs as source of truth, generating JSON Schema
+### 1. AI Agents Build Compliant UI
+
+When an AI agent (Claude, Copilot, etc.) generates UI code, it should automatically follow the design system—using correct colors, spacing, component variants, and patterns.
+
+**How DSS helps:** The `dss generate --llm` command produces a structured context document containing:
+- Design principles and constraints
+- Token values with semantic meanings
+- Component specs with `allowedContexts` and `antiPatterns`
+- Accessibility requirements
+
+Include this in your AI context, and generated code follows the design system.
+
+### 2. AI Agents Review Code for Compliance
+
+After code is written (by humans or AI), an agent should be able to review it and report design system violations.
+
+**How DSS helps:** The `dss validate` command checks implementations against the spec:
+- Hardcoded colors → should use CSS variables
+- Invalid variant values → must match component spec
+- Missing accessibility attributes → required by spec
+- Anti-pattern violations → flagged in component spec
+
+JSON output (`--json`) enables programmatic integration with CI or agent workflows.
+
+## Assessment: How Well Does DSS Achieve These Goals?
+
+| Goal | Effectiveness | Notes |
+|------|---------------|-------|
+| **AI builds compliant UI** | **High** | LLM context with intent, examples, and anti-patterns significantly improves AI output quality |
+| **AI reviews for compliance** | **Medium-High** | Catches token violations and accessibility issues; cannot verify visual correctness or behavioral logic |
+
+### What DSS Catches
+
+- Hardcoded colors, spacing values
+- Invalid component variants
+- Missing `alt`, `aria-label` attributes
+- Anti-patterns (multiple primary buttons, nested cards)
+- Non-standard token values
+
+### What DSS Cannot Catch
+
+- Visual correctness (does it *look* right?)
+- Interaction behavior (does hover/focus work?)
+- Semantic appropriateness (is this the *right* component for the use case?)
+- Layout and responsive issues
+
+For visual validation, combine DSS with visual regression testing (Chromatic, Percy).
 
 ## Installation
 
 ```bash
+# CLI
+go install github.com/plexusone/design-system-spec/cmd/dss@latest
+
+# Go SDK
 go get github.com/plexusone/design-system-spec/sdk/go
 ```
 
 ## Quick Start
 
-```go
-package main
+### 1. Create a Spec
 
-import (
-    "encoding/json"
-    "fmt"
+```
+my-design-system/
+├── meta.json
+├── foundations/
+│   └── colors.json
+└── components/
+    └── button.json
+```
 
-    dss "github.com/plexusone/design-system-spec/sdk/go"
-)
-
-func main() {
-    // Define a minimal design system
-    ds := dss.DesignSystem{
-        Meta: dss.Meta{
-            Name:        "My Design System",
-            Version:     "1.0.0",
-            Description: "A custom design system",
-        },
-        Foundations: dss.Foundations{
-            Colors: []dss.ColorToken{
-                {
-                    ID:       "primary-500",
-                    Value:    "#0066CC",
-                    Semantic: "primary",
-                    Usage:    "Primary brand color for CTAs and key actions",
-                },
-            },
-        },
-        Components: []dss.Component{
-            {
-                ID:          "button",
-                Name:        "Button",
-                Description: "Interactive button for triggering actions",
-                Variants: []dss.Variant{
-                    {ID: "primary", Name: "Primary", IsDefault: true},
-                    {ID: "secondary", Name: "Secondary"},
-                },
-                LLM: &dss.LLMContext{
-                    Intent:            "Trigger user actions",
-                    AllowedContexts:   []string{"forms", "dialogs", "toolbars"},
-                    ForbiddenContexts: []string{"inline-text"},
-                    AntiPatterns:      []string{"Multiple primary buttons in one view"},
-                },
-            },
-        },
-    }
-
-    // Validate
-    if err := ds.Validate(); err != nil {
-        panic(err)
-    }
-
-    // Output as JSON
-    data, _ := json.MarshalIndent(ds, "", "  ")
-    fmt.Println(string(data))
+**meta.json:**
+```json
+{
+  "name": "My Design System",
+  "version": "1.0.0"
 }
 ```
+
+**components/button.json:**
+```json
+{
+  "id": "Button",
+  "name": "Button",
+  "variants": [
+    { "id": "default", "isDefault": true },
+    { "id": "secondary" },
+    { "id": "destructive" }
+  ],
+  "llm": {
+    "intent": "Trigger user actions",
+    "allowedContexts": ["forms", "dialogs", "toolbars"],
+    "antiPatterns": ["Multiple primary buttons per view"]
+  }
+}
+```
+
+### 2. Generate LLM Context
+
+```bash
+dss generate --llm ./DESIGN_CONTEXT.md
+```
+
+Add `DESIGN_CONTEXT.md` to your AI assistant's context (Claude Projects, Copilot instructions, etc.).
+
+### 3. Validate Implementations
+
+```bash
+# Human-readable
+dss validate ./src/components
+
+# JSON for CI/agents
+dss validate --json ./src/components
+```
+
+## CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `dss info` | Display design system metadata |
+| `dss generate` | Generate CSS, TypeScript types, LLM prompt |
+| `dss validate <dir>` | Validate component implementations |
+
+### Generate Options
+
+```bash
+dss generate --llm ./DESIGN_CONTEXT.md  # LLM context (primary use case)
+dss generate --css ./src/index.css      # Tailwind v4 @theme block
+dss generate --types ./src/lib/types.ts # TypeScript interfaces
+```
+
+### Validate Output
+
+```
+✓ Passed:
+  Button: validated against spec
+
+⚠ Warnings (2):
+  [no-hardcoded-colors] ./src/components/Card.tsx:45
+    Hardcoded color '#333' - use CSS variable from design system
+  [button-accessible-name] ./src/components/IconButton.tsx:12
+    Icon-only button should have aria-label
+
+Summary: 3 checks (1 passed, 2 warnings, 0 errors)
+```
+
+## LLM Context Structure
+
+The generated `DESIGN_CONTEXT.md` includes:
+
+```markdown
+# My Design System
+
+## Design Principles
+- Clarity Over Complexity: ...
+
+## Design Tokens
+| Token | Value | Usage |
+|-------|-------|-------|
+| `primary` | `hsl(222 47% 11%)` | Primary actions and CTAs |
+
+## Components
+
+### Button
+**Intent:** Trigger user actions
+**Use in:** forms, dialogs, toolbars
+**Don't use in:** inline-text, navigation
+
+**Anti-patterns:**
+- Multiple primary buttons per view
+- Using button for navigation (use Link)
+
+**Examples:**
+<Button>Save</Button>
+<Button variant="destructive">Delete</Button>
+```
+
+This structure is optimized for LLM comprehension and consistent code generation.
+
+## Figma Integration
+
+> **Note:** Figma integration is for teams transitioning from traditional design workflows. For AI-native development, DSS specs are authored directly—Figma is not required.
+
+For teams that still use Figma:
+
+- **Tokens Studio** can sync Figma variables ↔ JSON tokens
+- Future: `dss import figma` / `dss export figma` commands
+
+If your workflow is AI-first (specs authored in JSON, UI generated by AI), skip Figma entirely.
 
 ## Canonical Layers
 
-DSS defines **9 canonical layers** for complete design system specification:
+DSS defines 9 layers (most projects only need 3):
 
-| Layer | Purpose | Types |
-|-------|---------|-------|
-| **Meta** | System metadata | `Meta`, `Maintainer` |
-| **Principles** | Design philosophy | `Principle`, `PrincipleExample` |
-| **Foundations** | Design tokens | `ColorToken`, `Typography`, `SpacingScale`, `ElevationToken`, `MotionSystem`, `GridSystem`, `Breakpoint` |
-| **Components** | UI elements | `Component`, `Variant`, `State`, `Prop`, `Slot`, `Constraints` |
-| **Patterns** | Multi-component solutions | `Pattern`, `PatternComponent`, `PatternLayout` |
-| **Templates** | Page layouts | `Template`, `TemplateRegion`, `TemplateGrid` |
-| **Content** | Voice & tone | `Content`, `VoiceGuidelines`, `ToneGuideline`, `Terminology`, `MicrocopyGuideline` |
-| **Accessibility** | WCAG compliance | `Accessibility`, `ColorContrastRequirements`, `KeyboardRequirements` |
-| **Governance** | Policies | `Governance`, `VersioningPolicy`, `DeprecationPolicy` |
+| Layer | Required | Purpose |
+|-------|----------|---------|
+| **Meta** | Yes | Name, version |
+| **Foundations** | Yes | Tokens (colors, typography, spacing) |
+| **Components** | Yes | UI elements with LLM context |
+| Principles | No | Design philosophy |
+| Patterns | No | Multi-component solutions |
+| Templates | No | Page layouts |
+| Content | No | Voice & tone |
+| Accessibility | No | WCAG requirements |
+| Governance | No | Versioning policies |
 
-## LLM Optimization
-
-Each component, pattern, and template can include `LLMContext` for AI code generation:
+## Go SDK
 
 ```go
-LLM: &dss.LLMContext{
-    Intent:            "Primary action button for form submissions",
-    AllowedContexts:   []string{"form-submit", "modal-confirm", "primary-cta"},
-    ForbiddenContexts: []string{"destructive-action", "navigation"},
-    ExampleUsage:      []string{"<Button variant='primary'>Submit</Button>"},
-    AntiPatterns:      []string{"Don't use for destructive actions", "Avoid multiple primary buttons"},
-    SemanticMeaning:   "Signals the main action users should take",
-    RelatedElements:   []string{"button-secondary", "button-outline", "link"},
-    PriorityScore:     90,
-}
-```
+import dss "github.com/plexusone/design-system-spec/sdk/go"
 
-## Loading Specs
+ds, _ := dss.LoadDesignSystem("./my-design-system/")
+ds.Validate()
 
-Load from a single file or directory structure:
+// Generate for AI context
+prompt, _ := ds.GenerateLLMPrompt(dss.DefaultLLMPromptOptions())
 
-```go
-// Single file
-ds, err := dss.LoadDesignSystem("design-system.json")
-
-// Directory structure
-ds, err := dss.LoadDesignSystem("./my-system/")
-// Expected structure:
-//   my-system/
-//     meta.json
-//     foundations/
-//       colors.json
-//       typography.json
-//     components/
-//       button.json
-//       input.json
-```
-
-## JSON Schema
-
-Generate JSON Schema for validation:
-
-```go
-schema := dss.GenerateSchema()
-data, _ := json.MarshalIndent(schema, "", "  ")
-// Use with JSON Schema validators
-```
-
-Or use the pre-generated schemas in `schema/`:
-
-- `schema/design-system.schema.json` - Root schema
-- `schema/foundations/foundations.schema.json`
-- `schema/components/component.schema.json`
-
-## Building
-
-```bash
-# Build all
-make build
-
-# Run tests
-make test
-
-# Generate schemas
-make generate-schema
-
-# Verify schemas
-make verify-schema
+// Generate for build
+css, _ := ds.GenerateCSS(dss.DefaultCSSOptions())
+types, _ := ds.GenerateReactTypes(dss.DefaultReactOptions())
 ```
 
 ## Project Structure
 
 ```
 design-system-spec/
-├── sdk/go/                 # Go SDK (nested module)
-│   ├── meta.go             # Meta types
-│   ├── foundations.go      # Token types
-│   ├── components.go       # Component types
-│   ├── patterns.go         # Pattern types
-│   ├── templates.go        # Template types
-│   ├── content.go          # Content guideline types
-│   ├── accessibility.go    # Accessibility types
-│   ├── governance.go       # Governance types
-│   ├── llm.go              # LLM optimization types
-│   ├── designsystem.go     # Root DesignSystem type
-│   ├── loader.go           # File loaders
-│   └── jsonschema.go       # Schema generation
-├── schema/                 # Generated JSON Schemas
-├── tools/generate/         # Schema generator tool
-├── Makefile
-└── TASKS.md                # Implementation tracking
+├── cmd/dss/           # CLI tool
+│   └── cmd/
+│       ├── generate.go
+│       ├── validate.go
+│       └── info.go
+├── sdk/go/            # Go SDK
+│   ├── loader.go
+│   ├── gen_css.go
+│   ├── gen_react.go
+│   └── gen_llm.go
+├── schema/            # JSON Schemas
+└── docs/              # MkDocs documentation
 ```
 
 ## Roadmap
 
-See [TASKS.md](TASKS.md) for detailed implementation status.
-
-- [x] Phase 1: Core SDK types
-- [x] Phase 2: Schema generation
-- [ ] Phase 3: CLI tool (`dss validate`, `dss lint`, `dss generate`)
-- [ ] Phase 4: Agent team for validation
-- [ ] Phase 5: Examples & documentation
+- [x] Core SDK (9 canonical layers)
+- [x] CLI (`generate`, `validate`, `info`)
+- [x] Code generators (CSS, TypeScript, LLM)
+- [x] Documentation (MkDocs)
+- [ ] `dss init` scaffolding
+- [ ] `dss lint` for spec completeness
+- [ ] Advanced validation (color contrast, cross-references)
+- [ ] Figma tokens import/export (for transitioning teams)
 
 ## License
 
@@ -219,9 +278,5 @@ MIT
  [goreport-url]: https://goreportcard.com/report/github.com/plexusone/design-system-spec
  [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/plexusone/design-system-spec
  [docs-godoc-url]: https://pkg.go.dev/github.com/plexusone/design-system-spec
- [viz-svg]: https://img.shields.io/badge/visualizaton-Go-blue.svg
- [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=plexusone%2Fdesign-system-spec
- [loc-svg]: https://tokei.rs/b1/github/plexusone/design-system-spec
- [repo-url]: https://github.com/plexusone/design-system-spec
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
  [license-url]: https://github.com/plexusone/design-system-spec/blob/master/LICENSE

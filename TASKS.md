@@ -1,95 +1,148 @@
 # Design System Spec - Implementation Tasks
 
-This document tracks the implementation phases for the design system specification project.
+## Project Goals
+
+DSS exists to solve two problems in AI-native development:
+
+1. **AI agents build compliant UI** - Generated code follows the design system
+2. **AI agents review code for compliance** - Automated validation catches violations
 
 ## Phase 1: Core SDK ✅
 
 **Status**: Complete
 
-Create the Go SDK with types for all 9 canonical layers.
+Go SDK with types for all 9 canonical layers.
 
-- [x] Create `sdk/go/` nested module with `go.mod`
-- [x] Implement `meta.go` - System metadata types
-- [x] Implement `principles.go` - Design philosophy types
-- [x] Implement `foundations.go` - Design token types (colors, typography, spacing, etc.)
-- [x] Implement `components.go` - Component types with variants, states, props
-- [x] Implement `patterns.go` - Multi-component UX pattern types
-- [x] Implement `templates.go` - Page-level layout types
-- [x] Implement `content.go` - Voice, tone, microcopy types
-- [x] Implement `accessibility.go` - WCAG, ARIA, keyboard support types
-- [x] Implement `governance.go` - Versioning, contribution, deprecation types
-- [x] Implement `llm.go` - LLM optimization context types
-- [x] Implement `designsystem.go` - Root DesignSystem type
-- [x] Implement `loader.go` - JSON/YAML file loaders
-- [x] Implement `jsonschema.go` - Schema generation functions
+- [x] `sdk/go/` nested module
+- [x] Meta, Principles, Foundations types
+- [x] Components with LLM context
+- [x] Patterns, Templates, Content types
+- [x] Accessibility, Governance types
+- [x] JSON/YAML loader
+- [x] JSON Schema generation
 
-## Phase 2: Schema Generation ✅
+## Phase 2: CLI Tool ✅
 
 **Status**: Complete
 
-Set up JSON Schema generation from Go types.
+The `dss` CLI using Cobra.
 
-- [x] Create `tools/generate/main.go` schema generator
-- [x] Create `Makefile` with build targets
-- [x] Generate schemas to `schema/` directory
-- [x] Verify build with `go build ./...`
+- [x] `dss info` - Display design system metadata
+- [x] `dss generate` - Generate CSS, TypeScript, LLM prompt
+- [x] `dss validate` - Validate implementations against spec
 
-## Phase 3: CLI Tool
+### Code Generators
 
-**Status**: Not Started
+- [x] `gen_css.go` - Tailwind v4, CSS vars, SCSS
+- [x] `gen_react.go` - TypeScript interfaces
+- [x] `gen_llm.go` - LLM-optimized context (Markdown)
 
-Create the `dss` command-line tool using Cobra.
+## Phase 3: Documentation ✅
 
-- [ ] Create `cmd/dss/main.go` entry point
-- [ ] Create `cmd/dss/cmd/root.go` with root command
-- [ ] Implement `cmd/dss/cmd/validate.go` - Validate spec files against schema
-- [ ] Implement `cmd/dss/cmd/lint.go` - Lint for completeness and best practices
-- [ ] Implement `cmd/dss/cmd/generate.go` - Generate outputs (tokens, docs)
-- [ ] Implement `cmd/dss/cmd/init.go` - Initialize new design system spec
-- [ ] Add tests for CLI commands
+**Status**: Complete
 
-## Phase 4: Agent Team
+- [x] MkDocs site (`docs/`)
+- [x] CLI reference
+- [x] Specification reference
+- [x] Getting started guide
+- [x] README with goals and assessment
 
-**Status**: Not Started
-
-Create agent specifications for validation.
-
-- [ ] Create `specs/agents/foundations-validator.md` - Token completeness validator
-- [ ] Create `specs/agents/components-validator.md` - Component structure validator
-- [ ] Create `specs/agents/accessibility-validator.md` - WCAG compliance validator
-- [ ] Create `specs/agents/completeness-validator.md` - Overall completeness validator
-- [ ] Create `specs/teams/design-system-team.json` - Team definition with DAG workflow
-
-## Phase 5: Examples & Documentation
+## Phase 4: Enhanced LLM Context
 
 **Status**: Not Started
 
-Create example design systems and documentation.
+Improve AI code generation quality.
 
-- [ ] Create `examples/minimal-system/` with minimal example:
+- [ ] XML output format for Claude (better structured parsing)
+- [ ] Component relationship graph (what goes with what)
+- [ ] Example compositions (not just single components)
+- [ ] Negative examples (what bad code looks like)
+- [ ] Token semantic groupings (surface colors vs. feedback colors)
 
-  - [ ] `meta.json`
-  - [ ] `foundations/colors.json`
-  - [ ] `foundations/typography.json`
-  - [ ] `components/button.json`
+## Phase 5: Enhanced Validation
 
-- [ ] Set up MkDocs in `docs/`:
+**Status**: Not Started
 
-  - [ ] `mkdocs.yml` configuration
-  - [ ] `docs/index.md` - Overview
-  - [ ] `docs/getting-started.md` - Quick start guide
-  - [ ] `docs/specification/` - Spec reference
-  - [ ] `docs/examples/` - Example walkthroughs
+Improve AI code review capability.
 
-- [ ] Create `README.md` with project overview
+- [ ] Color contrast validation (WCAG AA/AAA ratios)
+- [ ] Spacing consistency checks
+- [ ] Component composition validation (valid parent-child)
+- [ ] Custom validation rules (user-defined patterns)
+- [ ] Severity levels (error, warning, info)
+- [ ] Auto-fix suggestions in output
 
-## Future Enhancements
+## Phase 6: CLI Enhancements
 
-Ideas for future development:
+**Status**: Not Started
 
-- [ ] Token export generators (CSS variables, SCSS, Tailwind, etc.)
-- [ ] Figma plugin integration
-- [ ] Design token diffing between versions
-- [ ] Migration helpers for breaking changes
-- [ ] Visual documentation site generator
-- [ ] IDE extensions for schema validation
+- [ ] `dss init` - Scaffold new design system spec
+- [ ] `dss lint` - Lint spec for completeness
+- [ ] `dss diff` - Compare spec versions (breaking changes)
+
+## Phase 7: Integrations
+
+**Status**: Not Started
+
+### CI/CD (Priority)
+
+- [ ] GitHub Action for `dss validate`
+- [ ] JSON Schema validation in editors
+- [ ] Pre-commit hook configuration
+
+### Figma (For Transitioning Teams)
+
+> Note: Figma integration is for teams migrating from traditional workflows. AI-native teams author specs directly.
+
+- [ ] `dss import figma` - Import from Tokens Studio
+- [ ] `dss export figma` - Export to Figma format
+- [ ] Document migration workflow
+
+## Goal Assessment
+
+### Goal 1: AI Builds Compliant UI
+
+| Aspect | Status | Effectiveness |
+|--------|--------|---------------|
+| Token context | ✅ Done | High - values + semantic meanings |
+| Component intent | ✅ Done | High - `intent`, `allowedContexts` |
+| Anti-patterns | ✅ Done | High - explicit "don't do this" |
+| Examples | ✅ Done | Medium - single component examples |
+| Compositions | ❌ Todo | Would improve multi-component generation |
+| Negative examples | ❌ Todo | Would reduce common mistakes |
+
+**Current effectiveness: High** - Significantly improves AI output quality
+
+### Goal 2: AI Reviews for Compliance
+
+| Check Type | Status | Effectiveness |
+|------------|--------|---------------|
+| Hardcoded colors | ✅ Done | High |
+| Invalid variants | ✅ Done | High |
+| Accessibility attrs | ✅ Done | High |
+| Anti-patterns | ✅ Done | Medium - pattern matching |
+| Color contrast | ❌ Todo | Would catch WCAG issues |
+| Composition rules | ❌ Todo | Would catch structural issues |
+| Visual correctness | N/A | Out of scope (use Chromatic) |
+
+**Current effectiveness: Medium-High** - Catches token/accessibility issues, not visual
+
+## Known Limitations
+
+DSS intentionally does not:
+
+1. **Implement components** - DSS is metadata, not code
+2. **Validate visuals** - Use Chromatic/Percy for visual regression
+3. **Replace Figma for designers** - Designers use design tools, not JSON
+4. **Run at runtime** - DSS is build-time/CI only
+
+These are handled by complementary tools.
+
+## Future Ideas (Not Committed)
+
+- Vue/Svelte type generators
+- Dark mode CSS generation
+- Static documentation site generator
+- VS Code extension (schema validation, autocomplete)
+- AI-powered spec generation from existing CSS
+- Storybook story generation from spec
