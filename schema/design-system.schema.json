@@ -511,6 +511,10 @@
     },
     "DesignSystem": {
       "properties": {
+        "$schema": {
+          "type": "string",
+          "description": "JSON Schema reference URL"
+        },
         "meta": {
           "$ref": "#/$defs/Meta"
         },
