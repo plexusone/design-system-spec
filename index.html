@@ -625,6 +625,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="specification/theming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Theming
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -744,6 +767,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="case-studies/component-theming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Component Theming
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -795,6 +841,29 @@
             Releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    v0.3.0
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -981,6 +1050,8 @@
 <li><strong>Multi-format support</strong> - JSON/YAML for tokens, Markdown for documentation</li>
 <li><strong>LLM optimization</strong> - Explicit intent, contexts, and constraints for AI code generation</li>
 <li><strong>Code generation</strong> - Generate CSS, TypeScript types, and LLM prompts from spec</li>
+<li><strong>Theming contracts</strong> - Formal theming API between component libraries and applications</li>
+<li><strong>Diagram generation</strong> - Mermaid and D2 diagrams for architecture visualization</li>
 <li><strong>Compliance validation</strong> - Validate implementations against the spec</li>
 <li><strong>Go-first approach</strong> - Go structs as source of truth, generating JSON Schema</li>
 </ul>
@@ -998,11 +1069,17 @@
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Generate CSS, TypeScript types, and LLM context</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dss<span class="w"> </span>generate<span class="w"> </span>--css<span class="w"> </span>./src/index.css<span class="w"> </span>--types<span class="w"> </span>./src/lib/types.ts<span class="w"> </span>--llm<span class="w"> </span>./DESIGN_CONTEXT.md
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Validate component implementations</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dss<span class="w"> </span>validate<span class="w"> </span>./src/components
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Generate theme bindings for external components</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dss<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>--output<span class="w"> </span>./theme.css
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Validate theming contracts</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>dss<span class="w"> </span>contract<span class="w"> </span>validate
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Validate component implementations</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>dss<span class="w"> </span>validate<span class="w"> </span>./src/components
 </code></pre></div>
 <h2 id="canonical-layers">Canonical Layers<a class="headerlink" href="#canonical-layers" title="Permanent link">&para;</a></h2>
-<p>DSS defines <strong>9 canonical layers</strong> for complete design system specification:</p>
+<p>DSS defines <strong>10 canonical layers</strong> for complete design system specification:</p>
 <table>
 <thead>
 <tr>
@@ -1046,6 +1123,10 @@
 <tr>
 <td><strong>Governance</strong></td>
 <td>Versioning and deprecation policies</td>
+</tr>
+<tr>
+<td><strong>Theming</strong></td>
+<td>Token mappings to external components</td>
 </tr>
 </tbody>
 </table>

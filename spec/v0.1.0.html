@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design System Specification</title>
+  
+  <style>
+    :root {
+      --nav-width: 280px;
+      --content-max-width: 900px;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-nav: #1e293b;
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-nav: #e2e8f0;
+      --text-nav-active: #ffffff;
+      --accent: #3b82f6;
+      --border: #e2e8f0;
+      --code-bg: #f1f5f9;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --bg-nav: #0f172a;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border: #334155;
+        --code-bg: #1e293b;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 20px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--nav-width);
+      height: 100vh;
+      background: var(--bg-nav);
+      color: var(--text-nav);
+      overflow-y: auto;
+      padding: 20px 0;
+      z-index: 100;
+    }
+
+    .nav-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-nav-active);
+    }
+
+    .version-badge {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 8px;
+      background: var(--accent);
+      color: white;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+
+    .nav-toc {
+      list-style: none;
+    }
+
+    .nav-toc a {
+      display: block;
+      padding: 8px 20px;
+      color: var(--text-nav);
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+
+    .nav-toc a:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-nav-active);
+    }
+
+    .nav-toc .level-1 { font-weight: 600; padding-left: 20px; }
+    .nav-toc .level-2 { padding-left: 20px; font-weight: 500; margin-top: 12px; }
+    .nav-toc .level-3 { padding-left: 32px; font-size: 13px; }
+    .nav-toc .level-4 { padding-left: 44px; font-size: 13px; color: var(--text-secondary); }
+
+    /* Content */
+    .content {
+      margin-left: var(--nav-width);
+      padding: 40px;
+      max-width: calc(var(--content-max-width) + var(--nav-width) + 80px);
+    }
+
+    .content > * {
+      max-width: var(--content-max-width);
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 2em;
+      margin-bottom: 0.75em;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    h1:first-child { margin-top: 0; }
+    h1 { font-size: 2em; border-bottom: 2px solid var(--border); padding-bottom: 0.3em; }
+    h2 { font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
+    h3 { font-size: 1.25em; }
+    h4 { font-size: 1.1em; color: var(--text-secondary); }
+
+    p { margin: 1em 0; }
+
+    a { color: var(--accent); }
+    a:hover { text-decoration: underline; }
+
+    code {
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+      font-size: 0.875em;
+      background: var(--code-bg);
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 1.5em 0;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5em 0;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background: var(--bg-secondary);
+    }
+
+    /* Lists */
+    ul, ol {
+      margin: 1em 0;
+      padding-left: 2em;
+    }
+
+    li { margin: 0.5em 0; }
+
+    /* Blockquotes */
+    blockquote {
+      border-left: 4px solid var(--accent);
+      margin: 1.5em 0;
+      padding: 0.5em 0 0.5em 1em;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .nav {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .content {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-header">
+      <span class="nav-title">DSS</span><span class="version-badge">0.1.0</span>
+    </div>
+    <ul class="nav-toc">
+      <li><a href="#design-system-specification" class="level-1">Design System Specification</a></li>
+<li><a href="#version-010" class="level-4">Version 0.1.0</a></li>
+<li><a href="#introduction" class="level-2">Introduction</a></li>
+<li><a href="#goals" class="level-3">Goals</a></li>
+<li><a href="#definitions" class="level-2">Definitions</a></li>
+<li><a href="#dss-document" class="level-3">DSS Document</a></li>
+<li><a href="#path-templating" class="level-3">Path Templating</a></li>
+<li><a href="#media-types" class="level-3">Media Types</a></li>
+<li><a href="#http-status-codes" class="level-3">HTTP Status Codes</a></li>
+<li><a href="#specification" class="level-2">Specification</a></li>
+<li><a href="#versions" class="level-3">Versions</a></li>
+<li><a href="#format" class="level-3">Format</a></li>
+<li><a href="#data-types" class="level-3">Data Types</a></li>
+<li><a href="#rich-text-formatting" class="level-3">Rich Text Formatting</a></li>
+<li><a href="#relative-references" class="level-3">Relative References</a></li>
+<li><a href="#schema" class="level-2">Schema</a></li>
+<li><a href="#design-system-object" class="level-3">Design System Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#design-system-object-example" class="level-4">Design System Object Example</a></li>
+<li><a href="#meta-object" class="level-3">Meta Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#meta-object-example" class="level-4">Meta Object Example</a></li>
+<li><a href="#maintainer-object" class="level-3">Maintainer Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#foundations-object" class="level-3">Foundations Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#color-token-object" class="level-3">Color Token Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#color-token-object-example" class="level-4">Color Token Object Example</a></li>
+<li><a href="#typography-object" class="level-3">Typography Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#font-family-object" class="level-3">Font Family Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#spacing-scale-object" class="level-3">Spacing Scale Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#spacing-token-object" class="level-3">Spacing Token Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#component-object" class="level-3">Component Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#component-object-example" class="level-4">Component Object Example</a></li>
+<li><a href="#prop-object" class="level-3">Prop Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#prop-constraints-object" class="level-3">Prop Constraints Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#component-event-object" class="level-3">Component Event Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#event-detail-field-object" class="level-3">Event Detail Field Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#slot-object" class="level-3">Slot Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#variant-object" class="level-3">Variant Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#state-object" class="level-3">State Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#token-override-object" class="level-3">Token Override Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#constraints-object" class="level-3">Constraints Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#llm-context-object" class="level-3">LLM Context Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#llm-context-object-example" class="level-4">LLM Context Object Example</a></li>
+<li><a href="#pattern-object" class="level-3">Pattern Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#pattern-component-object" class="level-3">Pattern Component Object</a></li>
+<li><a href="#fixed-fields" class="level-4">Fixed Fields</a></li>
+<li><a href="#appendix-a-revision-history" class="level-2">Appendix A: Revision History</a></li>
+<li><a href="#appendix-b-json-schema" class="level-2">Appendix B: JSON Schema</a></li>
+<li><a href="#appendix-c-file-extension" class="level-2">Appendix C: File Extension</a></li>
+
+    </ul>
+  </nav>
+  <main class="content">
+    <h1 id="design-system-specification">Design System Specification</h1>
+<h4 id="version-010">Version 0.1.0</h4>
+<p>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;, &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;NOT RECOMMENDED&quot;, &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be interpreted as described in <a href="https://tools.ietf.org/html/bcp14">BCP 14</a> <a href="https://tools.ietf.org/html/rfc2119">RFC2119</a> <a href="https://tools.ietf.org/html/rfc8174">RFC8174</a> when, and only when, they appear in all capitals, as shown here.</p>
+<p>This document is licensed under <a href="https://www.apache.org/licenses/LICENSE-2.0.html">The Apache License, Version 2.0</a>.</p>
+<h2 id="introduction">Introduction</h2>
+<p>The Design System Specification (DSS) defines a standard, machine-readable format for describing design systems. A DSS document describes:</p>
+<ul>
+<li><strong>Foundations</strong>: Design tokens including colors, typography, spacing, and other primitive values</li>
+<li><strong>Components</strong>: Reusable UI elements with their props, events, slots, and constraints</li>
+<li><strong>Patterns</strong>: Multi-component solutions for common UX scenarios</li>
+<li><strong>Accessibility</strong>: System-wide and component-level a11y requirements</li>
+<li><strong>LLM Context</strong>: Metadata optimized for AI-assisted code generation</li>
+</ul>
+<h3 id="goals">Goals</h3>
+<ol>
+<li><strong>AI-Native Development</strong>: Enable AI agents to generate design-system-compliant code</li>
+<li><strong>Code Generation</strong>: Support generating CSS, TypeScript types, and documentation</li>
+<li><strong>Validation</strong>: Enable automated checking of implementations against the spec</li>
+<li><strong>Interoperability</strong>: Provide a common format for design system tooling</li>
+</ol>
+<h2 id="definitions">Definitions</h2>
+<h3 id="dss-document">DSS Document</h3>
+<p>A document (or set of documents) that defines or describes a design system. A DSS document MUST be a valid JSON or YAML document.</p>
+<h3 id="path-templating">Path Templating</h3>
+<p>Not applicable to this specification.</p>
+<h3 id="media-types">Media Types</h3>
+<p>The DSS document SHOULD be served with a media type of <code>application/json</code> or <code>application/yaml</code>.</p>
+<h3 id="http-status-codes">HTTP Status Codes</h3>
+<p>Not applicable to this specification.</p>
+<h2 id="specification">Specification</h2>
+<h3 id="versions">Versions</h3>
+<p>The DSS Specification is versioned using a <code>major.minor.patch</code> versioning scheme. The <code>major.minor</code> portion of the version string (e.g., <code>0.1</code>) SHALL designate the DSS feature set.</p>
+<h3 id="format">Format</h3>
+<p>A DSS document is itself a JSON object, which MAY be represented either in JSON or YAML format.</p>
+<p>All field names in the specification are <strong>case-sensitive</strong>.</p>
+<p>The schema exposes two types of fields: Fixed fields and Patterned fields.</p>
+<p><strong>Fixed fields</strong> have a declared name. <strong>Patterned fields</strong> declare a regex pattern for the field name.</p>
+<h3 id="data-types">Data Types</h3>
+<p>Primitive data types in the DSS are based on the types supported by JSON:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>string</code></td>
+<td></td>
+<td>A sequence of characters</td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td></td>
+<td>A numeric value (integer or decimal)</td>
+</tr>
+<tr>
+<td><code>integer</code></td>
+<td></td>
+<td>A whole number</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td></td>
+<td><code>true</code> or <code>false</code></td>
+</tr>
+<tr>
+<td><code>array</code></td>
+<td></td>
+<td>An ordered list of values</td>
+</tr>
+<tr>
+<td><code>object</code></td>
+<td></td>
+<td>A key-value map</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rich-text-formatting">Rich Text Formatting</h3>
+<p>Throughout the specification <code>description</code> fields are noted as supporting CommonMark markdown formatting.</p>
+<h3 id="relative-references">Relative References</h3>
+<p>Not applicable to this specification. All URLs MUST be absolute.</p>
+<h2 id="schema">Schema</h2>
+<h3 id="design-system-object">Design System Object</h3>
+<p>This is the root object of the DSS document.</p>
+<h4 id="fixed-fields">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meta</td>
+<td><a href="#meta-object">Meta Object</a></td>
+<td><strong>REQUIRED</strong>. Provides metadata about the design system.</td>
+</tr>
+<tr>
+<td>principles</td>
+<td>[<a href="#principle-object">Principle Object</a>]</td>
+<td>Design philosophy and brand values.</td>
+</tr>
+<tr>
+<td>foundations</td>
+<td><a href="#foundations-object">Foundations Object</a></td>
+<td><strong>REQUIRED</strong>. Design tokens and primitive values.</td>
+</tr>
+<tr>
+<td>components</td>
+<td>[<a href="#component-object">Component Object</a>]</td>
+<td>Reusable UI elements.</td>
+</tr>
+<tr>
+<td>patterns</td>
+<td>[<a href="#pattern-object">Pattern Object</a>]</td>
+<td>Multi-component UX solutions.</td>
+</tr>
+<tr>
+<td>templates</td>
+<td>[<a href="#template-object">Template Object</a>]</td>
+<td>Page-level layouts.</td>
+</tr>
+<tr>
+<td>content</td>
+<td><a href="#content-object">Content Object</a></td>
+<td>Voice, tone, and content guidelines.</td>
+</tr>
+<tr>
+<td>accessibility</td>
+<td><a href="#accessibility-object">Accessibility Object</a></td>
+<td>System-wide accessibility requirements.</td>
+</tr>
+<tr>
+<td>governance</td>
+<td><a href="#governance-object">Governance Object</a></td>
+<td>Versioning and contribution policies.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-system-object-example">Design System Object Example</h4>
+<pre><code class="language-json">{
+  &quot;meta&quot;: {
+    &quot;name&quot;: &quot;Acme Design System&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;description&quot;: &quot;The official design system for Acme products&quot;
+  },
+  &quot;foundations&quot;: {
+    &quot;colors&quot;: [
+      { &quot;id&quot;: &quot;primary&quot;, &quot;value&quot;: &quot;#3b82f6&quot;, &quot;usage&quot;: &quot;Primary actions&quot; }
+    ]
+  },
+  &quot;components&quot;: [
+    {
+      &quot;id&quot;: &quot;button&quot;,
+      &quot;name&quot;: &quot;Button&quot;,
+      &quot;description&quot;: &quot;Interactive button component&quot;
+    }
+  ]
+}
+</code></pre>
+<h3 id="meta-object">Meta Object</h3>
+<p>Provides metadata about the design system.</p>
+<h4 id="fixed-fields-1">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. The design system name.</td>
+</tr>
+<tr>
+<td>version</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. The version following semantic versioning.</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>string</code></td>
+<td>A brief overview of the design system. CommonMark syntax MAY be used.</td>
+</tr>
+<tr>
+<td>maturityLevel</td>
+<td><code>integer</code></td>
+<td>System maturity level from 1 (experimental) to 5 (stable).</td>
+</tr>
+<tr>
+<td>repository</td>
+<td><code>string</code></td>
+<td>URL to the source repository. MUST be a valid URI.</td>
+</tr>
+<tr>
+<td>documentation</td>
+<td><code>string</code></td>
+<td>URL to the documentation site. MUST be a valid URI.</td>
+</tr>
+<tr>
+<td>maintainers</td>
+<td>[<a href="#maintainer-object">Maintainer Object</a>]</td>
+<td>People or teams responsible for the system.</td>
+</tr>
+<tr>
+<td>license</td>
+<td><code>string</code></td>
+<td>The license identifier (e.g., &quot;MIT&quot;, &quot;Apache-2.0&quot;).</td>
+</tr>
+</tbody>
+</table>
+<h4 id="meta-object-example">Meta Object Example</h4>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;Acme Design System&quot;,
+  &quot;version&quot;: &quot;2.1.0&quot;,
+  &quot;description&quot;: &quot;A modern design system for building Acme applications&quot;,
+  &quot;maturityLevel&quot;: 4,
+  &quot;repository&quot;: &quot;https://github.com/acme/design-system&quot;,
+  &quot;license&quot;: &quot;MIT&quot;
+}
+</code></pre>
+<h3 id="maintainer-object">Maintainer Object</h3>
+<p>Represents a person or team responsible for the design system.</p>
+<h4 id="fixed-fields-2">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Name of the maintainer or team.</td>
+</tr>
+<tr>
+<td>email</td>
+<td><code>string</code></td>
+<td>Email contact. MUST be a valid email format.</td>
+</tr>
+<tr>
+<td>url</td>
+<td><code>string</code></td>
+<td>URL to profile or team page. MUST be a valid URI.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="foundations-object">Foundations Object</h3>
+<p>Contains design tokens and primitive values.</p>
+<h4 id="fixed-fields-3">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>colors</td>
+<td>[<a href="#color-token-object">Color Token Object</a>]</td>
+<td>Color palette and semantic color tokens.</td>
+</tr>
+<tr>
+<td>typography</td>
+<td><a href="#typography-object">Typography Object</a></td>
+<td>Font families, sizes, weights, and type scale.</td>
+</tr>
+<tr>
+<td>spacing</td>
+<td><a href="#spacing-scale-object">Spacing Scale Object</a></td>
+<td>Spacing scale for margins, padding, and gaps.</td>
+</tr>
+<tr>
+<td>elevation</td>
+<td>[<a href="#elevation-token-object">Elevation Token Object</a>]</td>
+<td>Shadow/depth tokens for layering.</td>
+</tr>
+<tr>
+<td>motion</td>
+<td><a href="#motion-system-object">Motion System Object</a></td>
+<td>Animation and transition tokens.</td>
+</tr>
+<tr>
+<td>grid</td>
+<td><a href="#grid-system-object">Grid System Object</a></td>
+<td>Layout grid system.</td>
+</tr>
+<tr>
+<td>breakpoints</td>
+<td>[<a href="#breakpoint-object">Breakpoint Object</a>]</td>
+<td>Responsive breakpoints.</td>
+</tr>
+<tr>
+<td>borderRadius</td>
+<td>[<a href="#border-radius-token-object">Border Radius Token Object</a>]</td>
+<td>Corner radius tokens.</td>
+</tr>
+<tr>
+<td>borderWidth</td>
+<td>[<a href="#border-width-token-object">Border Width Token Object</a>]</td>
+<td>Border width tokens.</td>
+</tr>
+<tr>
+<td>opacity</td>
+<td>[<a href="#opacity-token-object">Opacity Token Object</a>]</td>
+<td>Opacity scale tokens.</td>
+</tr>
+<tr>
+<td>zIndex</td>
+<td>[<a href="#z-index-token-object">Z-Index Token Object</a>]</td>
+<td>Z-index layer tokens.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="color-token-object">Color Token Object</h3>
+<p>Represents a single color in the design system.</p>
+<h4 id="fixed-fields-4">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Unique identifier (e.g., &quot;primary-500&quot;).</td>
+</tr>
+<tr>
+<td>value</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Color value in hex, rgb, rgba, or hsl format.</td>
+</tr>
+<tr>
+<td>semantic</td>
+<td><code>string</code></td>
+<td>Color's purpose (primary, secondary, danger, etc.).</td>
+</tr>
+<tr>
+<td>usage</td>
+<td><code>string</code></td>
+<td>When and how to use this color. CommonMark syntax MAY be used.</td>
+</tr>
+<tr>
+<td>contrast</td>
+<td><a href="#contrast-object">Contrast Object</a></td>
+<td>Accessibility contrast information.</td>
+</tr>
+<tr>
+<td>lightModeValue</td>
+<td><code>string</code></td>
+<td>Alternate value for light mode.</td>
+</tr>
+<tr>
+<td>darkModeValue</td>
+<td><code>string</code></td>
+<td>Alternate value for dark mode.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="color-token-object-example">Color Token Object Example</h4>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;primary&quot;,
+  &quot;value&quot;: &quot;#3b82f6&quot;,
+  &quot;darkModeValue&quot;: &quot;#60a5fa&quot;,
+  &quot;semantic&quot;: &quot;primary&quot;,
+  &quot;usage&quot;: &quot;Primary actions and interactive elements&quot;
+}
+</code></pre>
+<h3 id="typography-object">Typography Object</h3>
+<p>Defines the type system.</p>
+<h4 id="fixed-fields-5">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fontFamilies</td>
+<td>[<a href="#font-family-object">Font Family Object</a>]</td>
+<td><strong>REQUIRED</strong>. Available font stacks.</td>
+</tr>
+<tr>
+<td>fontSizes</td>
+<td>[<a href="#font-size-object">Font Size Object</a>]</td>
+<td><strong>REQUIRED</strong>. Font size scale.</td>
+</tr>
+<tr>
+<td>fontWeights</td>
+<td>[<a href="#font-weight-object">Font Weight Object</a>]</td>
+<td><strong>REQUIRED</strong>. Available font weights.</td>
+</tr>
+<tr>
+<td>lineHeights</td>
+<td>[<a href="#line-height-object">Line Height Object</a>]</td>
+<td><strong>REQUIRED</strong>. Line height scale.</td>
+</tr>
+<tr>
+<td>letterSpacings</td>
+<td>[<a href="#letter-spacing-object">Letter Spacing Object</a>]</td>
+<td>Letter spacing scale.</td>
+</tr>
+<tr>
+<td>typeScale</td>
+<td>[<a href="#type-style-object">Type Style Object</a>]</td>
+<td>Complete type styles.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="font-family-object">Font Family Object</h3>
+<p>Represents a font stack.</p>
+<h4 id="fixed-fields-6">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Unique identifier (e.g., &quot;sans&quot;, &quot;serif&quot;, &quot;mono&quot;).</td>
+</tr>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Display name for the font family.</td>
+</tr>
+<tr>
+<td>stack</td>
+<td><code>string</code></td>
+<td>CSS font-family fallback stack.</td>
+</tr>
+<tr>
+<td>value</td>
+<td><code>string</code></td>
+<td><strong>Deprecated</strong>. Use <code>stack</code> instead.</td>
+</tr>
+<tr>
+<td>weights</td>
+<td><code>[integer]</code></td>
+<td>Available font weights (e.g., [400, 500, 700]).</td>
+</tr>
+<tr>
+<td>source</td>
+<td><code>string</code></td>
+<td>URL to load the font (e.g., Google Fonts URL).</td>
+</tr>
+<tr>
+<td>usage</td>
+<td><code>string</code></td>
+<td>When to use this font family.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="spacing-scale-object">Spacing Scale Object</h3>
+<p>Defines the spacing system.</p>
+<h4 id="fixed-fields-7">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseUnit</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Fundamental spacing unit (e.g., &quot;4px&quot;).</td>
+</tr>
+<tr>
+<td>scale</td>
+<td>[<a href="#spacing-token-object">Spacing Token Object</a>]</td>
+<td><strong>REQUIRED</strong>. Spacing tokens.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="spacing-token-object">Spacing Token Object</h3>
+<p>Represents a single spacing value.</p>
+<h4 id="fixed-fields-8">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Unique identifier (e.g., &quot;xs&quot;, &quot;sm&quot;, &quot;md&quot;).</td>
+</tr>
+<tr>
+<td>value</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Spacing value with unit.</td>
+</tr>
+<tr>
+<td>pixelValue</td>
+<td><code>integer</code></td>
+<td>Equivalent pixel value for reference.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="component-object">Component Object</h3>
+<p>Represents a reusable UI element.</p>
+<h4 id="fixed-fields-9">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Unique identifier (e.g., &quot;button&quot;, &quot;modal&quot;).</td>
+</tr>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Display name for the component.</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>string</code></td>
+<td>Overview of the component's purpose. CommonMark syntax MAY be used.</td>
+</tr>
+<tr>
+<td>category</td>
+<td><code>string</code></td>
+<td>Groups related components (e.g., &quot;inputs&quot;, &quot;navigation&quot;).</td>
+</tr>
+<tr>
+<td>variants</td>
+<td>[<a href="#variant-object">Variant Object</a>]</td>
+<td>Different visual or behavioral versions.</td>
+</tr>
+<tr>
+<td>states</td>
+<td>[<a href="#state-object">State Object</a>]</td>
+<td>Interactive states (hover, focus, disabled).</td>
+</tr>
+<tr>
+<td>props</td>
+<td>[<a href="#prop-object">Prop Object</a>]</td>
+<td>Configurable properties/attributes.</td>
+</tr>
+<tr>
+<td>events</td>
+<td>[<a href="#component-event-object">Component Event Object</a>]</td>
+<td>CustomEvents emitted by the component.</td>
+</tr>
+<tr>
+<td>slots</td>
+<td>[<a href="#slot-object">Slot Object</a>]</td>
+<td>Content insertion points for composition.</td>
+</tr>
+<tr>
+<td>uses</td>
+<td><code>[string]</code></td>
+<td>Component IDs that this component depends on.</td>
+</tr>
+<tr>
+<td>tokensUsed</td>
+<td><code>[string]</code></td>
+<td>Foundation token IDs used by this component.</td>
+</tr>
+<tr>
+<td>constraints</td>
+<td><a href="#constraints-object">Constraints Object</a></td>
+<td>Usage limitations and requirements.</td>
+</tr>
+<tr>
+<td>accessibility</td>
+<td><a href="#component-a11y-object">Component A11y Object</a></td>
+<td>Accessibility requirements.</td>
+</tr>
+<tr>
+<td>llm</td>
+<td><a href="#llm-context-object">LLM Context Object</a></td>
+<td>AI code generation optimization fields.</td>
+</tr>
+<tr>
+<td>documentationUrl</td>
+<td><code>string</code></td>
+<td>URL to detailed documentation. MUST be a valid URI.</td>
+</tr>
+<tr>
+<td>figmaUrl</td>
+<td><code>string</code></td>
+<td>URL to Figma component. MUST be a valid URI.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="component-object-example">Component Object Example</h4>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;button&quot;,
+  &quot;name&quot;: &quot;Button&quot;,
+  &quot;description&quot;: &quot;Interactive button for triggering actions&quot;,
+  &quot;category&quot;: &quot;inputs&quot;,
+  &quot;props&quot;: [
+    {
+      &quot;name&quot;: &quot;variant&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;default&quot;: &quot;primary&quot;,
+      &quot;enumValues&quot;: [&quot;primary&quot;, &quot;secondary&quot;, &quot;destructive&quot;]
+    },
+    {
+      &quot;name&quot;: &quot;disabled&quot;,
+      &quot;type&quot;: &quot;boolean&quot;,
+      &quot;default&quot;: false
+    }
+  ],
+  &quot;events&quot;: [
+    {
+      &quot;name&quot;: &quot;click&quot;,
+      &quot;description&quot;: &quot;Fired when button is clicked&quot;,
+      &quot;bubbles&quot;: true,
+      &quot;composed&quot;: true
+    }
+  ],
+  &quot;llm&quot;: {
+    &quot;intent&quot;: &quot;Trigger user actions&quot;,
+    &quot;allowedContexts&quot;: [&quot;forms&quot;, &quot;dialogs&quot;, &quot;toolbars&quot;],
+    &quot;antiPatterns&quot;: [&quot;Multiple primary buttons per view&quot;]
+  }
+}
+</code></pre>
+<h3 id="prop-object">Prop Object</h3>
+<p>Represents a configurable property of a component.</p>
+<h4 id="fixed-fields-10">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Prop name as used in code.</td>
+</tr>
+<tr>
+<td>type</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Data type (string, number, boolean, enum, array, object).</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>string</code></td>
+<td>What the prop controls. CommonMark syntax MAY be used.</td>
+</tr>
+<tr>
+<td>required</td>
+<td><code>boolean</code></td>
+<td>Whether the prop must be provided. Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td>default</td>
+<td><code>any</code></td>
+<td>Default value if not specified.</td>
+</tr>
+<tr>
+<td>enumValues</td>
+<td><code>[string]</code></td>
+<td>Allowed values for enum types.</td>
+</tr>
+<tr>
+<td>constraints</td>
+<td><a href="#prop-constraints-object">Prop Constraints Object</a></td>
+<td>Validation rules for the prop value.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prop-constraints-object">Prop Constraints Object</h3>
+<p>Defines validation rules for a property value.</p>
+<h4 id="fixed-fields-11">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>min</td>
+<td><code>number</code></td>
+<td>Minimum value for number types.</td>
+</tr>
+<tr>
+<td>max</td>
+<td><code>number</code></td>
+<td>Maximum value for number types.</td>
+</tr>
+<tr>
+<td>minLength</td>
+<td><code>integer</code></td>
+<td>Minimum length for string types.</td>
+</tr>
+<tr>
+<td>maxLength</td>
+<td><code>integer</code></td>
+<td>Maximum length for string types.</td>
+</tr>
+<tr>
+<td>pattern</td>
+<td><code>string</code></td>
+<td>Regex pattern for string validation.</td>
+</tr>
+<tr>
+<td>step</td>
+<td><code>number</code></td>
+<td>Valid increments for number types.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="component-event-object">Component Event Object</h3>
+<p>Represents a CustomEvent emitted by a component.</p>
+<h4 id="fixed-fields-12">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Event name (e.g., &quot;change&quot;, &quot;submit&quot;).</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>string</code></td>
+<td>When this event is emitted. CommonMark syntax MAY be used.</td>
+</tr>
+<tr>
+<td>bubbles</td>
+<td><code>boolean</code></td>
+<td>Whether event bubbles through DOM. Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td>composed</td>
+<td><code>boolean</code></td>
+<td>Whether event crosses shadow DOM boundary. Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td>cancelable</td>
+<td><code>boolean</code></td>
+<td>Whether event can be canceled. Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td>detail</td>
+<td>[<a href="#event-detail-field-object">Event Detail Field Object</a>]</td>
+<td>Schema of the event.detail payload.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="event-detail-field-object">Event Detail Field Object</h3>
+<p>Describes a field in the event.detail payload.</p>
+<h4 id="fixed-fields-13">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Field name in the detail object.</td>
+</tr>
+<tr>
+<td>type</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Data type of the field.</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>string</code></td>
+<td>What this field contains.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="slot-object">Slot Object</h3>
+<p>Represents a content insertion point for composition.</p>
+<h4 id="fixed-fields-14">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Slot name.</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>string</code></td>
+<td>What content belongs in this slot. CommonMark syntax MAY be used.</td>
+</tr>
+<tr>
+<td>required</td>
+<td><code>boolean</code></td>
+<td>Whether content must be provided. Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td>allowedComponents</td>
+<td><code>[string]</code></td>
+<td>Component IDs that can be inserted.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="variant-object">Variant Object</h3>
+<p>Represents a visual or behavioral variant of a component.</p>
+<h4 id="fixed-fields-15">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Unique identifier for the variant.</td>
+</tr>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Display name (e.g., &quot;Primary&quot;, &quot;Secondary&quot;).</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>string</code></td>
+<td>When to use this variant. CommonMark syntax MAY be used.</td>
+</tr>
+<tr>
+<td>isDefault</td>
+<td><code>boolean</code></td>
+<td>Whether this is the default variant. Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td>tokenOverrides</td>
+<td>[<a href="#token-override-object">Token Override Object</a>]</td>
+<td>Tokens that differ from base component.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="state-object">State Object</h3>
+<p>Represents an interactive state of a component.</p>
+<h4 id="fixed-fields-16">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Unique identifier (hover, focus, disabled, etc.).</td>
+</tr>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td>Display name for the state.</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>string</code></td>
+<td>When this state applies. CommonMark syntax MAY be used.</td>
+</tr>
+<tr>
+<td>tokenOverrides</td>
+<td>[<a href="#token-override-object">Token Override Object</a>]</td>
+<td>Tokens that change in this state.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="token-override-object">Token Override Object</h3>
+<p>Specifies a token value that differs for a variant or state.</p>
+<h4 id="fixed-fields-17">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tokenId</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Token being overridden.</td>
+</tr>
+<tr>
+<td>value</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Override value.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="constraints-object">Constraints Object</h3>
+<p>Defines usage limitations for a component.</p>
+<h4 id="fixed-fields-18">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>minWidth</td>
+<td><code>string</code></td>
+<td>Minimum recommended width.</td>
+</tr>
+<tr>
+<td>maxWidth</td>
+<td><code>string</code></td>
+<td>Maximum recommended width.</td>
+</tr>
+<tr>
+<td>maxChildren</td>
+<td><code>integer</code></td>
+<td>Maximum number of child elements.</td>
+</tr>
+<tr>
+<td>requiredParent</td>
+<td><code>string</code></td>
+<td>Required parent component ID.</td>
+</tr>
+<tr>
+<td>forbiddenChildren</td>
+<td><code>[string]</code></td>
+<td>Components that cannot be nested inside.</td>
+</tr>
+<tr>
+<td>responsiveBehavior</td>
+<td><code>string</code></td>
+<td>How the component adapts to viewport changes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="llm-context-object">LLM Context Object</h3>
+<p>Provides optimization fields for AI code generation.</p>
+<h4 id="fixed-fields-19">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>intent</td>
+<td><code>string</code></td>
+<td>Primary purpose of this element.</td>
+</tr>
+<tr>
+<td>allowedContexts</td>
+<td><code>[string]</code></td>
+<td>Situations where this element SHOULD be used.</td>
+</tr>
+<tr>
+<td>forbiddenContexts</td>
+<td><code>[string]</code></td>
+<td>Situations where this element SHOULD NOT be used.</td>
+</tr>
+<tr>
+<td>dependencies</td>
+<td><code>[string]</code></td>
+<td>Other elements this one requires.</td>
+</tr>
+<tr>
+<td>exampleUsage</td>
+<td><code>[string]</code></td>
+<td>Code snippets demonstrating correct usage.</td>
+</tr>
+<tr>
+<td>antiPatterns</td>
+<td><code>[string]</code></td>
+<td>Common mistakes to avoid.</td>
+</tr>
+<tr>
+<td>semanticMeaning</td>
+<td><code>string</code></td>
+<td>User-facing meaning of this element.</td>
+</tr>
+<tr>
+<td>relatedComponents</td>
+<td><code>[string]</code></td>
+<td>Commonly used together with.</td>
+</tr>
+<tr>
+<td>priorityScore</td>
+<td><code>integer</code></td>
+<td>Preference score (higher = prefer over alternatives).</td>
+</tr>
+</tbody>
+</table>
+<h4 id="llm-context-object-example">LLM Context Object Example</h4>
+<pre><code class="language-json">{
+  &quot;intent&quot;: &quot;Primary action button for form submissions&quot;,
+  &quot;allowedContexts&quot;: [&quot;form-submit&quot;, &quot;modal-confirm&quot;, &quot;primary-cta&quot;],
+  &quot;forbiddenContexts&quot;: [&quot;destructive-action&quot;, &quot;navigation&quot;],
+  &quot;exampleUsage&quot;: [
+    &quot;&lt;Button variant=\&quot;primary\&quot;&gt;Submit&lt;/Button&gt;&quot;,
+    &quot;&lt;Button variant=\&quot;primary\&quot; disabled={isLoading}&gt;Save&lt;/Button&gt;&quot;
+  ],
+  &quot;antiPatterns&quot;: [
+    &quot;Don't use for destructive actions like delete&quot;,
+    &quot;Avoid multiple primary buttons in the same view&quot;
+  ]
+}
+</code></pre>
+<h3 id="pattern-object">Pattern Object</h3>
+<p>Represents a multi-component UX solution.</p>
+<h4 id="fixed-fields-20">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Unique identifier.</td>
+</tr>
+<tr>
+<td>name</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Display name.</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Purpose and when to use it. CommonMark syntax MAY be used.</td>
+</tr>
+<tr>
+<td>category</td>
+<td><code>string</code></td>
+<td>Groups related patterns (e.g., &quot;forms&quot;, &quot;navigation&quot;).</td>
+</tr>
+<tr>
+<td>components</td>
+<td>[<a href="#pattern-component-object">Pattern Component Object</a>]</td>
+<td><strong>REQUIRED</strong>. Components that make up this pattern.</td>
+</tr>
+<tr>
+<td>layout</td>
+<td><a href="#pattern-layout-object">Pattern Layout Object</a></td>
+<td>How components are arranged.</td>
+</tr>
+<tr>
+<td>behavior</td>
+<td><code>string</code></td>
+<td>Description of the interaction flow.</td>
+</tr>
+<tr>
+<td>variations</td>
+<td>[<a href="#pattern-variation-object">Pattern Variation Object</a>]</td>
+<td>Different configurations.</td>
+</tr>
+<tr>
+<td>accessibility</td>
+<td><a href="#pattern-a11y-object">Pattern A11y Object</a></td>
+<td>Accessibility requirements.</td>
+</tr>
+<tr>
+<td>llm</td>
+<td><a href="#llm-context-object">LLM Context Object</a></td>
+<td>AI code generation fields.</td>
+</tr>
+<tr>
+<td>documentationUrl</td>
+<td><code>string</code></td>
+<td>URL to detailed documentation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pattern-component-object">Pattern Component Object</h3>
+<p>References a component used in a pattern.</p>
+<h4 id="fixed-fields-21">Fixed Fields</h4>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>componentId</td>
+<td><code>string</code></td>
+<td><strong>REQUIRED</strong>. Reference to a component from the components list.</td>
+</tr>
+<tr>
+<td>role</td>
+<td><code>string</code></td>
+<td>Component's role in this pattern.</td>
+</tr>
+<tr>
+<td>required</td>
+<td><code>boolean</code></td>
+<td>Whether this component is essential. Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td>quantity</td>
+<td><code>string</code></td>
+<td>How many instances (e.g., &quot;1&quot;, &quot;1+&quot;, &quot;0-1&quot;).</td>
+</tr>
+<tr>
+<td>configuration</td>
+<td><code>object</code></td>
+<td>Default props for this usage.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="appendix-a-revision-history">Appendix A: Revision History</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1.0</td>
+<td>2024-01-15</td>
+<td>Initial release</td>
+</tr>
+</tbody>
+</table>
+<h2 id="appendix-b-json-schema">Appendix B: JSON Schema</h2>
+<p>The canonical JSON Schema for validating DSS documents is available at:</p>
+<pre><code>https://plexusone.dev/schemas/design-system.schema.json
+</code></pre>
+<h2 id="appendix-c-file-extension">Appendix C: File Extension</h2>
+<p>DSS documents SHOULD use the following file extensions:</p>
+<ul>
+<li><code>.dss.json</code> for JSON format</li>
+<li><code>.dss.yaml</code> or <code>.dss.yml</code> for YAML format</li>
+<li><code>design-system.json</code> for single-file specifications</li>
+</ul>
+
+  </main>
+  <script>
+    // Highlight current section in nav
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.getAttribute('id');
+        const navLink = document.querySelector('.nav-toc a[href="#' + id + '"]');
+        if (navLink) {
+          if (entry.isIntersecting) {
+            document.querySelectorAll('.nav-toc a').forEach(a => a.style.color = '');
+            navLink.style.color = 'var(--text-nav-active)';
+            navLink.style.background = 'rgba(59, 130, 246, 0.2)';
+          } else {
+            navLink.style.color = '';
+            navLink.style.background = '';
+          }
+        }
+      });
+    }, { rootMargin: '-20px 0px -80% 0px' });
+
+    document.querySelectorAll('h1[id], h2[id], h3[id], h4[id]').forEach(h => observer.observe(h));
+  </script>
+</body>
+</html>
