@@ -28,6 +28,9 @@ type DesignSystem struct {
 
 	// Governance defines versioning, contribution, and deprecation policies.
 	Governance *Governance `json:"governance,omitempty"`
+
+	// ThemeBindings maps application tokens to component theming contracts.
+	ThemeBindings []ThemeBindings `json:"themeBindings,omitempty"`
 }
 
 // Validate performs basic validation on the design system.

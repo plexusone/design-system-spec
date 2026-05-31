@@ -23,14 +23,23 @@ type Component struct {
 	// Props define configurable properties/attributes.
 	Props []Prop `json:"props,omitempty"`
 
+	// Events define custom events emitted by the component.
+	Events []ComponentEvent `json:"events,omitempty"`
+
 	// Slots define content insertion points for composition.
 	Slots []Slot `json:"slots,omitempty"`
+
+	// Uses lists component IDs this component depends on.
+	Uses []string `json:"uses,omitempty"`
 
 	// TokensUsed references foundation token IDs used by this component.
 	TokensUsed []string `json:"tokensUsed,omitempty"`
 
 	// Constraints define usage limitations and requirements.
 	Constraints *Constraints `json:"constraints,omitempty"`
+
+	// ThemingContract defines the external theming API for this component.
+	ThemingContract *ThemingContract `json:"themingContract,omitempty"`
 
 	// Accessibility defines a11y requirements for this component.
 	Accessibility *ComponentA11y `json:"accessibility,omitempty"`
@@ -106,6 +115,48 @@ type Prop struct {
 
 	// EnumValues lists allowed values for enum types.
 	EnumValues []string `json:"enumValues,omitempty"`
+
+	// Constraints defines validation constraints for this prop.
+	Constraints *PropConstraints `json:"constraints,omitempty"`
+}
+
+// PropConstraints defines validation constraints for a property.
+type PropConstraints struct {
+	// Min is the minimum value (for numbers) or length (for strings).
+	Min *float64 `json:"min,omitempty"`
+
+	// Max is the maximum value (for numbers) or length (for strings).
+	Max *float64 `json:"max,omitempty"`
+
+	// Pattern is a regex pattern the value must match.
+	Pattern string `json:"pattern,omitempty"`
+}
+
+// ComponentEvent represents a custom event emitted by a component.
+type ComponentEvent struct {
+	// Name is the event name (e.g., "change", "submit", "close").
+	Name string `json:"name"`
+
+	// Description explains when this event is emitted.
+	Description string `json:"description,omitempty"`
+
+	// Bubbles indicates whether the event bubbles up the DOM tree.
+	Bubbles bool `json:"bubbles,omitempty"`
+
+	// Detail describes the event detail payload fields.
+	Detail []EventDetailField `json:"detail,omitempty"`
+}
+
+// EventDetailField describes a field in an event's detail payload.
+type EventDetailField struct {
+	// Name is the field name.
+	Name string `json:"name"`
+
+	// Type is the data type.
+	Type string `json:"type"`
+
+	// Description explains the field's purpose.
+	Description string `json:"description,omitempty"`
 }
 
 // Slot represents a content insertion point for component composition.
