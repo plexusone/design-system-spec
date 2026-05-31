@@ -8,6 +8,56 @@
   "unreleased": {},
   "releases": [
     {
+      "version": "v0.3.0",
+      "date": "2026-05-30",
+      "highlights": [
+        { "description": "Theming contracts and bindings system for component library ↔ application theming" },
+        { "description": "Diagram generators (Mermaid, D2) for visualizing design system architecture" },
+        { "description": "Web component viewer (`@plexusone/dss-ui`) for interactive spec viewing" },
+        { "description": "W3C Design Tokens export for standards compliance" }
+      ],
+      "added": [
+        { "description": "`ThemingContract`, `ThemeToken`, `ThemeBindings`, `TokenMapping` types for formal theming API", "commit": "e9792ef" },
+        { "description": "`ValidateContract()` and `ValidateAllContracts()` for contract validation", "commit": "26cca0c" },
+        { "description": "`GenerateBindings()` for CSS/TypeScript/SCSS theme binding output", "commit": "396b579" },
+        { "description": "`dss bind` CLI command with `--format` and `--strategy` flags", "commit": "c387722" },
+        { "description": "`dss contract show` and `dss contract validate` CLI commands", "commit": "bc1ffab" },
+        { "description": "Mermaid diagram generator with component relationships and token usage diagrams", "commit": "190af14" },
+        { "description": "D2 diagram generator with architecture and component focus views", "commit": "6fcc195" },
+        { "description": "W3C Design Tokens Community Group format export", "commit": "dfecd91" },
+        { "description": "MkDocs-compatible documentation generator", "commit": "0afdd23" },
+        { "description": "`@plexusone/dss-ui` Lit-based web component viewer package", "commit": "960a943" },
+        { "description": "`Brand` schema section for organization branding (logos, navigation, social)", "commit": "fb173f7" },
+        { "description": "`$schema` property support in design system JSON files", "commit": "af494b9" },
+        { "description": "`ComponentEvent` and `EventDetailField` types for event definitions", "commit": "7a45a6c" },
+        { "description": "`PropConstraints` type for property validation rules", "commit": "7a45a6c" },
+        { "description": "`Uses` field for component dependency declarations", "commit": "7a45a6c" },
+        { "description": "PlexusOne unified navigation and theme integration", "commit": "406f8b9" },
+        { "description": "`themed-app` example demonstrating theme bindings", "commit": "e1c90d6" }
+      ],
+      "changed": [
+        { "description": "JSON schemas regenerated with theming, event, and constraint types", "commit": "89a33a4" },
+        { "description": "README updated with theming contracts, new CLI commands, and roadmap", "commit": "afe9e2d" },
+        { "description": "MkDocs navigation includes Theming specification and case study", "commit": "83e67c7" }
+      ],
+      "fixed": [
+        { "description": "Resolve golangci-lint findings (gofmt, gosec G107, unparam, dupl)", "commit": "d4ab04a" }
+      ],
+      "documentation": [
+        { "description": "Theming specification with contract and bindings schemas", "commit": "508fcef" },
+        { "description": "Component theming case study (markdown-editor + PlexusOne)", "commit": "508fcef" },
+        { "description": "CLI reference updated with `bind` and `contract` commands", "commit": "83e67c7" },
+        { "description": "SDK reference updated with diagram generators and theming functions", "commit": "83e67c7" },
+        { "description": "CLAUDE.md project instructions for AI-assisted development", "commit": "e9970d2" }
+      ],
+      "tests": [
+        { "description": "Comprehensive theming contract and bindings tests", "commit": "19bcf2b" }
+      ],
+      "build": [
+        { "description": "Bump `github.com/invopop/jsonschema` from 0.13.0 to 0.14.0", "commit": "4bed924" }
+      ]
+    },
+    {
       "version": "v0.2.0",
       "date": "2026-04-04",
       "highlights": [
