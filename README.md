@@ -135,6 +135,9 @@ dss validate --json ./src/components
 | `dss info` | Display design system metadata |
 | `dss generate` | Generate CSS, TypeScript types, LLM prompt |
 | `dss validate <dir>` | Validate component implementations |
+| `dss bind` | Generate theme bindings CSS/TypeScript/SCSS |
+| `dss contract show` | Display component theming contract |
+| `dss contract validate` | Validate all theming contracts |
 
 ### Generate Options
 
@@ -142,6 +145,29 @@ dss validate --json ./src/components
 dss generate --llm ./DESIGN_CONTEXT.md  # LLM context (primary use case)
 dss generate --css ./src/index.css      # Tailwind v4 @theme block
 dss generate --types ./src/lib/types.ts # TypeScript interfaces
+```
+
+### Theme Bindings
+
+```bash
+# Generate CSS bindings from themeBindings configuration
+dss bind --output ./theme.css
+
+# Generate TypeScript constants
+dss bind --format typescript --output ./theme.ts
+
+# Use semantic auto-mapping strategy
+dss bind --strategy semantic --output ./theme.css
+```
+
+### Contract Commands
+
+```bash
+# Show a component's theming contract
+dss contract show button
+
+# Validate all theming contracts
+dss contract validate
 ```
 
 ### Validate Output
@@ -192,6 +218,49 @@ The generated `DESIGN_CONTEXT.md` includes:
 
 This structure is optimized for LLM comprehension and consistent code generation.
 
+## Theming Contracts
+
+DSS supports formal theming contracts between component libraries and consuming applications:
+
+**Component Side (themingContract):**
+```json
+{
+  "themingContract": {
+    "prefix": "--btn",
+    "tokens": [
+      {
+        "id": "background",
+        "cssProperty": "--btn-background",
+        "semantic": "primary",
+        "defaultLight": "#0066CC",
+        "defaultDark": "#3399FF"
+      }
+    ]
+  }
+}
+```
+
+**Application Side (themeBindings):**
+```json
+{
+  "themeBindings": [
+    {
+      "component": "button",
+      "mappings": [
+        { "from": "brand-primary", "to": "background" }
+      ]
+    }
+  ]
+}
+```
+
+**Generate CSS:**
+```bash
+dss bind --output ./theme.css
+```
+
+See [Theming Specification](docs/specification/theming.md) for details.
+
 ## Figma Integration
 
 > **Note:** Figma integration is for teams transitioning from traditional design workflows. For AI-native development, DSS specs are authored directly—Figma is not required.
@@ -239,18 +308,28 @@ types, _ := ds.GenerateReactTypes(dss.DefaultReactOptions())
 
 ```
 design-system-spec/
-├── cmd/dss/           # CLI tool
+├── cmd/dss/              # CLI tool
 │   └── cmd/
-│       ├── generate.go
-│       ├── validate.go
+│       ├── generate.go   # Generate CSS, TypeScript, LLM
+│       ├── validate.go   # Validate implementations
+│       ├── bind.go       # Theme bindings generation
+│       ├── contract.go   # Theming contract commands
 │       └── info.go
-├── sdk/go/            # Go SDK
-│   ├── loader.go
-│   ├── gen_css.go
-│   ├── gen_react.go
-│   └── gen_llm.go
-├── schema/            # JSON Schemas
-└── docs/              # MkDocs documentation
+├── sdk/go/               # Go SDK
+│   ├── loader.go         # Load design systems
+│   ├── theming.go        # Theming contract types
+│   ├── contract_validate.go  # Contract validation
+│   ├── gen_bindings.go   # Theme bindings generator
+│   ├── gen_css.go        # CSS generator
+│   ├── gen_react.go      # TypeScript generator
+│   ├── gen_llm.go        # LLM context generator
+│   ├── gen_mermaid.go    # Mermaid diagram generator
+│   ├── gen_d2.go         # D2 diagram generator
+│   ├── gen_w3c_tokens.go # W3C Design Tokens export
+│   └── gen_docs.go       # Documentation generator
+├── schema/               # JSON Schemas (generated)
+├── ui/                   # Web component viewer (Lit)
+└── docs/                 # MkDocs documentation
 ```
 
 ## Roadmap
@@ -259,6 +338,10 @@ design-system-spec/
 - [x] CLI (`generate`, `validate`, `info`)
 - [x] Code generators (CSS, TypeScript, LLM)
 - [x] Documentation (MkDocs)
+- [x] Theming contracts and bindings
+- [x] Diagram generators (Mermaid, D2)
+- [x] W3C Design Tokens export
+- [x] Web component viewer (ui/)
 - [ ] `dss init` scaffolding
 - [ ] `dss lint` for spec completeness
 - [ ] Advanced validation (color contrast, cross-references)
