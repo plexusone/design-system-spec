@@ -35,9 +35,21 @@
           },
           "type": "array"
         },
+        "events": {
+          "items": {
+            "$ref": "#/$defs/ComponentEvent"
+          },
+          "type": "array"
+        },
         "slots": {
           "items": {
             "$ref": "#/$defs/Slot"
+          },
+          "type": "array"
+        },
+        "uses": {
+          "items": {
+            "type": "string"
           },
           "type": "array"
         },
@@ -49,6 +61,9 @@
         },
         "constraints": {
           "$ref": "#/$defs/Constraints"
+        },
+        "themingContract": {
+          "$ref": "#/$defs/ThemingContract"
         },
         "accessibility": {
           "$ref": "#/$defs/ComponentA11y"
@@ -95,6 +110,27 @@
       "additionalProperties": false,
       "type": "object"
     },
+    "ComponentEvent": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "bubbles": {
+          "type": "boolean"
+        },
+        "detail": {
+          "items": {
+            "$ref": "#/$defs/EventDetailField"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
     "Constraints": {
       "properties": {
         "minWidth": {
@@ -116,6 +152,21 @@
           "type": "array"
         },
         "responsiveBehavior": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "EventDetailField": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "description": {
           "type": "string"
         }
       },
@@ -213,6 +264,24 @@
             "type": "string"
           },
           "type": "array"
+        },
+        "constraints": {
+          "$ref": "#/$defs/PropConstraints"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PropConstraints": {
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "pattern": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -253,6 +322,48 @@
         "tokenOverrides": {
           "items": {
             "$ref": "#/$defs/TokenOverride"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ThemeToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "cssProperty": {
+          "type": "string"
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "defaultLight": {
+          "type": "string"
+        },
+        "defaultDark": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ThemingContract": {
+      "properties": {
+        "prefix": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tokens": {
+          "items": {
+            "$ref": "#/$defs/ThemeToken"
           },
           "type": "array"
         }

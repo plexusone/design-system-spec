@@ -220,6 +220,9 @@
         "constraints": {
           "$ref": "#/$defs/Constraints"
         },
+        "themingContract": {
+          "$ref": "#/$defs/ThemingContract"
+        },
         "accessibility": {
           "$ref": "#/$defs/ComponentA11y"
         },
@@ -274,12 +277,6 @@
           "type": "string"
         },
         "bubbles": {
-          "type": "boolean"
-        },
-        "composed": {
-          "type": "boolean"
-        },
-        "cancelable": {
           "type": "boolean"
         },
         "detail": {
@@ -511,10 +508,6 @@
     },
     "DesignSystem": {
       "properties": {
-        "$schema": {
-          "type": "string",
-          "description": "JSON Schema reference URL"
-        },
         "meta": {
           "$ref": "#/$defs/Meta"
         },
@@ -554,216 +547,11 @@
         "governance": {
           "$ref": "#/$defs/Governance"
         },
-        "brand": {
-          "$ref": "#/$defs/Brand"
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "Brand": {
-      "description": "Organization-specific brand configuration",
-      "properties": {
-        "identity": {
-          "$ref": "#/$defs/BrandIdentity"
-        },
-        "logos": {
-          "$ref": "#/$defs/BrandLogos"
-        },
-        "navigation": {
-          "$ref": "#/$defs/BrandNavigation"
-        },
-        "colorCombinations": {
+        "themeBindings": {
           "items": {
-            "$ref": "#/$defs/ColorCombination"
+            "$ref": "#/$defs/ThemeBindings"
           },
           "type": "array"
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "BrandIdentity": {
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "tagline": {
-          "type": "string"
-        },
-        "mission": {
-          "type": "string"
-        },
-        "domain": {
-          "type": "string"
-        },
-        "founded": {
-          "type": "string"
-        },
-        "social": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "format": "uri"
-          }
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "BrandLogos": {
-      "properties": {
-        "primary": {
-          "$ref": "#/$defs/LogoVariant"
-        },
-        "icon": {
-          "$ref": "#/$defs/LogoIcon"
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "LogoVariant": {
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "variants": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "svg": { "type": "string" },
-              "usage": { "type": "string" }
-            }
-          }
-        },
-        "minWidth": {
-          "type": "string"
-        },
-        "clearSpace": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "LogoIcon": {
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "svg": {
-          "type": "string"
-        },
-        "favicon": {
-          "type": "string"
-        },
-        "design": {
-          "type": "object",
-          "properties": {
-            "background": { "type": "string" },
-            "foreground": { "type": "string" },
-            "cornerRadius": { "type": "string" }
-          }
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "BrandNavigation": {
-      "properties": {
-        "brand": {
-          "type": "object",
-          "properties": {
-            "name": { "type": "string" },
-            "href": { "type": "string", "format": "uri" }
-          }
-        },
-        "baseUrl": {
-          "type": "string",
-          "format": "uri"
-        },
-        "links": {
-          "items": {
-            "$ref": "#/$defs/NavItem"
-          },
-          "type": "array"
-        },
-        "dropdowns": {
-          "items": {
-            "$ref": "#/$defs/NavDropdown"
-          },
-          "type": "array"
-        },
-        "actions": {
-          "items": {
-            "$ref": "#/$defs/NavItem"
-          },
-          "type": "array"
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "NavItem": {
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "label": {
-          "type": "string"
-        },
-        "href": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "icon": {
-          "type": "string"
-        },
-        "external": {
-          "type": "boolean"
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "NavDropdown": {
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "label": {
-          "type": "string"
-        },
-        "items": {
-          "items": {
-            "$ref": "#/$defs/NavItem"
-          },
-          "type": "array"
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "ColorCombination": {
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "background": {
-          "type": "string"
-        },
-        "text": {
-          "type": "string"
-        },
-        "accent": {
-          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -1506,17 +1294,8 @@
         "max": {
           "type": "number"
         },
-        "minLength": {
-          "type": "integer"
-        },
-        "maxLength": {
-          "type": "integer"
-        },
         "pattern": {
           "type": "string"
-        },
-        "step": {
-          "type": "number"
         }
       },
       "additionalProperties": false,
@@ -1884,6 +1663,97 @@
           "type": "string"
         },
         "coverage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ThemeBindings": {
+      "properties": {
+        "component": {
+          "type": "string"
+        },
+        "specUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "themeMode": {
+          "type": "string",
+          "enum": [
+            "light",
+            "dark"
+          ]
+        },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "explicit",
+            "semantic",
+            "inherit"
+          ]
+        },
+        "mappings": {
+          "items": {
+            "$ref": "#/$defs/TokenMapping"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ThemeToken": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "cssProperty": {
+          "type": "string"
+        },
+        "semantic": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "defaultLight": {
+          "type": "string"
+        },
+        "defaultDark": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ThemingContract": {
+      "properties": {
+        "prefix": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tokens": {
+          "items": {
+            "$ref": "#/$defs/ThemeToken"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "TokenMapping": {
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "transform": {
           "type": "string"
         }
       },

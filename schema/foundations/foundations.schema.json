@@ -147,7 +147,19 @@
         "name": {
           "type": "string"
         },
+        "stack": {
+          "type": "string"
+        },
         "value": {
+          "type": "string"
+        },
+        "weights": {
+          "items": {
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "source": {
           "type": "string"
         },
         "usage": {
