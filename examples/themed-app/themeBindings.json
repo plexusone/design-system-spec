@@ -1,0 +1,38 @@
+[
+  {
+    "component": "button",
+    "specUrl": "../minimal-system/components/button.json",
+    "themeMode": "dark",
+    "strategy": "explicit",
+    "mappings": [
+      {
+        "from": "brand-primary-500",
+        "to": "background"
+      },
+      {
+        "from": "brand-primary-600",
+        "to": "background-hover"
+      },
+      {
+        "from": "neutral-900",
+        "to": "text"
+      },
+      {
+        "from": "border-default",
+        "to": "border"
+      },
+      {
+        "from": "focus-ring",
+        "to": "focus-ring"
+      },
+      {
+        "from": "neutral-700",
+        "to": "disabled-background"
+      },
+      {
+        "from": "text-muted",
+        "to": "disabled-text"
+      }
+    ]
+  }
+]

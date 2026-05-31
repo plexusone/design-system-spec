@@ -1,0 +1,72 @@
+[
+  {
+    "id": "brand-primary-500",
+    "value": "#8B5CF6",
+    "description": "Primary brand color - Purple"
+  },
+  {
+    "id": "brand-primary-600",
+    "value": "#7C3AED",
+    "description": "Primary brand color - darker"
+  },
+  {
+    "id": "brand-secondary-500",
+    "value": "#06B6D4",
+    "description": "Secondary brand color - Cyan"
+  },
+  {
+    "id": "brand-danger-500",
+    "value": "#EF4444",
+    "description": "Danger/error color"
+  },
+  {
+    "id": "brand-success-500",
+    "value": "#22C55E",
+    "description": "Success color"
+  },
+  {
+    "id": "neutral-50",
+    "value": "#F8FAFC",
+    "description": "Lightest neutral"
+  },
+  {
+    "id": "neutral-100",
+    "value": "#F1F5F9",
+    "description": "Very light neutral"
+  },
+  {
+    "id": "neutral-700",
+    "value": "#334155",
+    "description": "Dark neutral"
+  },
+  {
+    "id": "neutral-900",
+    "value": "#0F172A",
+    "description": "Darkest neutral"
+  },
+  {
+    "id": "text-primary",
+    "value": "#F1F5F9",
+    "description": "Primary text color (dark mode)"
+  },
+  {
+    "id": "text-muted",
+    "value": "#94A3B8",
+    "description": "Muted text color"
+  },
+  {
+    "id": "surface-dark",
+    "value": "#0A0E1A",
+    "description": "Dark mode surface background"
+  },
+  {
+    "id": "border-default",
+    "value": "#334155",
+    "description": "Default border color"
+  },
+  {
+    "id": "focus-ring",
+    "value": "#8B5CF640",
+    "description": "Focus ring with transparency"
+  }
+]
