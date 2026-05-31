@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSS Viewer - Design System Spec</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0e1a;
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+
+    dss-viewer {
+      display: block;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <dss-viewer id="viewer" theme="dark" mode="viewer"></dss-viewer>
+
+  <script type="module">
+    import './src/index.ts';
+
+    // Sample design system for demonstration
+    const sampleSpec = {
+      meta: {
+        name: "PlexusOne Design System",
+        version: "1.0.0",
+        description: "A modern, AI-native design system for building consistent user interfaces."
+      },
+      principles: [
+        {
+          id: "clarity",
+          name: "Clarity First",
+          description: "Every element should have a clear purpose. Remove ambiguity in both design and interaction."
+        },
+        {
+          id: "consistency",
+          name: "Consistent Patterns",
+          description: "Use established patterns across all products to reduce cognitive load."
+        },
+        {
+          id: "accessible",
+          name: "Accessible by Default",
+          description: "Design for everyone. Accessibility is not an afterthought."
+        }
+      ],
+      foundations: {
+        colors: [
+          { id: "primary-500", value: "#06b6d4", semantic: "primary", usage: "Primary brand color, CTAs" },
+          { id: "primary-600", value: "#0891b2", semantic: "primary", usage: "Primary hover state" },
+          { id: "primary-400", value: "#22d3ee", semantic: "primary", usage: "Primary light variant" },
+          { id: "secondary-500", value: "#8b5cf6", semantic: "secondary", usage: "Secondary actions" },
+          { id: "secondary-600", value: "#7c3aed", semantic: "secondary", usage: "Secondary hover" },
+          { id: "danger-500", value: "#ef4444", semantic: "danger", usage: "Error states, destructive actions" },
+          { id: "warning-500", value: "#f59e0b", semantic: "warning", usage: "Warning messages" },
+          { id: "success-500", value: "#22c55e", semantic: "success", usage: "Success states" },
+          { id: "neutral-50", value: "#f8fafc", semantic: "neutral" },
+          { id: "neutral-100", value: "#f1f5f9", semantic: "neutral" },
+          { id: "neutral-200", value: "#e2e8f0", semantic: "neutral" },
+          { id: "neutral-700", value: "#334155", semantic: "neutral" },
+          { id: "neutral-800", value: "#1e293b", semantic: "neutral" },
+          { id: "neutral-900", value: "#0f172a", semantic: "neutral" },
+          { id: "dark-base", value: "#0a0e1a", semantic: "background", usage: "Dark mode background" }
+        ],
+        typography: {
+          fontFamilies: [
+            {
+              id: "sans",
+              name: "Inter",
+              stack: "'Inter', system-ui, -apple-system, sans-serif",
+              weights: [400, 500, 600, 700],
+              usage: "Primary font for all UI text"
+            },
+            {
+              id: "mono",
+              name: "JetBrains Mono",
+              stack: "'JetBrains Mono', 'Fira Code', monospace",
+              weights: [400, 500],
+              usage: "Code blocks, technical content"
+            }
+          ],
+          fontSizes: [
+            { id: "xs", value: "0.75rem", pixelValue: 12 },
+            { id: "sm", value: "0.875rem", pixelValue: 14 },
+            { id: "base", value: "1rem", pixelValue: 16 },
+            { id: "lg", value: "1.125rem", pixelValue: 18 },
+            { id: "xl", value: "1.25rem", pixelValue: 20 },
+            { id: "2xl", value: "1.5rem", pixelValue: 24 },
+            { id: "3xl", value: "2rem", pixelValue: 32 },
+            { id: "4xl", value: "2.5rem", pixelValue: 40 }
+          ],
+          fontWeights: [
+            { id: "normal", value: 400 },
+            { id: "medium", value: 500 },
+            { id: "semibold", value: 600 },
+            { id: "bold", value: 700 }
+          ],
+          lineHeights: [
+            { id: "tight", value: "1.25" },
+            { id: "normal", value: "1.5" },
+            { id: "relaxed", value: "1.75" }
+          ]
+        },
+        spacing: {
+          baseUnit: "4px",
+          scale: [
+            { id: "0", value: "0", pixelValue: 0 },
+            { id: "1", value: "0.25rem", pixelValue: 4 },
+            { id: "2", value: "0.5rem", pixelValue: 8 },
+            { id: "3", value: "0.75rem", pixelValue: 12 },
+            { id: "4", value: "1rem", pixelValue: 16 },
+            { id: "6", value: "1.5rem", pixelValue: 24 },
+            { id: "8", value: "2rem", pixelValue: 32 },
+            { id: "12", value: "3rem", pixelValue: 48 },
+            { id: "16", value: "4rem", pixelValue: 64 }
+          ]
+        },
+        borderRadius: [
+          { id: "none", value: "0" },
+          { id: "sm", value: "4px" },
+          { id: "md", value: "8px" },
+          { id: "lg", value: "12px" },
+          { id: "xl", value: "16px" },
+          { id: "full", value: "9999px" }
+        ],
+        elevation: [
+          { id: "sm", value: "0 1px 2px 0 rgb(0 0 0 / 0.05)", usage: "Subtle elevation for cards" },
+          { id: "md", value: "0 4px 6px -1px rgb(0 0 0 / 0.1)", usage: "Medium elevation for dropdowns" },
+          { id: "lg", value: "0 10px 15px -3px rgb(0 0 0 / 0.1)", usage: "High elevation for modals" },
+          { id: "xl", value: "0 20px 25px -5px rgb(0 0 0 / 0.1)", usage: "Maximum elevation" }
+        ]
+      },
+      components: [
+        {
+          id: "button",
+          name: "Button",
+          description: "Interactive button component for triggering actions",
+          category: "inputs",
+          variants: [
+            { id: "primary", name: "Primary", description: "High-emphasis for primary actions", isDefault: true },
+            { id: "secondary", name: "Secondary", description: "Medium-emphasis for secondary actions" },
+            { id: "outline", name: "Outline", description: "Low-emphasis with border only" },
+            { id: "ghost", name: "Ghost", description: "Minimal for tertiary actions" },
+            { id: "danger", name: "Danger", description: "Destructive actions" }
+          ],
+          states: [
+            { id: "default", description: "Normal resting state" },
+            { id: "hover", description: "Mouse hovering" },
+            { id: "active", description: "Being pressed" },
+            { id: "focus", description: "Keyboard focus" },
+            { id: "disabled", description: "Not interactive" }
+          ],
+          props: [
+            { name: "variant", type: "enum", default: "primary", enumValues: ["primary", "secondary", "outline", "ghost", "danger"] },
+            { name: "size", type: "enum", default: "md", enumValues: ["sm", "md", "lg"] },
+            { name: "disabled", type: "boolean", default: false },
+            { name: "loading", type: "boolean", default: false }
+          ],
+          accessibility: {
+            role: "button",
+            keyboardSupport: [
+              { key: "Enter", action: "Activate button" },
+              { key: "Space", action: "Activate button" }
+            ]
+          },
+          themingContract: {
+            prefix: "--btn",
+            tokens: [
+              { id: "background", cssProperty: "--btn-background", semantic: "primary", defaultLight: "#0066CC", defaultDark: "#3399FF" },
+              { id: "text", cssProperty: "--btn-text", semantic: "text-inverse", defaultLight: "#FFFFFF", defaultDark: "#0A0E1A" },
+              { id: "border", cssProperty: "--btn-border", semantic: "border", defaultLight: "#E2E8F0", defaultDark: "#334155" }
+            ]
+          }
+        },
+        {
+          id: "input",
+          name: "Text Input",
+          description: "Single-line text input field",
+          category: "inputs",
+          variants: [
+            { id: "default", name: "Default", isDefault: true },
+            { id: "filled", name: "Filled", description: "With background fill" }
+          ],
+          states: [
+            { id: "default" },
+            { id: "focus" },
+            { id: "error" },
+            { id: "disabled" }
+          ],
+          props: [
+            { name: "type", type: "enum", default: "text", enumValues: ["text", "email", "password", "number"] },
+            { name: "placeholder", type: "string" },
+            { name: "disabled", type: "boolean", default: false },
+            { name: "required", type: "boolean", default: false }
+          ],
+          accessibility: {
+            role: "textbox",
+            requiredAttributes: ["aria-label or associated label"]
+          }
+        },
+        {
+          id: "card",
+          name: "Card",
+          description: "Container for grouping related content",
+          category: "layout",
+          variants: [
+            { id: "default", name: "Default", isDefault: true },
+            { id: "elevated", name: "Elevated", description: "With shadow" },
+            { id: "outlined", name: "Outlined", description: "With border only" }
+          ],
+          props: [
+            { name: "variant", type: "enum", default: "default", enumValues: ["default", "elevated", "outlined"] },
+            { name: "padding", type: "enum", default: "md", enumValues: ["sm", "md", "lg"] }
+          ]
+        }
+      ],
+      themeBindings: [
+        {
+          component: "button",
+          strategy: "explicit",
+          themeMode: "dark",
+          mappings: [
+            { from: "primary-500", to: "background" },
+            { from: "neutral-900", to: "text" },
+            { from: "neutral-700", to: "border" }
+          ]
+        }
+      ]
+    };
+
+    // Load the sample spec
+    document.getElementById('viewer').spec = sampleSpec;
+  </script>
+</body>
+</html>

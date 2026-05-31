@@ -1,6 +1,7 @@
 # Binaries (root level only)
 /generate
 /dss
+/specrender
 *.exe
 *.exe~
 *.dll
@@ -29,3 +30,10 @@ Thumbs.db
 
 # Dependency directories (if not using modules)
 vendor/
+
+# MkDocs generated site
+/site/
+
+# Node.js (ui package)
+ui/node_modules/
+ui/dist/

@@ -1,0 +1,39 @@
+{
+  "name": "@plexusone/dss-ui",
+  "version": "0.1.0",
+  "description": "Design System Spec Web UI - Visual viewer and editor for DSS JSON specs",
+  "type": "module",
+  "main": "dist/dss-ui.js",
+  "module": "dist/dss-ui.js",
+  "types": "dist/dss-ui.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/dss-ui.js",
+      "types": "./dist/dss-ui.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.4.0"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "web-components",
+    "lit"
+  ],
+  "license": "MIT"
+}
