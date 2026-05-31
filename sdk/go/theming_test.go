@@ -104,14 +104,14 @@ func TestIsValidSemantic(t *testing.T) {
 		semantic string
 		want     bool
 	}{
-		{"", true},              // Empty is allowed
-		{"primary", true},       // Valid
-		{"secondary", true},     // Valid
-		{"danger", true},        // Valid
-		{"text-muted", true},    // Valid
-		{"invalid", false},      // Not in list
-		{"PRIMARY", false},      // Case sensitive
-		{"text_muted", false},   // Wrong format
+		{"", true},            // Empty is allowed
+		{"primary", true},     // Valid
+		{"secondary", true},   // Valid
+		{"danger", true},      // Valid
+		{"text-muted", true},  // Valid
+		{"invalid", false},    // Not in list
+		{"PRIMARY", false},    // Case sensitive
+		{"text_muted", false}, // Wrong format
 	}
 
 	for _, tt := range tests {

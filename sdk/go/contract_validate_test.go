@@ -4,11 +4,11 @@ import "testing"
 
 func TestValidateContract(t *testing.T) {
 	tests := []struct {
-		name           string
-		component      Component
-		wantPassed     bool
-		wantErrors     int
-		wantWarnings   int
+		name         string
+		component    Component
+		wantPassed   bool
+		wantErrors   int
+		wantWarnings int
 	}{
 		{
 			name: "no contract",

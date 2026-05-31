@@ -61,38 +61,22 @@ func (ds *DesignSystem) GenerateDocs(opts DocsOptions) (*DocsOutput, error) {
 	}
 
 	// Generate index page
-	index, err := ds.generateDocsIndex(opts, projectName)
-	if err != nil {
-		return nil, fmt.Errorf("generating index: %w", err)
-	}
-	output.Files["index.md"] = index
+	output.Files["index.md"] = ds.generateDocsIndex(opts, projectName)
 
 	// Generate component pages
 	if len(ds.Components) > 0 {
 		// Components index
-		compIndex, err := ds.generateComponentsIndex(opts)
-		if err != nil {
-			return nil, fmt.Errorf("generating components index: %w", err)
-		}
-		output.Files["components/index.md"] = compIndex
+		output.Files["components/index.md"] = ds.generateComponentsIndex(opts)
 
 		// Individual component pages
 		for _, c := range ds.Components {
-			page, err := ds.generateComponentPage(c, opts)
-			if err != nil {
-				return nil, fmt.Errorf("generating component page for %s: %w", c.ID, err)
-			}
-			output.Files[filepath.Join("components", c.ID+".md")] = page
+			output.Files[filepath.Join("components", c.ID+".md")] = ds.generateComponentPage(c, opts)
 		}
 	}
 
 	// Generate tokens documentation
 	if !ds.Foundations.isEmpty() {
-		tokensIndex, err := ds.generateTokensIndex(opts)
-		if err != nil {
-			return nil, fmt.Errorf("generating tokens index: %w", err)
-		}
-		output.Files["tokens/index.md"] = tokensIndex
+		output.Files["tokens/index.md"] = ds.generateTokensIndex(opts)
 
 		// W3C tokens JSON
 		if opts.IncludeTokens {
@@ -130,17 +114,13 @@ func (ds *DesignSystem) GenerateDocs(opts DocsOptions) (*DocsOutput, error) {
 
 	// Generate patterns documentation
 	if len(ds.Patterns) > 0 {
-		patternsIndex, err := ds.generatePatternsIndex(opts)
-		if err != nil {
-			return nil, fmt.Errorf("generating patterns index: %w", err)
-		}
-		output.Files["patterns/index.md"] = patternsIndex
+		output.Files["patterns/index.md"] = ds.generatePatternsIndex()
 	}
 
 	return output, nil
 }
 
-func (ds *DesignSystem) generateDocsIndex(opts DocsOptions, projectName string) (string, error) {
+func (ds *DesignSystem) generateDocsIndex(opts DocsOptions, projectName string) string {
 	var b strings.Builder
 
 	b.WriteString("# ")
@@ -200,10 +180,10 @@ func (ds *DesignSystem) generateDocsIndex(opts DocsOptions, projectName string) 
 		b.WriteString(fmt.Sprintf("- [Source Code](%s)\n", opts.ProjectURL))
 	}
 
-	return b.String(), nil
+	return b.String()
 }
 
-func (ds *DesignSystem) generateComponentsIndex(opts DocsOptions) (string, error) {
+func (ds *DesignSystem) generateComponentsIndex(opts DocsOptions) string {
 	var b strings.Builder
 
 	b.WriteString("# Components\n\n")
@@ -246,10 +226,10 @@ func (ds *DesignSystem) generateComponentsIndex(opts DocsOptions) (string, error
 		b.WriteString("\n")
 	}
 
-	return b.String(), nil
+	return b.String()
 }
 
-func (ds *DesignSystem) generateComponentPage(c Component, opts DocsOptions) (string, error) {
+func (ds *DesignSystem) generateComponentPage(c Component, opts DocsOptions) string {
 	var b strings.Builder
 
 	// Title
@@ -476,10 +456,10 @@ func (ds *DesignSystem) generateComponentPage(c Component, opts DocsOptions) (st
 		b.WriteString("\n")
 	}
 
-	return b.String(), nil
+	return b.String()
 }
 
-func (ds *DesignSystem) generateTokensIndex(opts DocsOptions) (string, error) {
+func (ds *DesignSystem) generateTokensIndex(opts DocsOptions) string {
 	var b strings.Builder
 
 	b.WriteString("# Design Tokens\n\n")
@@ -583,10 +563,10 @@ func (ds *DesignSystem) generateTokensIndex(opts DocsOptions) (string, error) {
 		}
 	}
 
-	return b.String(), nil
+	return b.String()
 }
 
-func (ds *DesignSystem) generatePatternsIndex(opts DocsOptions) (string, error) {
+func (ds *DesignSystem) generatePatternsIndex() string {
 	var b strings.Builder
 
 	b.WriteString("# Patterns\n\n")
@@ -632,5 +612,5 @@ func (ds *DesignSystem) generatePatternsIndex(opts DocsOptions) (string, error) 
 		}
 	}
 
-	return b.String(), nil
+	return b.String()
 }

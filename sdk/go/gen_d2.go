@@ -328,7 +328,7 @@ func (ds *DesignSystem) GenerateD2ComponentDiagram(componentID string, opts D2Op
 
 // Helper functions
 
-func writeD2ComponentNode(b *strings.Builder, c Component, opts D2Options, indent string) {
+func writeD2ComponentNode(b *strings.Builder, c Component, _ D2Options, indent string) {
 	nodeID := sanitizeD2ID(c.ID)
 
 	b.WriteString(fmt.Sprintf("%s%s: %s {\n", indent, nodeID, c.Name))

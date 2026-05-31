@@ -140,6 +140,7 @@ func fetchContract(specURL, baseDir string) (*ThemingContract, error) {
 
 	if strings.HasPrefix(specURL, "http://") || strings.HasPrefix(specURL, "https://") {
 		// HTTP fetch
+		// #nosec G107 -- URL from design system spec, user-controlled configuration
 		resp, err := http.Get(specURL)
 		if err != nil {
 			return nil, fmt.Errorf("fetch %s: %w", specURL, err)

@@ -158,97 +158,86 @@ func TestGenerateBindings_InheritStrategy(t *testing.T) {
 	}
 }
 
-func TestGenerateBindings_TypeScriptFormat(t *testing.T) {
-	ds := &DesignSystem{
-		Meta: Meta{Name: "Test", Version: "1.0.0"},
-		Foundations: Foundations{
-			Colors: []ColorToken{
-				{ID: "brand", Value: "#FF0000"},
-			},
+func TestGenerateBindings_OutputFormats(t *testing.T) {
+	tests := []struct {
+		name       string
+		format     BindingFormat
+		colorID    string
+		colorValue string
+		compID     string
+		compName   string
+		tokenID    string
+		cssProp    string
+		wantStrs   []string
+	}{
+		{
+			name:       "TypeScript format",
+			format:     FormatTypeScript,
+			colorID:    "brand",
+			colorValue: "#FF0000",
+			compID:     "alert",
+			compName:   "Alert",
+			tokenID:    "bg-color",
+			cssProp:    "--alert-bg-color",
+			wantStrs:   []string{"export const alertTheme", "bgColor: '#FF0000'"},
 		},
-		Components: []Component{
-			{
-				ID:   "alert",
-				Name: "Alert",
-				ThemingContract: &ThemingContract{
-					Prefix: "--alert",
-					Tokens: []ThemeToken{
-						{ID: "bg-color", CSSProperty: "--alert-bg-color", DefaultLight: "#FFF", DefaultDark: "#000"},
+		{
+			name:       "SCSS format",
+			format:     FormatSCSS,
+			colorID:    "accent",
+			colorValue: "#00FF00",
+			compID:     "tag",
+			compName:   "Tag",
+			tokenID:    "fill",
+			cssProp:    "--tag-fill",
+			wantStrs:   []string{"$tag-fill: #00FF00", "--tag-fill: #00FF00"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ds := &DesignSystem{
+				Meta: Meta{Name: "Test", Version: "1.0.0"},
+				Foundations: Foundations{
+					Colors: []ColorToken{
+						{ID: tt.colorID, Value: tt.colorValue},
 					},
 				},
-			},
-		},
-		ThemeBindings: []ThemeBindings{
-			{
-				Component: "alert",
-				Strategy:  "explicit",
-				Mappings: []TokenMapping{
-					{From: "brand", To: "bg-color"},
-				},
-			},
-		},
-	}
-
-	opts := BindingOptions{Format: FormatTypeScript}
-
-	bindings, err := GenerateBindings(ds, opts)
-	if err != nil {
-		t.Fatalf("GenerateBindings failed: %v", err)
-	}
-
-	// Check TypeScript output
-	if !strings.Contains(bindings[0].CSS, "export const alertTheme") {
-		t.Errorf("TypeScript missing theme export; got: %s", bindings[0].CSS)
-	}
-	if !strings.Contains(bindings[0].CSS, "bgColor: '#FF0000'") {
-		t.Errorf("TypeScript missing camelCase property; got: %s", bindings[0].CSS)
-	}
-}
-
-func TestGenerateBindings_SCSSFormat(t *testing.T) {
-	ds := &DesignSystem{
-		Meta: Meta{Name: "Test", Version: "1.0.0"},
-		Foundations: Foundations{
-			Colors: []ColorToken{
-				{ID: "accent", Value: "#00FF00"},
-			},
-		},
-		Components: []Component{
-			{
-				ID:   "tag",
-				Name: "Tag",
-				ThemingContract: &ThemingContract{
-					Prefix: "--tag",
-					Tokens: []ThemeToken{
-						{ID: "fill", CSSProperty: "--tag-fill", DefaultLight: "#FFF", DefaultDark: "#000"},
+				Components: []Component{
+					{
+						ID:   tt.compID,
+						Name: tt.compName,
+						ThemingContract: &ThemingContract{
+							Prefix: "--" + tt.compID,
+							Tokens: []ThemeToken{
+								{ID: tt.tokenID, CSSProperty: tt.cssProp, DefaultLight: "#FFF", DefaultDark: "#000"},
+							},
+						},
 					},
 				},
-			},
-		},
-		ThemeBindings: []ThemeBindings{
-			{
-				Component: "tag",
-				Strategy:  "explicit",
-				Mappings: []TokenMapping{
-					{From: "accent", To: "fill"},
+				ThemeBindings: []ThemeBindings{
+					{
+						Component: tt.compID,
+						Strategy:  "explicit",
+						Mappings: []TokenMapping{
+							{From: tt.colorID, To: tt.tokenID},
+						},
+					},
 				},
-			},
-		},
-	}
+			}
 
-	opts := BindingOptions{Format: FormatSCSS}
+			opts := BindingOptions{Format: tt.format}
+			bindings, err := GenerateBindings(ds, opts)
+			if err != nil {
+				t.Fatalf("GenerateBindings failed: %v", err)
+			}
 
-	bindings, err := GenerateBindings(ds, opts)
-	if err != nil {
-		t.Fatalf("GenerateBindings failed: %v", err)
-	}
-
-	// Check SCSS output has both variables and CSS
-	if !strings.Contains(bindings[0].CSS, "$tag-fill: #00FF00") {
-		t.Errorf("SCSS missing variable; got: %s", bindings[0].CSS)
-	}
-	if !strings.Contains(bindings[0].CSS, "--tag-fill: #00FF00") {
-		t.Errorf("SCSS missing CSS property; got: %s", bindings[0].CSS)
+			for _, want := range tt.wantStrs {
+				if !strings.Contains(bindings[0].CSS, want) {
+					t.Errorf("output missing %q; got: %s", want, bindings[0].CSS)
+				}
+			}
+		})
 	}
 }
 
@@ -339,9 +328,9 @@ func TestResolveTokenValue(t *testing.T) {
 		want     string
 	}{
 		{"primary-500", "#3B82F6"},
-		{"colors.primary-500", "#3B82F6"},          // dot notation with lookup
-		{"colors.accent", "#8B5CF6"},               // exact match with dot
-		{"unknown", "var(--unknown)"},              // not found
+		{"colors.primary-500", "#3B82F6"},           // dot notation with lookup
+		{"colors.accent", "#8B5CF6"},                // exact match with dot
+		{"unknown", "var(--unknown)"},               // not found
 		{"colors.unknown", "var(--colors-unknown)"}, // not found with dot
 	}
 
