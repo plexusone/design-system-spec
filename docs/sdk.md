@@ -130,6 +130,7 @@ type DesignSystem struct {
     Content       *Content
     Accessibility *Accessibility
     Governance    *Governance
+    ThemeBindings []ThemeBindings  // Application token mappings
 }
 ```
 
@@ -137,17 +138,57 @@ type DesignSystem struct {
 
 ```go
 type Component struct {
-    ID          string
-    Name        string
+    ID              string
+    Name            string
+    Description     string
+    Category        string
+    Variants        []Variant
+    States          []State
+    Props           []Prop
+    Events          []ComponentEvent   // Custom events
+    Slots           []Slot
+    Uses            []string           // Component dependencies
+    Constraints     *Constraints
+    ThemingContract *ThemingContract   // External theming API
+    Accessibility   *ComponentA11y
+    LLM             *LLMContext
+}
+```
+
+### ThemingContract
+
+```go
+type ThemingContract struct {
+    Prefix      string       // CSS custom property prefix (e.g., "--btn")
     Description string
-    Category    string
-    Variants    []Variant
-    States      []State
-    Props       []Prop
-    Slots       []Slot
-    Anatomy     []AnatomyPart
-    Constraints *Constraints
-    LLM         *LLMContext
+    Tokens      []ThemeToken
+}
+
+type ThemeToken struct {
+    ID           string  // Token identifier
+    CSSProperty  string  // Full CSS property name
+    Semantic     string  // Semantic category for auto-mapping
+    Description  string
+    DefaultLight string  // Light mode default
+    DefaultDark  string  // Dark mode default
+}
+```
+
+### ThemeBindings
+
+```go
+type ThemeBindings struct {
+    Component string          // Component ID to theme
+    SpecURL   string          // Optional URL to fetch component spec
+    ThemeMode string          // "light", "dark", or empty for both
+    Strategy  string          // "explicit", "semantic", "inherit"
+    Mappings  []TokenMapping
+}
+
+type TokenMapping struct {
+    From      string  // Application token ID
+    To        string  // Component token ID
+    Transform string  // Optional CSS transform function
 }
 ```
 
@@ -180,6 +221,103 @@ Validation checks:
 - Component IDs are unique
 - Variant references are valid
 - Color values are parseable
+
+## Theming Contracts
+
+### Validate Contracts
+
+```go
+// Validate a single component's contract
+report := dss.ValidateContract(&component)
+if !report.Passed {
+    for _, err := range report.Errors {
+        fmt.Printf("Error: %s: %s\n", err.Field, err.Message)
+    }
+}
+
+// Validate all contracts in a design system
+reports := dss.ValidateAllContracts(ds)
+fmt.Printf("Errors: %d, Warnings: %d\n",
+    dss.TotalErrors(reports),
+    dss.TotalWarnings(reports))
+```
+
+### Generate Theme Bindings
+
+```go
+opts := dss.BindingOptions{
+    Format:          dss.FormatCSS,  // or FormatTypeScript, FormatSCSS
+    DefaultStrategy: "semantic",      // or "explicit", "inherit"
+}
+
+bindings, err := dss.GenerateBindings(ds, opts)
+if err != nil {
+    panic(err)
+}
+
+// Write to file
+f, _ := os.Create("theme.css")
+dss.WriteBindings(f, bindings)
+```
+
+## Diagram Generation
+
+### Mermaid Diagrams
+
+```go
+opts := dss.DefaultMermaidOptions()
+opts.Direction = "LR"  // Left to Right
+opts.ShowSlots = true
+
+// Component relationship diagram
+mermaid, err := ds.GenerateMermaid(opts)
+
+// Single component focus diagram
+diagram, err := ds.GenerateMermaidComponentDiagram("button", opts)
+
+// Token usage diagram
+tokenDiagram, err := ds.GenerateMermaidTokenDiagram(opts)
+```
+
+### D2 Diagrams
+
+```go
+opts := dss.DefaultD2Options()
+opts.Sketch = true  // Hand-drawn look
+
+// Full architecture diagram
+d2, err := ds.GenerateD2(opts)
+
+// Single component diagram
+diagram, err := ds.GenerateD2ComponentDiagram("button", opts)
+```
+
+## W3C Design Tokens Export
+
+```go
+opts := dss.DefaultW3CTokensOptions()
+opts.IncludeDescriptions = true
+opts.IncludeExtensions = true
+
+tokens, err := ds.GenerateW3CTokens(opts)
+// Output: W3C Design Tokens Community Group format JSON
+```
+
+## Documentation Generation
+
+```go
+opts := dss.DefaultDocsOptions()
+opts.OutputDir = "docs/spec"
+opts.IncludeMermaid = true
+opts.IncludeD2 = true
+opts.MkDocsCompatible = true
+
+output, err := ds.GenerateDocs(opts)
+// output.Files contains map of path -> content
+for path, content := range output.Files {
+    // Write each file
+}
+```
 
 ## JSON Schema Generation
 

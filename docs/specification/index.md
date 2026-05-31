@@ -15,6 +15,7 @@ DSS defines **9 canonical layers** for complete design system specification. Eac
 | Content | `content.json` | Voice & tone guidelines |
 | [Accessibility](accessibility.md) | `accessibility.json` | WCAG compliance requirements |
 | Governance | `governance.json` | Versioning and deprecation policies |
+| [Theming](theming.md) | `themeBindings.json` | Token mappings to external components |
 
 ## Directory Structure
 
@@ -27,13 +28,14 @@ my-design-system/
 ├── accessibility.json        # WCAG requirements
 ├── governance.json           # Policies
 ├── content.json              # Voice & tone
+├── themeBindings.json        # Token mappings to external components
 ├── foundations/
 │   ├── colors.json           # Color tokens
 │   ├── typography.json       # Font definitions
 │   ├── spacing.json          # Spacing scale
 │   └── border-radius.json    # Border radius values
 ├── components/
-│   ├── button.json           # Button component spec
+│   ├── button.json           # Button component spec (includes themingContract)
 │   ├── card.json             # Card component spec
 │   └── input.json            # Input component spec
 ├── patterns/

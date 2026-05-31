@@ -57,10 +57,12 @@ nav:
       - Components: specification/components.md
       - Patterns: specification/patterns.md
       - Accessibility: specification/accessibility.md
+      - Theming: specification/theming.md
   - Go SDK: sdk.md
   - Examples: examples.md
   - Case Studies:
       - PlexusOne: case-studies/plexusone.md
+      - Component Theming: case-studies/component-theming.md
   - Releases:
       - v0.2.0: releases/v0.2.0.md
       - v0.1.1: releases/v0.1.1.md

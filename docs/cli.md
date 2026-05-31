@@ -154,6 +154,147 @@ dss validate --json ./src/components
 
 ---
 
+### dss bind
+
+Generate theme bindings from design system token mappings.
+
+```bash
+dss bind [flags]
+```
+
+**Flags:**
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--output` | `-o` | Output file (default: stdout) |
+| `--format` | `-f` | Output format: `css`, `typescript`, `scss` (default: `css`) |
+| `--strategy` | | Mapping strategy: `explicit`, `semantic`, `inherit` (default: `explicit`) |
+
+**Examples:**
+
+```bash
+# Generate CSS bindings to stdout
+dss bind
+
+# Generate CSS to file
+dss bind --output ./theme.css
+
+# Generate TypeScript constants
+dss bind --format typescript --output ./theme.ts
+
+# Use semantic auto-mapping
+dss bind --strategy semantic --output ./theme.css
+
+# Generate SCSS variables
+dss bind --format scss --output ./theme.scss
+```
+
+**Mapping Strategies:**
+
+| Strategy | Description |
+|----------|-------------|
+| `explicit` | Only use defined `from`/`to` mappings, skip unmapped tokens |
+| `semantic` | Auto-map by semantic field, fall back to component defaults |
+| `inherit` | Use component defaults for all unmapped tokens |
+
+---
+
+### dss contract
+
+Display and validate component theming contracts.
+
+```bash
+dss contract <subcommand> [flags]
+```
+
+**Subcommands:**
+
+#### dss contract show
+
+Display a component's theming contract.
+
+```bash
+dss contract show <component-id> [flags]
+```
+
+**Flags:**
+
+| Flag | Description |
+|------|-------------|
+| `--json` | Output as JSON instead of table |
+
+**Examples:**
+
+```bash
+# Show button's theming contract
+dss contract show button
+
+# JSON output
+dss contract show button --json
+```
+
+**Output:**
+
+```
+Theming Contract: Button
+Prefix: --btn
+
+ID          CSS PROPERTY      SEMANTIC  LIGHT DEFAULT  DARK DEFAULT
+--          ------------      --------  -------------  ------------
+background  --btn-background  primary   #0066CC        #3399FF
+text        --btn-text        text      #FFFFFF        #0A0E1A
+```
+
+#### dss contract validate
+
+Validate all theming contracts in the design system.
+
+```bash
+dss contract validate [flags]
+```
+
+**Flags:**
+
+| Flag | Description |
+|------|-------------|
+| `--json` | Output as JSON instead of table |
+
+**Examples:**
+
+```bash
+# Validate all contracts
+dss contract validate
+
+# JSON output for CI
+dss contract validate --json
+```
+
+**Validation Checks:**
+
+| Check | Severity | Description |
+|-------|----------|-------------|
+| Prefix required | Error | Contract must have a prefix starting with `--` |
+| Token ID required | Error | Each token must have a unique ID |
+| CSS property required | Error | Each token must have a cssProperty |
+| Duplicate token ID | Error | Token IDs must be unique within a contract |
+| CSS property prefix | Warning | cssProperty should start with the contract prefix |
+| Invalid semantic | Warning | Semantic value should be from the allowed set |
+| Missing defaults | Warning | Tokens should have defaultLight and defaultDark |
+
+**Output:**
+
+```
+✓ button: OK
+⚠ card: 2 warnings
+    WARN  [bg] themingContract.tokens[0].defaultLight: defaultLight not provided
+✗ input: 1 error, 0 warnings
+    ERROR themingContract.prefix: prefix is required
+
+Validation passed: 3 contracts validated, 2 warnings
+```
+
+---
+
 ## Usage in Makefiles
 
 Example `Makefile` for a project using DSS:
