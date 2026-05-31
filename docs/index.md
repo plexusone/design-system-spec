@@ -12,6 +12,8 @@ Design System Spec (DSS) provides a canonical framework for expressing design sy
 - **Multi-format support** - JSON/YAML for tokens, Markdown for documentation
 - **LLM optimization** - Explicit intent, contexts, and constraints for AI code generation
 - **Code generation** - Generate CSS, TypeScript types, and LLM prompts from spec
+- **Theming contracts** - Formal theming API between component libraries and applications
+- **Diagram generation** - Mermaid and D2 diagrams for architecture visualization
 - **Compliance validation** - Validate implementations against the spec
 - **Go-first approach** - Go structs as source of truth, generating JSON Schema
 
@@ -34,13 +36,19 @@ dss info
 # Generate CSS, TypeScript types, and LLM context
 dss generate --css ./src/index.css --types ./src/lib/types.ts --llm ./DESIGN_CONTEXT.md
 
+# Generate theme bindings for external components
+dss bind --output ./theme.css
+
+# Validate theming contracts
+dss contract validate
+
 # Validate component implementations
 dss validate ./src/components
 ```
 
 ## Canonical Layers
 
-DSS defines **9 canonical layers** for complete design system specification:
+DSS defines **10 canonical layers** for complete design system specification:
 
 | Layer | Purpose |
 |-------|---------|
@@ -53,6 +61,7 @@ DSS defines **9 canonical layers** for complete design system specification:
 | **Content** | Voice & tone guidelines |
 | **Accessibility** | WCAG compliance requirements |
 | **Governance** | Versioning and deprecation policies |
+| **Theming** | Token mappings to external components |
 
 ## Next Steps
 
