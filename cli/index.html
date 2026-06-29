@@ -1004,7 +1004,7 @@
   <span class="md-ellipsis">
     
   
-    Case Studies
+    Reference
   
 
     
@@ -1017,6 +1017,95 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specs/ROADMAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NPM Package Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Case Studies
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1111,10 +1200,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
             
   
   
@@ -1132,8 +1221,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1774,6 +1863,50 @@
 </tr>
 </tbody>
 </table>
+<p><strong>Generated Package Exports:</strong></p>
+<p>The generated <code>package.json</code> includes these exports for consumers:</p>
+<table>
+<thead>
+<tr>
+<th>Export Path</th>
+<th>File</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.</code></td>
+<td><code>index.mjs</code> / <code>index.js</code></td>
+<td><code>import { colors } from '@myorg/design-tokens'</code></td>
+</tr>
+<tr>
+<td><code>./css</code></td>
+<td><code>css/tokens.css</code></td>
+<td><code>@import '@myorg/design-tokens/css'</code></td>
+</tr>
+<tr>
+<td><code>./tailwind</code></td>
+<td><code>tailwind/preset.js</code></td>
+<td><code>import preset from '@myorg/design-tokens/tailwind'</code></td>
+</tr>
+<tr>
+<td><code>./shadcn</code></td>
+<td><code>shadcn/theme.css</code></td>
+<td><code>@import '@myorg/design-tokens/shadcn'</code></td>
+</tr>
+<tr>
+<td><code>./mkdocs</code></td>
+<td><code>mkdocs/extra.css</code></td>
+<td><code>extra_css: ['.../@myorg/design-tokens/mkdocs']</code></td>
+</tr>
+<tr>
+<td><code>./scss</code></td>
+<td><code>scss/_variables.scss</code></td>
+<td><code>@import '@myorg/design-tokens/scss'</code></td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../specs/ROADMAP/">NPM Package Spec</a> for full <code>package.json</code> structure.</p>
 <p><strong>CSS Formats:</strong></p>
 <table>
 <thead>
