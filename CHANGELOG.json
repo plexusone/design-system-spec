@@ -8,6 +8,32 @@
   "unreleased": {},
   "releases": [
     {
+      "version": "v0.4.0",
+      "date": "2026-06-29",
+      "highlights": [
+        { "description": "NPM package generation with framework-specific outputs (CSS, Tailwind, ShadCN, MkDocs, SCSS, JSON, W3C)" },
+        { "description": "Single-file loader support for design-system.json files" }
+      ],
+      "added": [
+        { "description": "`GeneratePackage()` method for NPM package generation with 7 target formats", "commit": "31f178a" },
+        { "description": "`PackageGeneratorOptions` struct with target, scope, and name configuration", "commit": "31f178a" },
+        { "description": "`PackageTarget` constants: CSS, Tailwind, ShadCN, MkDocs Material, SCSS, JSON, W3C", "commit": "31f178a" },
+        { "description": "`--package`, `--scope`, `--name`, `--targets`, `--dry-run` CLI flags for package generation", "commit": "4ac4c0a" },
+        { "description": "Comprehensive package generation tests validating all target outputs", "commit": "00d4bb0" }
+      ],
+      "fixed": [
+        { "description": "Directory loader now supports `design-system.json` single-file format", "commit": "53f82fa" }
+      ],
+      "documentation": [
+        { "description": "NPM package generation roadmap and usage examples", "commit": "5108c43" },
+        { "description": "Updated CLI reference with `--package` flag documentation", "commit": "9ff2193" },
+        { "description": "Updated task list tracking NPM package implementation", "commit": "9ff2193" }
+      ],
+      "build": [
+        { "description": "Update Go module dependencies", "commit": "e6a5a3f" }
+      ]
+    },
+    {
       "version": "v0.3.0",
       "date": "2026-05-30",
       "highlights": [
