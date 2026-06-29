@@ -50,7 +50,17 @@ func loadFromFile(path string) (*DesignSystem, error) {
 //	  components/
 //	    button.json
 //	    ...
+//
+// Alternatively, loads from a single design-system.json or design-system.yaml file.
 func loadFromDirectory(dir string) (*DesignSystem, error) {
+	// First, check for a single design-system.json or design-system.yaml file
+	for _, ext := range []string{".json", ".yaml", ".yml"} {
+		path := filepath.Join(dir, "design-system"+ext)
+		if _, err := os.Stat(path); err == nil {
+			return loadFromFile(path)
+		}
+	}
+
 	ds := &DesignSystem{}
 
 	// Load meta
