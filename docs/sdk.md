@@ -319,6 +319,127 @@ for path, content := range output.Files {
 }
 ```
 
+## NPM Package Generation
+
+Generate publishable NPM packages with framework-specific presets and configurations.
+
+### GeneratePackage Method
+
+```go
+opts := dss.PackageGeneratorOptions{
+    OutputDir:   "./dist",
+    Scope:       "@myorg",
+    PackageName: "design-tokens",
+    Targets: []dss.PackageTarget{
+        dss.TargetCSS,
+        dss.TargetTailwind,
+        dss.TargetShadCN,
+    },
+    IncludeReadme: true,
+}
+
+err := ds.GeneratePackage(opts)
+if err != nil {
+    panic(err)
+}
+```
+
+### PackageGeneratorOptions
+
+```go
+type PackageGeneratorOptions struct {
+    // OutputDir is the directory to write the package to
+    OutputDir string
+
+    // Targets specifies which framework outputs to generate
+    Targets []PackageTarget
+
+    // Scope is the NPM scope (e.g., "@plexusone")
+    // If empty, derived from meta
+    Scope string
+
+    // PackageName is the package name (default: "design-tokens")
+    PackageName string
+
+    // DryRun previews output without writing files
+    DryRun bool
+
+    // IncludeReadme generates a README.md file
+    IncludeReadme bool
+}
+```
+
+### PackageTarget Constants
+
+```go
+const (
+    TargetCSS            PackageTarget = "css"
+    TargetTailwind       PackageTarget = "tailwind"
+    TargetShadCN         PackageTarget = "shadcn"
+    TargetMkDocsMaterial PackageTarget = "mkdocs-material"
+    TargetSCSS           PackageTarget = "scss"
+    TargetJSON           PackageTarget = "json"
+    TargetW3C            PackageTarget = "w3c"
+)
+```
+
+### Example: Generate All Targets
+
+```go
+ds, _ := dss.LoadDesignSystem("./my-design-system/")
+
+opts := dss.DefaultPackageOptions()
+opts.OutputDir = "./dist"
+opts.Targets = []dss.PackageTarget{
+    dss.TargetCSS,
+    dss.TargetTailwind,
+    dss.TargetShadCN,
+    dss.TargetMkDocsMaterial,
+    dss.TargetSCSS,
+    dss.TargetJSON,
+    dss.TargetW3C,
+}
+
+err := ds.GeneratePackage(opts)
+```
+
+### Example: Preview Without Writing
+
+```go
+opts := dss.DefaultPackageOptions()
+opts.OutputDir = "./dist"
+opts.DryRun = true
+
+err := ds.GeneratePackage(opts)
+// No files written, validates package structure
+```
+
+### Generated Package Structure
+
+```
+dist/
+├── package.json           # NPM manifest with exports
+├── index.js               # CommonJS entry point
+├── index.mjs              # ES module entry point
+├── index.d.ts             # TypeScript declarations
+├── README.md              # Usage documentation
+├── css/
+│   └── tokens.css
+├── tailwind/
+│   ├── preset.js
+│   └── theme.json
+├── shadcn/
+│   └── theme.css
+├── mkdocs/
+│   └── theme.css
+├── scss/
+│   └── tokens.scss
+├── json/
+│   └── tokens.json
+└── w3c/
+    └── tokens.json
+```
+
 ## JSON Schema Generation
 
 ```go

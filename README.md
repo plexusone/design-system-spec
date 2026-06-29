@@ -145,6 +145,60 @@ dss validate --json ./src/components
 dss generate --llm ./DESIGN_CONTEXT.md  # LLM context (primary use case)
 dss generate --css ./src/index.css      # Tailwind v4 @theme block
 dss generate --types ./src/lib/types.ts # TypeScript interfaces
+dss generate --package ./dist           # NPM package with framework presets
+```
+
+### Generating NPM Packages
+
+Generate publishable NPM packages with framework-specific outputs:
+
+```bash
+# Generate package with all targets
+dss generate --package ./dist --targets all
+
+# Generate with specific targets
+dss generate --package ./dist --targets css,tailwind,shadcn
+
+# Custom scope and name
+dss generate --package ./dist --scope @myorg --name tokens
+```
+
+**Available Targets:**
+
+| Target | Output | Use Case |
+|--------|--------|----------|
+| `css` | CSS custom properties | Vanilla CSS/HTML projects |
+| `tailwind` | Tailwind v4 preset and theme | Tailwind CSS v4+ projects |
+| `shadcn` | ShadCN/UI theme variables | ShadCN/UI component library |
+| `mkdocs-material` | MkDocs Material theme | Documentation sites |
+| `scss` | SCSS variables | Sass/SCSS projects |
+| `json` | Raw JSON tokens | Build tool pipelines |
+| `w3c` | W3C Design Tokens format | Standards-compliant token exchange |
+
+**Using Generated Packages:**
+
+Tailwind v4:
+
+```javascript
+import tokens from '@myorg/design-tokens/tailwind';
+
+export default {
+  presets: [tokens],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+};
+```
+
+ShadCN:
+
+```css
+@import '@myorg/design-tokens/shadcn';
+```
+
+MkDocs Material:
+
+```yaml
+extra_css:
+  - https://unpkg.com/@myorg/design-tokens/mkdocs/theme.css
 ```
 
 ### Theme Bindings

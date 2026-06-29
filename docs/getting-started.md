@@ -245,6 +245,36 @@ This generates a markdown file optimized for AI code generation, including:
 - Component specs with anti-patterns
 - Accessibility requirements
 
+### Generate NPM Package
+
+Generate a publishable NPM package with framework-specific outputs:
+
+```bash
+dss generate --package ./dist --targets all
+```
+
+This creates a complete package with:
+
+- `package.json` with proper exports
+- CSS custom properties
+- Tailwind v4 preset
+- ShadCN theme variables
+- MkDocs Material theme
+- SCSS variables
+- JSON and W3C token formats
+
+**Specific Targets:**
+
+```bash
+# Only CSS and Tailwind
+dss generate --package ./dist --targets css,tailwind
+
+# With custom scope and name
+dss generate --package ./dist --scope @myorg --name tokens --targets css,tailwind,shadcn
+```
+
+The generated package can be published to NPM and consumed in your projects.
+
 ## Validate Implementation
 
 If you have React components, validate them against your spec:
