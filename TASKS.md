@@ -33,9 +33,20 @@ The `dss` CLI using Cobra.
 
 ### Code Generators
 
-- [x] `gen_css.go` - Tailwind v4, CSS vars, SCSS
+- [x] `gen_css.go` - Tailwind v4, CSS vars, SCSS, MkDocs Material
 - [x] `gen_react.go` - TypeScript interfaces
 - [x] `gen_llm.go` - LLM-optimized context (Markdown)
+- [x] `gen_package.go` - NPM package generation with framework presets
+
+### NPM Package Generation
+
+Generate publishable NPM packages with framework-specific outputs:
+
+- [x] `--package` flag for `dss generate`
+- [x] Targets: css, tailwind, shadcn, mkdocs-material, scss, json, w3c
+- [x] Auto-generated package.json, README, TypeScript types
+- [x] Tailwind v4 preset generation
+- [x] ShadCN theme CSS generation
 
 ## Phase 3: Documentation ✅
 

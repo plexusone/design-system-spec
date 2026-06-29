@@ -88,7 +88,36 @@ dss generate --css-format scss --css ./src/variables.scss
 
 # Generate standard CSS custom properties
 dss generate --css-format css-vars --css ./src/vars.css
+
+# Generate NPM package with all targets
+dss generate --package ./dist --targets all
+
+# Generate NPM package with specific targets
+dss generate --package ./dist --targets css,tailwind,shadcn
 ```
+
+**NPM Package Flags:**
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--package` | `-p` | Output directory for NPM package |
+| `--scope` | `-s` | NPM scope (e.g., `@myorg`) |
+| `--name` | `-n` | Package name (default: `design-tokens`) |
+| `--targets` | `-t` | Comma-separated targets (default: `css,tailwind`) |
+| `--dry-run` | | Preview without writing files |
+
+**Available Targets:**
+
+| Target | Description |
+|--------|-------------|
+| `css` | CSS custom properties |
+| `tailwind` | Tailwind CSS v4 preset |
+| `shadcn` | ShadCN/UI theme variables |
+| `mkdocs-material` | MkDocs Material theme |
+| `scss` | SCSS variables |
+| `json` | Raw JSON tokens |
+| `w3c` | W3C Design Tokens format |
+| `all` | All of the above |
 
 **CSS Formats:**
 
@@ -303,7 +332,7 @@ Example `Makefile` for a project using DSS:
 DSS ?= dss
 WEB_SRC = ./web/src
 
-.PHONY: generate validate
+.PHONY: generate validate package
 
 generate:
 	@$(DSS) generate \
@@ -322,6 +351,60 @@ validate-ci:
 check:
 	@$(DSS) generate --css /tmp/check.css
 	@diff -q $(WEB_SRC)/index.css /tmp/check.css
+
+# Generate NPM package
+package:
+	@$(DSS) generate --package ./dist --targets all
+```
+
+---
+
+## Using Generated NPM Packages
+
+### In a Tailwind Project
+
+```javascript
+// tailwind.config.js
+import preset from '@myorg/design-tokens/tailwind'
+
+export default {
+  presets: [preset],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+}
+```
+
+### In a ShadCN Project
+
+```css
+/* Import theme variables */
+@import '@myorg/design-tokens/shadcn/theme.css';
+```
+
+### In MkDocs
+
+```yaml
+# mkdocs.yml
+extra_css:
+  - node_modules/@myorg/design-tokens/mkdocs/extra.css
+```
+
+### Direct CSS Import
+
+```css
+@import '@myorg/design-tokens/css/tokens.css';
+
+.my-button {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+```
+
+### JavaScript/TypeScript
+
+```javascript
+import { colors, spacing } from '@myorg/design-tokens'
+
+console.log(colors.primary) // #...
 ```
 
 ---
