@@ -119,6 +119,21 @@ dss generate --package ./dist --targets css,tailwind,shadcn
 | `w3c` | W3C Design Tokens format |
 | `all` | All of the above |
 
+**Generated Package Exports:**
+
+The generated `package.json` includes these exports for consumers:
+
+| Export Path | File | Usage |
+|-------------|------|-------|
+| `.` | `index.mjs` / `index.js` | `import { colors } from '@myorg/design-tokens'` |
+| `./css` | `css/tokens.css` | `@import '@myorg/design-tokens/css'` |
+| `./tailwind` | `tailwind/preset.js` | `import preset from '@myorg/design-tokens/tailwind'` |
+| `./shadcn` | `shadcn/theme.css` | `@import '@myorg/design-tokens/shadcn'` |
+| `./mkdocs` | `mkdocs/extra.css` | `extra_css: ['.../@myorg/design-tokens/mkdocs']` |
+| `./scss` | `scss/_variables.scss` | `@import '@myorg/design-tokens/scss'` |
+
+See [NPM Package Spec](specs/ROADMAP.md) for full `package.json` structure.
+
 **CSS Formats:**
 
 | Format | Description |

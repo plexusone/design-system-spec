@@ -60,6 +60,8 @@ nav:
       - Theming: specification/theming.md
   - Go SDK: sdk.md
   - Examples: examples.md
+  - Reference:
+      - NPM Package Spec: specs/ROADMAP.md
   - Case Studies:
       - PlexusOne: case-studies/plexusone.md
       - Component Theming: case-studies/component-theming.md
