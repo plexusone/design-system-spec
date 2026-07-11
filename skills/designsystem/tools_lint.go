@@ -14,7 +14,7 @@ func (s *Skill) lintSpecTool() skill.Tool {
 		skill.Parameters{
 			"rules": {
 				Type:        "array",
-				Description: "Specific rules to check (default: all). Available: meta-required, component-has-variants, component-has-props, component-has-llm-context, llm-has-intent, llm-has-anti-patterns, tokens-have-descriptions, token-references-valid, no-orphan-tokens, component-uses-valid, accessibility-defined, theming-contract-valid",
+				Description: "Specific rules to check (default: all). Available: meta-required, component-has-variants, component-has-props, component-has-llm-context, llm-has-intent, llm-has-anti-patterns, llm-has-allowed-contexts, tokens-have-descriptions, token-references-valid, no-orphan-tokens, component-uses-valid, accessibility-defined, theming-contract-valid, validators-configured, validator-tool-required, validator-type-valid",
 				Required:    false,
 			},
 			"min_score": {
@@ -81,7 +81,7 @@ func (s *Skill) listLintRulesTool() skill.Tool {
 func (s *Skill) checkAgentReadinessTool() skill.Tool {
 	return skill.NewTool(
 		"check_agent_readiness",
-		"Check if the design system spec is ready for AI agent code generation. Verifies that components have LLM context with intent, anti-patterns, and allowed contexts.",
+		"Check if the design system spec is ready for AI agent code generation. Verifies that components have LLM context with intent, anti-patterns, and allowed contexts. Also checks that external validators are configured for requirements delegation.",
 		skill.Parameters{
 			"component_id": {
 				Type:        "string",
@@ -90,13 +90,14 @@ func (s *Skill) checkAgentReadinessTool() skill.Tool {
 			},
 		},
 		func(ctx context.Context, params map[string]any) (any, error) {
-			// Run lint with agent-readiness rules
+			// Run lint with agent-readiness rules (LLM context + validators)
 			opts := &dss.LintOptions{
 				Rules: []string{
 					"component-has-llm-context",
 					"llm-has-intent",
 					"llm-has-anti-patterns",
 					"llm-has-allowed-contexts",
+					"validators-configured",
 				},
 				IncludeSuggestions: true,
 			}

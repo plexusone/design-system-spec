@@ -77,6 +77,12 @@ func (s *Skill) Tools() []skill.Tool {
 		s.lintSpecTool(),
 		s.listLintRulesTool(),
 		s.checkAgentReadinessTool(),
+
+		// Validator delegation tools
+		s.listValidatorsTool(),
+		s.getValidatorTool(),
+		s.getValidationRequirementsTool(),
+		s.getValidatorInvocationTool(),
 	}
 }
 
