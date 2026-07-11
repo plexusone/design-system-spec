@@ -1,0 +1,208 @@
+# Design System Fix Loop - VEAL Pattern
+# Validates UI code against design system and automatically fixes violations
+#
+# This is a generic loop that works with any DSS-compliant design system.
+# The design-system.json in the project provides the token definitions.
+#
+# Uses structured-evaluation for machine-readable reports between agents.
+
+name: design-fix
+type: VEAL
+description: |
+  Design system compliance validation and fix loop.
+  Uses dss lint for deterministic checks and LLM review for semantic validation.
+  Automatically fixes violations through design-fixer agent.
+
+  Reports use structured-evaluation/rubric format for:
+  - Machine-readable findings
+  - Severity-based blocking
+  - Category scoring (pass/partial/fail)
+  - CI/CD integration
+
+validator: design-compliance
+actor: design-fixer
+
+# Report format for agent communication
+report_format: structured-evaluation/rubric
+requires: [dss, sevaluation]
+
+max_attempts: 3
+escalation: human
+
+success_criteria: |
+  All checks pass with GO status:
+  - No hardcoded colors (all use design tokens)
+  - Spacing follows design system scale
+  - Typography uses design system fonts
+  - Colors used according to semantic purpose
+  - No anti-patterns (multiple primary buttons, etc.)
+  - Accessibility requirements met
+
+# Validation checks (run in order: deterministic first, then LLM)
+checks:
+  # ============================================================
+  # DETERMINISTIC CHECKS (dss lint)
+  # ============================================================
+
+  - id: color-tokens
+    description: Verify all colors use design system tokens
+    type: command
+    command: dss lint --check colors --json
+    required: true
+    severity: high
+    expected: No hardcoded hex colors outside token definitions
+
+  - id: spacing-scale
+    description: Verify spacing values follow design system scale
+    type: command
+    command: dss lint --check spacing --json
+    required: true
+    severity: medium
+    expected: All spacing uses scale tokens
+
+  - id: typography-tokens
+    description: Verify typography uses design system fonts
+    type: command
+    command: dss lint --check typography --json
+    required: true
+    severity: medium
+    expected: Font families use design tokens
+
+  - id: component-variants
+    description: Verify component variants are valid
+    type: command
+    command: dss lint --check components --json
+    required: true
+    severity: high
+    expected: All component variants exist in design system
+
+  - id: anti-patterns
+    description: Check for design anti-patterns
+    type: command
+    command: dss lint --check patterns --json
+    required: true
+    severity: high
+    expected: No anti-patterns detected
+
+  # ============================================================
+  # PATTERN CHECKS (regex-based)
+  # ============================================================
+
+  - id: hardcoded-hex
+    description: Find hardcoded hex colors
+    type: pattern
+    patterns:
+      - "#[0-9a-fA-F]{3,8}"
+    files: "**/*.{css,scss,tsx,jsx,vue,svelte}"
+    exclude:
+      - "**/design-system.json"
+      - "**/tokens.json"
+      - "**/*.md"
+      - "**/node_modules/**"
+    required: true
+    severity: high
+
+  - id: hardcoded-rgb
+    description: Find hardcoded RGB/RGBA colors
+    type: pattern
+    patterns:
+      - "rgba?\\([^)]+\\)"
+    files: "**/*.{css,scss,tsx,jsx,vue,svelte}"
+    exclude:
+      - "**/design-system.json"
+      - "**/node_modules/**"
+    required: false
+    severity: medium
+
+  - id: hardcoded-pixels
+    description: Find hardcoded pixel spacing
+    type: pattern
+    patterns:
+      - "(margin|padding|gap):\\s*\\d+px"
+    files: "**/*.{css,scss,tsx,jsx}"
+    required: false
+    severity: medium
+
+  # ============================================================
+  # LLM CHECKS (semantic validation)
+  # ============================================================
+
+  - id: semantic-colors
+    description: Verify colors match their semantic purpose
+    type: llm-as-judge
+    rubric: |
+      Review color usage for semantic correctness:
+
+      | Semantic | Correct Usage | Incorrect Usage |
+      |----------|---------------|-----------------|
+      | primary | CTAs, links, active states | Errors, warnings |
+      | accent | Focus rings, secondary emphasis | Primary actions |
+      | success | Positive outcomes | General emphasis |
+      | error | Destructive actions, errors | Warnings, info |
+      | warning | Caution states | Errors |
+      | text | Body text, headings | Backgrounds |
+      | background | Container backgrounds | Text |
+
+      Flag any color used outside its semantic purpose.
+    severity: medium
+    required: true
+
+  - id: accessibility
+    description: Check accessibility requirements
+    type: llm-as-judge
+    rubric: |
+      Verify accessibility compliance:
+
+      1. Color Contrast
+         - Text on backgrounds: minimum 4.5:1 (WCAG AA)
+         - Large text (18pt+): minimum 3:1
+         - UI components: minimum 3:1
+
+      2. Focus States
+         - All interactive elements have visible focus indicators
+         - Focus ring uses accent/focus color from design system
+
+      3. Interactive States
+         - Buttons have hover, focus, active, disabled states
+         - Links have hover and focus states
+
+      4. Motion
+         - Respects prefers-reduced-motion if animations present
+    severity: high
+    required: true
+
+  - id: design-principles
+    description: Check adherence to design principles
+    type: llm-as-judge
+    rubric: |
+      If design system has principles defined, verify:
+
+      - Dark-first: Is dark mode default? Colors optimized for dark?
+      - Consistency: Does this match other implementations?
+      - Hierarchy: Is visual hierarchy clear?
+      - Minimalism: Is design free of unnecessary decoration?
+
+      Only flag clear violations, not stylistic preferences.
+    severity: low
+    required: false
+
+# Files to validate
+file_patterns:
+  - "src/**/*.{css,scss,tsx,jsx,vue,svelte}"
+  - "components/**/*.{css,scss,tsx,jsx,vue,svelte}"
+  - "styles/**/*.{css,scss}"
+  - "docs/stylesheets/**/*.css"
+
+# Files to exclude
+exclude_patterns:
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/*.min.css"
+  - "**/design-system.json"
+  - "**/tokens.json"
+
+# Context files for agents
+context:
+  - design-system.json
+  - llm-context.md
