@@ -54,6 +54,101 @@ The loader scans for:
 ds, err := dss.LoadDesignSystem("./design-system.json")
 ```
 
+### From Embedded Filesystem
+
+Load design systems from Go's `embed.FS` or any `fs.FS` interface. This enables bundling specs into binaries for distribution.
+
+```go
+import (
+    "embed"
+    "io/fs"
+    dss "github.com/plexusone/design-system-spec/sdk/go"
+)
+
+//go:embed spec/*
+var specFS embed.FS
+
+func main() {
+    // Get the subdirectory within the embedded FS
+    sub, err := fs.Sub(specFS, "spec")
+    if err != nil {
+        panic(err)
+    }
+
+    // Load from embedded filesystem
+    ds, err := dss.LoadDesignSystemFromFS(sub)
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Printf("Loaded: %s v%s\n", ds.Meta.Name, ds.Meta.Version)
+}
+```
+
+This is useful for:
+
+- **MCP servers** with embedded specs (single binary distribution)
+- **CLI tools** with bundled design systems
+- **Testing** with in-memory filesystems
+- **Lambda/serverless** deployments
+
+## Service Layer
+
+The SDK provides a `Service` type that wraps a `DesignSystem` and exposes operations suitable for CLI tools, MCP servers, and SDK consumers.
+
+### Creating a Service
+
+```go
+ds, _ := dss.LoadDesignSystem("./my-design-system/")
+service := dss.NewService(ds)
+```
+
+### Service Methods
+
+```go
+// Component operations
+comp, err := service.GetComponent(ctx, "button")
+components := service.ListComponents(ctx)
+
+// Token operations
+token, err := service.GetToken(ctx, "color", "primary")
+tokens := service.ListTokens(ctx, "color")
+
+// Pattern operations
+pattern, err := service.GetPattern(ctx, "form-validation")
+patterns := service.ListPatterns(ctx)
+
+// Metadata
+meta := service.GetMeta(ctx)
+
+// Validation
+result, err := service.ValidateFile(ctx, "./src/Button.tsx", nil)
+result, err := service.ValidateDirectory(ctx, "./src/components", nil)
+
+// Generation
+prompt, err := service.GenerateLLMPrompt(ctx, nil)
+```
+
+### Validation Results
+
+```go
+type ValidationResult struct {
+    Files      int
+    Violations []Violation
+    Summary    ValidationSummary
+}
+
+type Violation struct {
+    File     string
+    Line     int
+    Column   int
+    Rule     string
+    Message  string
+    Severity string // "error", "warning", "info"
+    Context  string
+}
+```
+
 ## Code Generation
 
 ### Generate CSS

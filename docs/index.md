@@ -12,10 +12,12 @@ Design System Spec (DSS) provides a canonical framework for expressing design sy
 - **Multi-format support** - JSON/YAML for tokens, Markdown for documentation
 - **LLM optimization** - Explicit intent, contexts, and constraints for AI code generation
 - **Code generation** - Generate CSS, TypeScript types, and LLM prompts from spec
+- **MCP Server** - Expose design systems to AI assistants via Model Context Protocol
 - **Theming contracts** - Formal theming API between component libraries and applications
 - **Diagram generation** - Mermaid and D2 diagrams for architecture visualization
 - **Compliance validation** - Validate implementations against the spec
 - **Go-first approach** - Go structs as source of truth, generating JSON Schema
+- **Embedded specs** - Bundle specs into binaries with Go's embed package
 
 ## Quick Install
 
@@ -44,6 +46,9 @@ dss contract validate
 
 # Validate component implementations
 dss validate ./src/components
+
+# Start MCP server for AI assistant integration
+dss-mcp --spec ./design-system
 ```
 
 ## Canonical Layers
@@ -67,4 +72,6 @@ DSS defines **10 canonical layers** for complete design system specification:
 
 - [Getting Started](getting-started.md) - Create your first design system spec
 - [CLI Reference](cli.md) - Full CLI command documentation
+- [MCP Server](mcp-server.md) - Integrate with AI assistants like Claude
+- [Go SDK](sdk.md) - Programmatic access and embedded specs
 - [Specification](specification/index.md) - Detailed spec reference

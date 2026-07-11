@@ -470,3 +470,77 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 ```
+
+---
+
+## MCP Server (dss-mcp)
+
+The `dss-mcp` command runs an MCP (Model Context Protocol) server that exposes design system operations to AI assistants like Claude.
+
+### Installation
+
+```bash
+go install github.com/plexusone/design-system-spec/cmd/dss-mcp@latest
+```
+
+### Usage
+
+```bash
+# Start MCP server with your design system spec
+dss-mcp --spec ./design-system/
+
+# Enable browser validation tools (requires w3pilot)
+dss-mcp --spec ./design-system/ --browser
+```
+
+### Flags
+
+| Flag | Description |
+|------|-------------|
+| `--spec`, `-s` | Path to design system spec directory (required) |
+| `--browser` | Enable w3pilot browser tools for visual validation |
+
+### Claude Desktop Configuration
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "design-system": {
+      "command": "dss-mcp",
+      "args": ["--spec", "/path/to/design-system"]
+    }
+  }
+}
+```
+
+### Available Tools
+
+The MCP server exposes 15 tools organized into three categories:
+
+**Spec Reading (7 tools):**
+
+- `get_component` - Get component definition
+- `list_components` - List all components
+- `get_token` - Get design token value
+- `list_tokens` - List tokens by type
+- `get_pattern` - Get pattern definition
+- `list_patterns` - List all patterns
+- `get_meta` - Get design system metadata
+
+**Guidance (4 tools):**
+
+- `generate_prompt` - Generate LLM context prompt
+- `get_variants` - Get component variants
+- `get_props` - Get component props
+- `get_anti_patterns` - Get anti-patterns to avoid
+
+**Validation (4 tools):**
+
+- `validate_file` - Validate a file
+- `validate_directory` - Validate all files in directory
+- `check_colors` - Check for hardcoded colors
+- `check_spacing` - Check for hardcoded spacing
+
+See [MCP Server](mcp-server.md) for full documentation.

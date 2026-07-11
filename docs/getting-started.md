@@ -295,3 +295,5 @@ The validator checks for:
 - Read the [CLI Reference](cli.md) for all available commands
 - Explore the [Specification](specification/index.md) for all available fields
 - See [Examples](examples.md) for real-world design systems
+- Set up the [MCP Server](mcp-server.md) for AI assistant integration
+- Learn about [embedding specs](sdk.md#from-embedded-filesystem) for single-binary distribution

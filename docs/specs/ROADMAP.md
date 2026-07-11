@@ -1,3 +1,116 @@
+# Design System Spec Roadmap
+
+## MCP Server Implementation
+
+This section tracks the MCP (Model Context Protocol) server implementation for AI-assisted design system workflows.
+
+### Completed
+
+- [x] SDK Service Layer (`sdk/go/service.go`)
+- [x] File Validation Logic (`sdk/go/validate_file.go`)
+- [x] Skill Definition (`skills/designsystem/`)
+- [x] MCP Server Entry Point (`cmd/dss-mcp/main.go`)
+- [x] Internal omniskill stubs (`internal/omniskill/`)
+
+### In Progress
+
+#### Phase 1: Refactor CLI to Use Service ✅
+
+Unify CLI and MCP by having both use the service layer.
+
+| File | Status | Description |
+|------|--------|-------------|
+| `cmd/dss/cmd/validate.go` | ✅ Done | Use `service.ValidateDirectory()` instead of inline logic |
+| `cmd/dss/cmd/info.go` | ✅ Done | Use `service.GetMeta()`, `service.ListComponents()` |
+| `cmd/dss/cmd/generate.go` | ✅ Done | Use `service.GenerateLLMPrompt()` |
+
+#### Phase 2: Skill Tests ✅
+
+Add comprehensive tests for the skill package.
+
+| File | Status | Description |
+|------|--------|-------------|
+| `skills/designsystem/skill_test.go` | ✅ Done | Test tool registration and execution |
+
+#### Phase 3: Integration Testing
+
+End-to-end testing of the MCP server.
+
+| Test | Status | Description |
+|------|--------|-------------|
+| Build verification | ✅ Done | MCP server builds and CLI works correctly |
+| Spec loading | ✅ Done | Loads minimal-system example successfully |
+| MCP Inspector | Pending | `npx @anthropic/mcp-inspector dss-mcp --spec ./examples/minimal-system` |
+| Claude Desktop | Pending | Test with real Claude Desktop configuration |
+
+#### Phase 5: Embedded Filesystem Support ✅
+
+Enable loading design systems from embedded filesystems for single-binary distribution.
+
+| File | Status | Description |
+|------|--------|-------------|
+| `sdk/go/loader.go` | ✅ Done | Added `LoadDesignSystemFromFS()` for fs.FS support |
+| `sdk/go/loader_test.go` | ✅ Done | Tests for embedded filesystem loading |
+| `docs/mcp-server.md` | ✅ Done | Documentation for embedded MCP servers |
+| `docs/sdk.md` | ✅ Done | Documentation for `LoadDesignSystemFromFS` |
+
+#### Phase 6: Fix Tools ✅
+
+Auto-fix design system violations for agent-ready workflows.
+
+| File | Status | Description |
+|------|--------|-------------|
+| `sdk/go/fix_file.go` | ✅ Done | Fix logic for colors, spacing, accessibility |
+| `sdk/go/fix_file_test.go` | ✅ Done | Comprehensive tests for fix operations |
+| `skills/designsystem/tools_fix.go` | ✅ Done | MCP tools: fix_file, suggest_fixes, fix_colors, fix_spacing, fix_accessibility, fix_directory |
+| `docs/mcp-server.md` | ✅ Done | Documentation for fix tools |
+
+#### Phase 4: Documentation ✅
+
+| File | Status | Description |
+|------|--------|-------------|
+| `docs/mcp-server.md` | ✅ Done | MCP server usage guide |
+| `README.md` | ✅ Done | Add MCP server section |
+| `mkdocs.yml` | ✅ Done | Added to navigation |
+
+### Architecture
+
+```
+dss-mcp (MCP Server)
+├── designsystem skill (15 tools)
+│   ├── Spec reading: get_component, list_components, get_token, etc.
+│   ├── Guidance: generate_prompt, get_variants, get_props, get_anti_patterns
+│   └── Validation: validate_file, validate_directory, check_colors, check_spacing
+│
+└── w3pilot skill (optional, via --browser)
+    └── 169 browser automation tools (auto-discovered)
+```
+
+### Usage
+
+```bash
+# Start MCP server
+dss-mcp --spec ./design-system/
+
+# With browser validation
+dss-mcp --spec ./design-system/ --browser
+```
+
+### Claude Desktop Configuration
+
+```json
+{
+  "mcpServers": {
+    "design-system": {
+      "command": "dss-mcp",
+      "args": ["--spec", "/path/to/spec"]
+    }
+  }
+}
+```
+
+---
+
 # NPM Package Generation Roadmap
 
 This document specifies the NPM package generation feature for design-system-spec.

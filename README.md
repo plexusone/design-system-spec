@@ -157,6 +157,53 @@ dss validate --json ./src/components
 | `dss contract show` | Display component theming contract |
 | `dss contract validate` | Validate all theming contracts |
 
+## MCP Server
+
+The `dss-mcp` command exposes your design system as an MCP (Model Context Protocol) server, enabling AI assistants like Claude to directly query and validate against your spec.
+
+### Installation
+
+```bash
+go install github.com/plexusone/design-system-spec/cmd/dss-mcp@latest
+```
+
+### Claude Desktop Integration
+
+Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "design-system": {
+      "command": "dss-mcp",
+      "args": ["--spec", "/path/to/your/design-system"]
+    }
+  }
+}
+```
+
+### Available Tools
+
+| Category | Tools | Purpose |
+|----------|-------|---------|
+| Spec Reading | `get_component`, `list_components`, `get_token`, `list_tokens`, `get_pattern`, `list_patterns`, `get_meta` | Query the design system |
+| Guidance | `generate_prompt`, `get_variants`, `get_props`, `get_anti_patterns` | Implementation guidance |
+| Validation | `validate_file`, `validate_directory`, `check_colors`, `check_spacing` | Code compliance checking |
+| Fix | `fix_file`, `suggest_fixes`, `fix_colors`, `fix_spacing`, `fix_accessibility`, `fix_directory` | Auto-fix violations |
+
+### Example Workflow
+
+```
+User: "Implement a button component following the design system"
+
+Claude: [calls get_component with id="button"]
+        [calls get_variants with component_id="button"]
+        [implements component]
+        [calls validate_file to check compliance]
+```
+
+See [MCP Server Documentation](docs/mcp-server.md) for full details.
+
 ### Generate Options
 
 ```bash
@@ -376,29 +423,59 @@ css, _ := ds.GenerateCSS(dss.DefaultCSSOptions())
 types, _ := ds.GenerateReactTypes(dss.DefaultReactOptions())
 ```
 
+### Loading from Embedded Filesystems
+
+Bundle design system specs into binaries using Go's `embed` package:
+
+```go
+import (
+    "embed"
+    "io/fs"
+    dss "github.com/plexusone/design-system-spec/sdk/go"
+)
+
+//go:embed spec/*
+var specFS embed.FS
+
+func main() {
+    sub, _ := fs.Sub(specFS, "spec")
+    ds, _ := dss.LoadDesignSystemFromFS(sub)
+    // Use ds...
+}
+```
+
+This enables single-binary distribution for MCP servers and CLI tools.
+
 ## Project Structure
 
 ```
 design-system-spec/
-├── cmd/dss/              # CLI tool
-│   └── cmd/
-│       ├── generate.go   # Generate CSS, TypeScript, LLM
-│       ├── validate.go   # Validate implementations
-│       ├── bind.go       # Theme bindings generation
-│       ├── contract.go   # Theming contract commands
-│       └── info.go
+├── cmd/
+│   ├── dss/              # CLI tool
+│   │   └── cmd/
+│   │       ├── generate.go   # Generate CSS, TypeScript, LLM
+│   │       ├── validate.go   # Validate implementations
+│   │       ├── bind.go       # Theme bindings generation
+│   │       ├── contract.go   # Theming contract commands
+│   │       └── info.go
+│   └── dss-mcp/          # MCP server
+│       └── main.go       # MCP server entry point
 ├── sdk/go/               # Go SDK
 │   ├── loader.go         # Load design systems
+│   ├── service.go        # Service layer for CLI/MCP
+│   ├── validate_file.go  # File validation logic
 │   ├── theming.go        # Theming contract types
 │   ├── contract_validate.go  # Contract validation
 │   ├── gen_bindings.go   # Theme bindings generator
 │   ├── gen_css.go        # CSS generator
 │   ├── gen_react.go      # TypeScript generator
 │   ├── gen_llm.go        # LLM context generator
-│   ├── gen_mermaid.go    # Mermaid diagram generator
-│   ├── gen_d2.go         # D2 diagram generator
-│   ├── gen_w3c_tokens.go # W3C Design Tokens export
-│   └── gen_docs.go       # Documentation generator
+│   └── ...               # Other generators
+├── skills/designsystem/  # MCP skill definition
+│   ├── skill.go          # Skill interface
+│   ├── tools_spec.go     # Spec reading tools
+│   ├── tools_guidance.go # Guidance tools
+│   └── tools_validate.go # Validation tools
 ├── schema/               # JSON Schemas (generated)
 ├── ui/                   # Web component viewer (Lit)
 └── docs/                 # MkDocs documentation
@@ -414,6 +491,7 @@ design-system-spec/
 - [x] Diagram generators (Mermaid, D2)
 - [x] W3C Design Tokens export
 - [x] Web component viewer (ui/)
+- [x] MCP server for AI assistants
 - [ ] `dss init` scaffolding
 - [ ] `dss lint` for spec completeness
 - [ ] Advanced validation (color contrast, cross-references)
