@@ -83,6 +83,13 @@ func (s *Skill) Tools() []skill.Tool {
 		s.getValidatorTool(),
 		s.getValidationRequirementsTool(),
 		s.getValidatorInvocationTool(),
+
+		// Compliance and release tools
+		s.generateComplianceReportTool(),
+		s.checkReleaseGateTool(),
+		s.runFixLoopTool(),
+		s.fixAndVerifyTool(),
+		s.getComplianceCertificateTool(),
 	}
 }
 
