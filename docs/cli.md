@@ -198,6 +198,103 @@ dss validate --json ./src/components
 
 ---
 
+### dss lint-spec
+
+Lint the design system specification for completeness and best practices.
+
+```bash
+dss lint-spec [flags]
+```
+
+**Flags:**
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--rules` | | Specific rules to check (comma-separated) |
+| `--min-score` | | Minimum acceptable score (0-100) |
+| `--json` | | Output as JSON |
+| `--verbose` | `-v` | Show all issues including info level |
+
+**Subcommands:**
+
+```bash
+# List available lint rules
+dss lint-spec rules
+```
+
+**Examples:**
+
+```bash
+# Lint current directory
+dss lint-spec
+
+# Lint with minimum score requirement
+dss lint-spec --min-score 80
+
+# Lint specific rules only
+dss lint-spec --rules component-has-llm-context,llm-has-intent
+
+# JSON output for CI
+dss lint-spec --json
+
+# Show all issues including info level
+dss lint-spec --verbose
+
+# Show available rules
+dss lint-spec rules
+```
+
+**Available Rules:**
+
+| Rule | Severity | Description |
+|------|----------|-------------|
+| `meta-required` | Error | Design system must have name and version |
+| `component-has-variants` | Warning | Components should define variants |
+| `component-has-props` | Info | Components should define props |
+| `component-has-llm-context` | Warning | Components should have LLM context |
+| `llm-has-intent` | Error | LLM context must have intent field |
+| `llm-has-anti-patterns` | Warning | LLM context should document anti-patterns |
+| `llm-has-allowed-contexts` | Info | LLM context should specify allowed contexts |
+| `tokens-have-descriptions` | Info | Tokens should have descriptions |
+| `token-references-valid` | Error | Token references must resolve to valid tokens |
+| `no-orphan-tokens` | Info | Tokens should be referenced by components |
+| `component-uses-valid` | Error | Component uses references must be valid |
+| `accessibility-defined` | Warning | Design system should define accessibility |
+| `theming-contract-valid` | Error/Warning | Theming contracts must be properly configured |
+| `validators-configured` | Warning | External validators should be configured |
+| `validator-tool-required` | Error | Validators must specify a tool name |
+| `validator-type-valid` | Error | Validator type must be valid |
+
+**Output:**
+
+```
+Spec Completeness Score: 85/100
+
+Coverage:
+  Components with LLM context: 80%
+  Components with variants:    90%
+  Components with props:       100%
+  Tokens with descriptions:    75%
+  Tokens referenced:           95%
+
+Issues: 0 errors, 2 warnings, 3 info
+
+Warnings:
+  components[2].llm [card]: Component 'card' missing LLM context for AI code generation
+    → Add llm field with intent, allowedContexts, and antiPatterns
+
+✓ Spec is agent-ready
+```
+
+**Exit Codes:**
+
+| Code | Meaning |
+|------|---------|
+| 0 | Lint passed (score >= min-score, no errors) |
+| 1 | Lint failed (score < min-score or has errors) |
+
+---
+
 ### dss bind
 
 Generate theme bindings from design system token mappings.

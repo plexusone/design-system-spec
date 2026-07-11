@@ -4,7 +4,7 @@ The `dss-mcp` command exposes design system operations as an MCP (Model Context 
 
 ## Overview
 
-The MCP server provides 21 tools organized into four categories:
+The MCP server provides 33 tools organized into eight categories:
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
@@ -12,6 +12,9 @@ The MCP server provides 21 tools organized into four categories:
 | Guidance | 4 | Generate prompts, get variants, props, and anti-patterns |
 | Validation | 4 | Validate files against the design system |
 | Fix | 6 | Auto-fix design system violations |
+| Lint | 3 | Check spec completeness and agent-readiness |
+| Validators | 4 | External validator discovery and delegation |
+| Compliance | 5 | Compliance reporting and release gates |
 
 ## Installation
 
@@ -325,6 +328,231 @@ Fix design system violations in all files in a directory.
 | `rules` | array | No | Specific rules to fix (default: all) |
 | `dry_run` | boolean | No | If true, return fixes without applying them |
 
+### Lint Tools
+
+#### `lint_spec`
+
+Lint the design system spec for completeness and best practices. Returns a score (0-100), coverage metrics, and detailed issues.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `rules` | array | No | Specific rules to check (default: all) |
+| `min_score` | number | No | Minimum acceptable score (0-100) |
+
+**Available Rules:**
+
+- `meta-required` - Design system must have name and version
+- `component-has-variants` - Components should define variants
+- `component-has-props` - Components should define props
+- `component-has-llm-context` - Components should have LLM context
+- `llm-has-intent` - LLM context must have intent field
+- `llm-has-anti-patterns` - LLM context should document anti-patterns
+- `llm-has-allowed-contexts` - LLM context should specify allowed contexts
+- `tokens-have-descriptions` - Tokens should have descriptions
+- `token-references-valid` - Token references must resolve
+- `no-orphan-tokens` - Tokens should be referenced by components
+- `component-uses-valid` - Component uses references must be valid
+- `accessibility-defined` - Design system should define accessibility requirements
+- `theming-contract-valid` - Theming contracts must be properly configured
+- `validators-configured` - External validators should be configured
+- `validator-tool-required` - Validators must specify a tool name
+- `validator-type-valid` - Validator type must be valid
+
+#### `list_lint_rules`
+
+List all available lint rules with descriptions.
+
+**Parameters:** None
+
+#### `check_agent_readiness`
+
+Check if the design system spec is ready for AI agent code generation. Verifies LLM context completeness and validator configuration.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `component_id` | string | No | Check readiness for a specific component |
+
+### Validator Tools
+
+Tools for discovering and delegating to external validators (e.g., agent-a11y for WCAG, spectral for API style).
+
+#### `list_validators`
+
+List all configured external validators.
+
+**Parameters:** None
+
+**Returns:**
+
+```json
+{
+  "configured": true,
+  "validators": [
+    {
+      "domain": "accessibility",
+      "tool": "agent-a11y",
+      "type": "mcp",
+      "required": true
+    }
+  ]
+}
+```
+
+#### `get_validator`
+
+Get configuration for a specific validator by domain.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `domain` | string | Yes | Validator domain: `accessibility`, `api`, or custom |
+
+#### `get_validation_requirements`
+
+Get all validation requirements defined in the spec with their corresponding validators.
+
+**Parameters:** None
+
+#### `get_validator_invocation`
+
+Get invocation details for a validator (MCP command, CLI command, etc.).
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `domain` | string | Yes | Validator domain |
+
+### Compliance Tools
+
+Tools for the complete release workflow: validate → fix → verify → release.
+
+#### `generate_compliance_report`
+
+Generate a comprehensive compliance report for release.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `directory` | string | Yes | Directory to validate |
+| `min_score` | number | No | Minimum acceptable score (default: 80) |
+| `blocking_categories` | array | No | Categories that block release (default: colors, accessibility) |
+| `include_issues` | boolean | No | Include detailed issue list (default: true) |
+
+**Returns:**
+
+```json
+{
+  "status": "pass",
+  "score": 92,
+  "categories": [
+    {"category": "colors", "status": "pass", "score": 100},
+    {"category": "accessibility", "status": "warn", "score": 85}
+  ],
+  "summary": {
+    "totalChecks": 15,
+    "passed": 12,
+    "errors": 0,
+    "warnings": 3
+  }
+}
+```
+
+#### `check_release_gate`
+
+Check if the codebase passes the release gate. Returns approved/rejected with reasons.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `directory` | string | Yes | Directory to validate |
+| `min_score` | number | No | Minimum acceptable score (default: 80) |
+| `require_zero_errors` | boolean | No | Require zero error-level issues (default: true) |
+| `allow_warnings` | boolean | No | Allow release with warnings (default: true) |
+
+**Returns:**
+
+```json
+{
+  "approved": true,
+  "reason": "All checks passed",
+  "score": 92,
+  "certificate": {
+    "id": "a3f2c8b1",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "hash": "sha256:..."
+  }
+}
+```
+
+#### `run_fix_loop`
+
+Run an automated fix-validate loop until convergence or max iterations.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `directory` | string | Yes | Directory to fix |
+| `max_iterations` | number | No | Maximum fix-validate cycles (default: 3) |
+| `dry_run` | boolean | No | Preview fixes without applying (default: false) |
+| `stop_on_regression` | boolean | No | Stop if fixes introduce new violations (default: true) |
+| `rules` | array | No | Specific rules to fix |
+
+**Returns:**
+
+```json
+{
+  "converged": true,
+  "iterations": 2,
+  "initialViolations": 8,
+  "finalViolations": 0,
+  "fixedCount": 8,
+  "status": "pass"
+}
+```
+
+#### `fix_and_verify`
+
+Fix a single file and verify the fix resolved the violations.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `file` | string | Yes | File to fix |
+| `rules` | array | No | Specific rules to fix |
+| `dry_run` | boolean | No | Preview fixes without applying |
+
+**Returns:**
+
+```json
+{
+  "violationsBefore": 3,
+  "fixesApplied": 3,
+  "violationsAfter": 0,
+  "verified": true,
+  "reason": "all violations fixed"
+}
+```
+
+#### `get_compliance_certificate`
+
+Generate a compliance certificate after validation. Provides proof of compliance for release artifacts.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `directory` | string | Yes | Directory that was validated |
+
 ## Example Workflows
 
 ### Component Implementation
@@ -378,6 +606,60 @@ Claude: [calls fix_directory with path="./src/components"]
 ..."
 ```
 
+### Complete Release Workflow
+
+```
+User: "Prepare the codebase for release"
+
+Claude: [calls lint_spec]
+"Spec completeness: 92/100
+- All components have LLM context ✓
+- Accessibility validator configured ✓"
+
+Claude: [calls run_fix_loop with directory="./src"]
+"Fix-validate loop completed:
+- Initial violations: 12
+- Fixes applied: 10
+- Final violations: 2 (unfixable - need human review)
+- Converged in 2 iterations"
+
+Claude: [calls check_release_gate with directory="./src"]
+"Release gate: APPROVED
+- Score: 88/100
+- Blocking issues: 0
+- Warnings: 2 (non-blocking)
+- Certificate: a3f2c8b1"
+
+User: "What are the warnings?"
+
+Claude: [reviews remaining issues]
+"2 semantic issues requiring human review:
+1. Card.tsx:45 - Consider if this color choice matches brand guidelines
+2. Form.tsx:78 - Multiple buttons in close proximity
+
+These are non-blocking. Ready to release."
+```
+
+### Check Agent Readiness
+
+```
+User: "Is our design system ready for AI code generation?"
+
+Claude: [calls check_agent_readiness]
+"Agent Readiness: 85%
+
+✓ 12/14 components have LLM context
+✓ Intent defined for all components with LLM context
+✓ Anti-patterns documented
+✓ Accessibility validator configured
+
+⚠ Missing LLM context:
+- Tooltip: Add intent and allowedContexts
+- Divider: Add intent field
+
+Recommendation: Add LLM context to remaining components for best AI generation results."
+```
+
 ## Architecture
 
 ```
@@ -393,7 +675,14 @@ Claude: [calls fix_directory with path="./src/components"]
 │  │                  omniskill Runtime                          ││
 │  │  ┌──────────────────────────┐  ┌──────────────────────────┐││
 │  │  │ designsystem skill       │  │ w3pilot skill            │││
-│  │  │ (21 native Go tools)     │  │ (169 browser tools)      │││
+│  │  │ (33 native Go tools)     │  │ (169 browser tools)      │││
+│  │  │ - Spec reading (7)       │  │                          │││
+│  │  │ - Guidance (4)           │  │                          │││
+│  │  │ - Validation (4)         │  │                          │││
+│  │  │ - Fix (6)                │  │                          │││
+│  │  │ - Lint (3)               │  │                          │││
+│  │  │ - Validators (4)         │  │                          │││
+│  │  │ - Compliance (5)         │  │                          │││
 │  │  └──────────┬───────────────┘  └────────────┬─────────────┘││
 │  └─────────────┼───────────────────────────────┼───────────────┘│
 └────────────────┼───────────────────────────────┼────────────────┘
@@ -403,8 +692,9 @@ Claude: [calls fix_directory with path="./src/components"]
 │      sdk/go/ (Service Layer)       │  │  w3pilot MCP Server   │
 │  - Component operations            │  │  (subprocess)         │
 │  - Token operations                │  └───────────────────────┘
-│  - Validation                      │
-│  - Prompt generation               │
+│  - Validation & Fix                │
+│  - Compliance & Release            │
+│  - Spec linting                    │
 └────────────────────────────────────┘
 ```
 

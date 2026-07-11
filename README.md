@@ -153,6 +153,7 @@ dss validate --json ./src/components
 | `dss info` | Display design system metadata |
 | `dss generate` | Generate CSS, TypeScript types, LLM prompt |
 | `dss validate <dir>` | Validate component implementations |
+| `dss lint-spec` | Lint spec for completeness and agent-readiness |
 | `dss bind` | Generate theme bindings CSS/TypeScript/SCSS |
 | `dss contract show` | Display component theming contract |
 | `dss contract validate` | Validate all theming contracts |
@@ -182,7 +183,7 @@ Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/
 }
 ```
 
-### Available Tools
+### Available Tools (33 total)
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
@@ -190,9 +191,13 @@ Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/
 | Guidance | `generate_prompt`, `get_variants`, `get_props`, `get_anti_patterns` | Implementation guidance |
 | Validation | `validate_file`, `validate_directory`, `check_colors`, `check_spacing` | Code compliance checking |
 | Fix | `fix_file`, `suggest_fixes`, `fix_colors`, `fix_spacing`, `fix_accessibility`, `fix_directory` | Auto-fix violations |
+| Lint | `lint_spec`, `list_lint_rules`, `check_agent_readiness` | Spec completeness checking |
+| Validators | `list_validators`, `get_validator`, `get_validation_requirements`, `get_validator_invocation` | External validator delegation |
+| Compliance | `generate_compliance_report`, `check_release_gate`, `run_fix_loop`, `fix_and_verify`, `get_compliance_certificate` | Release workflow |
 
-### Example Workflow
+### Example Workflows
 
+**Component Implementation:**
 ```
 User: "Implement a button component following the design system"
 
@@ -200,6 +205,16 @@ Claude: [calls get_component with id="button"]
         [calls get_variants with component_id="button"]
         [implements component]
         [calls validate_file to check compliance]
+```
+
+**Release Workflow:**
+```
+User: "Prepare the codebase for release"
+
+Claude: [calls lint_spec to check spec completeness]
+        [calls run_fix_loop to auto-fix violations]
+        [calls check_release_gate for go/no-go decision]
+        "Release approved with score 92/100. Certificate: a3f2c8b1"
 ```
 
 See [MCP Server Documentation](docs/mcp-server.md) for full details.
@@ -453,10 +468,11 @@ design-system-spec/
 ├── cmd/
 │   ├── dss/              # CLI tool
 │   │   └── cmd/
-│   │       ├── generate.go   # Generate CSS, TypeScript, LLM
-│   │       ├── validate.go   # Validate implementations
-│   │       ├── bind.go       # Theme bindings generation
-│   │       ├── contract.go   # Theming contract commands
+│   │       ├── generate.go    # Generate CSS, TypeScript, LLM
+│   │       ├── validate.go    # Validate implementations
+│   │       ├── lint_spec.go   # Spec completeness linting
+│   │       ├── bind.go        # Theme bindings generation
+│   │       ├── contract.go    # Theming contract commands
 │   │       └── info.go
 │   └── dss-mcp/          # MCP server
 │       └── main.go       # MCP server entry point
@@ -464,18 +480,25 @@ design-system-spec/
 │   ├── loader.go         # Load design systems
 │   ├── service.go        # Service layer for CLI/MCP
 │   ├── validate_file.go  # File validation logic
+│   ├── fix_file.go       # Auto-fix violations
+│   ├── lint_spec.go      # Spec completeness linting
+│   ├── compliance.go     # Compliance reporting
+│   ├── fix_loop.go       # Fix-validate loop
+│   ├── validators.go     # External validator types
 │   ├── theming.go        # Theming contract types
-│   ├── contract_validate.go  # Contract validation
-│   ├── gen_bindings.go   # Theme bindings generator
 │   ├── gen_css.go        # CSS generator
 │   ├── gen_react.go      # TypeScript generator
 │   ├── gen_llm.go        # LLM context generator
 │   └── ...               # Other generators
-├── skills/designsystem/  # MCP skill definition
+├── skills/designsystem/  # MCP skill definition (33 tools)
 │   ├── skill.go          # Skill interface
 │   ├── tools_spec.go     # Spec reading tools
 │   ├── tools_guidance.go # Guidance tools
-│   └── tools_validate.go # Validation tools
+│   ├── tools_validate.go # Validation tools
+│   ├── tools_fix.go      # Fix tools
+│   ├── tools_lint.go     # Lint tools
+│   ├── tools_validators.go # Validator delegation tools
+│   └── tools_compliance.go # Compliance & release tools
 ├── schema/               # JSON Schemas (generated)
 ├── ui/                   # Web component viewer (Lit)
 └── docs/                 # MkDocs documentation
@@ -491,10 +514,14 @@ design-system-spec/
 - [x] Diagram generators (Mermaid, D2)
 - [x] W3C Design Tokens export
 - [x] Web component viewer (ui/)
-- [x] MCP server for AI assistants
+- [x] MCP server for AI assistants (33 tools)
+- [x] `dss lint-spec` for spec completeness
+- [x] External validator delegation (WCAG, API style)
+- [x] Compliance reporting and release gates
+- [x] Fix-validate loop with convergence detection
 - [ ] `dss init` scaffolding
-- [ ] `dss lint` for spec completeness
-- [ ] Advanced validation (color contrast, cross-references)
+- [ ] CI/CD GitHub Actions integration
+- [ ] Advanced validation (color contrast, visual regression)
 - [ ] Figma tokens import/export (for transitioning teams)
 
 ## License
