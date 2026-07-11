@@ -60,6 +60,7 @@ nav:
       - Accessibility: specification/accessibility.md
       - Theming: specification/theming.md
   - Go SDK: sdk.md
+  - Agentic Maturity: agentic-maturity.md
   - Examples: examples.md
   - Reference:
       - NPM Package Spec: specs/ROADMAP.md
