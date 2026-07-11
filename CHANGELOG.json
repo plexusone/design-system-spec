@@ -5,7 +5,34 @@
   "versioning": "semver",
   "commitConvention": "conventional",
   "maintainers": ["plexusone"],
-  "unreleased": {},
+  "unreleased": {
+    "highlights": [
+      { "description": "MCP server (`dss-mcp`) exposing 21 tools for AI assistant integration" },
+      { "description": "Auto-fix tools for design system violations (colors, spacing, accessibility)" },
+      { "description": "Embedded filesystem support for single-binary distribution" }
+    ],
+    "added": [
+      { "description": "`dss-mcp` MCP server with 21 tools for spec reading, guidance, validation, and fixing", "commit": "df235ca" },
+      { "description": "`Service` type wrapping `DesignSystem` for unified CLI/MCP/SDK operations", "commit": "c4a54a6" },
+      { "description": "`ValidateFile()` and `ValidateDirectory()` methods with 7 validation rules", "commit": "8fb5996" },
+      { "description": "`LoadDesignSystemFromFS()` for loading from `embed.FS` and `fs.FS` interfaces", "commit": "7e56e26" },
+      { "description": "`FixFile()`, `SuggestFixes()`, `FixDirectory()` methods for auto-fixing violations", "commit": "0932eda" },
+      { "description": "Fix tools: `fix_file`, `suggest_fixes`, `fix_colors`, `fix_spacing`, `fix_accessibility`, `fix_directory`", "commit": "df235ca" },
+      { "description": "Design compliance and fixer agent specifications", "commit": "ba0ea0c" }
+    ],
+    "changed": [
+      { "description": "CLI commands (`validate`, `info`, `generate`) refactored to use service layer", "commit": "bd695ec" }
+    ],
+    "documentation": [
+      { "description": "MCP server documentation with all 21 tools, parameters, and example workflows", "commit": "a2c6f59" },
+      { "description": "SDK documentation for `Service` layer and `LoadDesignSystemFromFS`", "commit": "a2c6f59" },
+      { "description": "CLI reference updated with `dss-mcp` command", "commit": "a2c6f59" },
+      { "description": "Embedded MCP server example for single-binary distribution", "commit": "a2c6f59" }
+    ],
+    "build": [
+      { "description": "Add MCP SDK dependency (`github.com/modelcontextprotocol/go-sdk`)", "commit": "e1e3323" }
+    ]
+  },
   "releases": [
     {
       "version": "v0.4.0",

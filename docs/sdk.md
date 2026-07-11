@@ -125,6 +125,11 @@ meta := service.GetMeta(ctx)
 result, err := service.ValidateFile(ctx, "./src/Button.tsx", nil)
 result, err := service.ValidateDirectory(ctx, "./src/components", nil)
 
+// Auto-fixing
+fixResult, err := service.FixFile(ctx, "./src/Button.tsx", nil)
+fixResult, err := service.SuggestFixes(ctx, "./src/Button.tsx", nil) // dry run
+fixResults, err := service.FixDirectory(ctx, "./src/components", nil)
+
 // Generation
 prompt, err := service.GenerateLLMPrompt(ctx, nil)
 ```
@@ -147,6 +152,100 @@ type Violation struct {
     Severity string // "error", "warning", "info"
     Context  string
 }
+```
+
+### Fix Results
+
+```go
+type FixResult struct {
+    Path          string
+    Fixes         []Fix
+    ModifiedLines int
+    NewContent    string    // Only populated if DryRun is false
+    Summary       FixSummary
+}
+
+type Fix struct {
+    Line        int
+    Column      int
+    Rule        string
+    Original    string
+    Replacement string
+    TokenUsed   string  // Token ID used for replacement
+}
+
+type FixSummary struct {
+    ColorsFixed        int
+    SpacingFixed       int
+    AccessibilityFixed int
+}
+```
+
+### Auto-Fixing Violations
+
+The Service provides methods to automatically fix design system violations:
+
+```go
+// Fix violations in a single file (writes changes)
+result, err := service.FixFile(ctx, "./src/Button.tsx", &dss.FixOptions{
+    Rules:  []string{"no-hardcoded-colors", "use-spacing-scale"},
+    DryRun: false,
+})
+
+// Preview fixes without applying (dry run)
+result, err := service.SuggestFixes(ctx, "./src/Button.tsx", nil)
+for _, fix := range result.Fixes {
+    fmt.Printf("Line %d: %s → %s (token: %s)\n",
+        fix.Line, fix.Original, fix.Replacement, fix.TokenUsed)
+}
+
+// Fix all files in a directory
+results, err := service.FixDirectory(ctx, "./src/components", nil)
+for _, r := range results {
+    fmt.Printf("%s: %d fixes applied\n", r.Path, len(r.Fixes))
+}
+```
+
+**Fix Options:**
+
+```go
+type FixOptions struct {
+    // Rules to apply (default: all)
+    Rules []string
+
+    // DryRun previews fixes without writing
+    DryRun bool
+}
+```
+
+**Available Fix Rules:**
+
+| Rule | Description |
+|------|-------------|
+| `no-hardcoded-colors` | Replace hex/rgb colors with closest design token |
+| `use-spacing-scale` | Replace pixel values with spacing scale tokens |
+| `img-alt-required` | Add alt text to images (derived from filename) |
+| `button-accessible-name` | Add aria-label to icon-only buttons |
+
+**Color Matching:**
+
+The fixer uses intelligent color matching:
+
+1. Exact match - if hex value matches a token exactly
+2. Closest match - finds the perceptually closest token using color distance
+
+```go
+// Example: #3b82f6 matches "primary-500" exactly
+// Example: #3a7fef maps to closest token "primary-500"
+```
+
+**Spacing Matching:**
+
+Spacing values are snapped to the nearest token in the spacing scale:
+
+```go
+// Example: "12px" → "spacing-3" (if scale is 4px base)
+// Example: "17px" → "spacing-4" (snaps to 16px)
 ```
 
 ## Code Generation

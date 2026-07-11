@@ -517,7 +517,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ### Available Tools
 
-The MCP server exposes 15 tools organized into three categories:
+The MCP server exposes 21 tools organized into four categories:
 
 **Spec Reading (7 tools):**
 
@@ -542,5 +542,14 @@ The MCP server exposes 15 tools organized into three categories:
 - `validate_directory` - Validate all files in directory
 - `check_colors` - Check for hardcoded colors
 - `check_spacing` - Check for hardcoded spacing
+
+**Fix (6 tools):**
+
+- `fix_file` - Auto-fix violations in a file
+- `suggest_fixes` - Suggest fixes without applying (dry run)
+- `fix_colors` - Fix hardcoded colors to use tokens
+- `fix_spacing` - Fix hardcoded spacing to use scale
+- `fix_accessibility` - Add missing alt/aria-label attributes
+- `fix_directory` - Fix all files in a directory
 
 See [MCP Server](mcp-server.md) for full documentation.
