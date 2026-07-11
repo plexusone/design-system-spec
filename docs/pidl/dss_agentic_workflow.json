@@ -1,0 +1,654 @@
+{
+  "protocol": {
+    "id": "dss-agentic-development",
+    "name": "DSS Agentic Development Workflow",
+    "kind": "process",
+    "version": "1.0.0",
+    "description": "Closed-loop workflow for AI agents building design system compliant applications using DSS",
+    "category": "agent",
+    "metadata": {
+      "author": "PlexusOne",
+      "domain": "design-systems",
+      "automation_target": "L4",
+      "current_automation": "L2.8"
+    }
+  },
+  "entities": [
+    {
+      "id": "human_designer",
+      "name": "Human Designer",
+      "type": "user",
+      "description": "Design system owner who defines principles and approves releases",
+      "step_type": "human",
+      "processing": {
+        "timeout": "48h"
+      }
+    },
+    {
+      "id": "coding_agent",
+      "name": "Coding Agent",
+      "type": "server",
+      "description": "AI agent (Claude, Copilot) that generates code",
+      "step_type": "llm",
+      "processing": {
+        "determinism": "non_deterministic",
+        "engine": "claude-opus-4",
+        "model_policy": "quality-gated"
+      }
+    },
+    {
+      "id": "dss_mcp",
+      "name": "DSS MCP Server",
+      "type": "server",
+      "description": "Design System Spec MCP server providing 33 tools",
+      "step_type": "tool"
+    },
+    {
+      "id": "lint_spec",
+      "name": "Spec Linter",
+      "type": "server",
+      "description": "Validates spec completeness (lint_spec tool)",
+      "step_type": "deterministic",
+      "processing": {
+        "determinism": "deterministic",
+        "idempotent": true
+      },
+      "inputs": [
+        {
+          "name": "design_spec",
+          "kind": "file",
+          "description": "Design system specification files"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "lint_result",
+          "kind": "object",
+          "description": "Score (0-100), issues, coverage metrics"
+        }
+      ]
+    },
+    {
+      "id": "prompt_generator",
+      "name": "LLM Prompt Generator",
+      "type": "server",
+      "description": "Generates LLM context from spec (generate_prompt tool)",
+      "step_type": "deterministic",
+      "processing": {
+        "determinism": "deterministic",
+        "idempotent": true
+      },
+      "inputs": [
+        {
+          "name": "design_spec",
+          "kind": "file"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "llm_context",
+          "kind": "object",
+          "description": "Structured context for AI code generation"
+        }
+      ]
+    },
+    {
+      "id": "code_validator",
+      "name": "Code Validator",
+      "type": "server",
+      "description": "Validates code against spec (validate_directory tool)",
+      "step_type": "deterministic",
+      "processing": {
+        "determinism": "deterministic",
+        "idempotent": true
+      },
+      "inputs": [
+        {
+          "name": "source_code",
+          "kind": "file",
+          "description": "Source files (tsx/jsx/ts/js/css)"
+        },
+        {
+          "name": "design_spec",
+          "kind": "file"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "violations",
+          "kind": "object",
+          "description": "List of violations with severity, location, rule"
+        }
+      ]
+    },
+    {
+      "id": "auto_fixer",
+      "name": "Auto Fixer",
+      "type": "server",
+      "description": "Auto-fixes token violations (run_fix_loop tool)",
+      "step_type": "deterministic",
+      "processing": {
+        "determinism": "deterministic",
+        "idempotent": false
+      },
+      "inputs": [
+        {
+          "name": "source_code",
+          "kind": "file"
+        },
+        {
+          "name": "violations",
+          "kind": "object"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "fixed_code",
+          "kind": "file"
+        },
+        {
+          "name": "fix_result",
+          "kind": "object",
+          "description": "Converged, iterations, fixed count, remaining"
+        }
+      ],
+      "failure_modes": [
+        {
+          "id": "regression_detected",
+          "name": "Regression Detected",
+          "severity": "high",
+          "description": "Fix introduced new violations",
+          "recovery": "Rollback and escalate to human"
+        }
+      ]
+    },
+    {
+      "id": "semantic_fixer",
+      "name": "Semantic Fixer",
+      "type": "server",
+      "description": "LLM-powered fix for anti-patterns and semantic issues",
+      "step_type": "llm",
+      "processing": {
+        "determinism": "non_deterministic",
+        "engine": "claude-opus-4",
+        "model_policy": "quality-gated"
+      },
+      "inputs": [
+        {
+          "name": "source_code",
+          "kind": "file"
+        },
+        {
+          "name": "semantic_violations",
+          "kind": "object",
+          "description": "Anti-patterns, component misuse"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "refactored_code",
+          "kind": "file"
+        },
+        {
+          "name": "explanation",
+          "kind": "object",
+          "description": "Why changes were made"
+        }
+      ]
+    },
+    {
+      "id": "human_reviewer",
+      "name": "Human Reviewer",
+      "type": "user",
+      "description": "Reviews semantic fixes and unfixable violations",
+      "step_type": "human",
+      "processing": {
+        "timeout": "4h"
+      },
+      "inputs": [
+        {
+          "name": "code_changes",
+          "kind": "object"
+        },
+        {
+          "name": "unfixable_issues",
+          "kind": "object"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "approval",
+          "kind": "object",
+          "description": "Approved, rejected, or needs changes"
+        }
+      ]
+    },
+    {
+      "id": "compliance_reporter",
+      "name": "Compliance Reporter",
+      "type": "server",
+      "description": "Generates compliance report (generate_compliance_report tool)",
+      "step_type": "deterministic",
+      "processing": {
+        "determinism": "deterministic",
+        "idempotent": true
+      },
+      "inputs": [
+        {
+          "name": "validation_results",
+          "kind": "object"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "compliance_report",
+          "kind": "object",
+          "description": "Score, categories, issues, summary"
+        }
+      ]
+    },
+    {
+      "id": "release_gate",
+      "name": "Release Gate",
+      "type": "server",
+      "description": "Go/no-go decision (check_release_gate tool)",
+      "step_type": "deterministic",
+      "processing": {
+        "determinism": "deterministic",
+        "idempotent": true
+      },
+      "inputs": [
+        {
+          "name": "compliance_report",
+          "kind": "object"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "gate_result",
+          "kind": "object",
+          "description": "Approved/rejected, reason, certificate"
+        }
+      ]
+    },
+    {
+      "id": "external_validator_a11y",
+      "name": "Accessibility Validator",
+      "type": "server",
+      "description": "External WCAG validator (agent-a11y)",
+      "step_type": "external",
+      "processing": {
+        "timeout": "5m"
+      },
+      "failure_modes": [
+        {
+          "id": "validator_unavailable",
+          "name": "Validator Unavailable",
+          "severity": "medium",
+          "description": "External validator not reachable",
+          "recovery": "Skip and note in report"
+        }
+      ]
+    },
+    {
+      "id": "visual_validator",
+      "name": "Visual Regression Validator",
+      "type": "server",
+      "description": "Visual comparison (Chromatic/Percy) - NOT YET INTEGRATED",
+      "step_type": "external",
+      "processing": {
+        "timeout": "10m"
+      },
+      "annotations": [
+        {
+          "type": "warning",
+          "text": "Gap: Visual validation not integrated, requires human review"
+        }
+      ]
+    },
+    {
+      "id": "human_approver",
+      "name": "Release Approver",
+      "type": "user",
+      "description": "Final human approval for release",
+      "step_type": "human",
+      "processing": {
+        "timeout": "24h"
+      }
+    },
+    {
+      "id": "certificate_generator",
+      "name": "Certificate Generator",
+      "type": "server",
+      "description": "Generates compliance certificate (get_compliance_certificate tool)",
+      "step_type": "deterministic",
+      "processing": {
+        "determinism": "deterministic",
+        "idempotent": true
+      },
+      "outputs": [
+        {
+          "name": "certificate",
+          "kind": "object",
+          "description": "ID, hash, timestamp, categories"
+        }
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "spec_validation",
+      "name": "1. Spec Validation",
+      "description": "Ensure design system spec is complete and agent-ready"
+    },
+    {
+      "id": "code_generation",
+      "name": "2. Code Generation",
+      "description": "AI agent generates code using spec context"
+    },
+    {
+      "id": "validation",
+      "name": "3. Validation",
+      "description": "Validate generated code against spec"
+    },
+    {
+      "id": "fix_loop",
+      "name": "4. Fix Loop",
+      "description": "Auto-fix violations until convergence"
+    },
+    {
+      "id": "human_review",
+      "name": "5. Human Review",
+      "description": "Human reviews unfixable issues and semantic changes"
+    },
+    {
+      "id": "release_decision",
+      "name": "6. Release Decision",
+      "description": "Compliance reporting and release gate"
+    }
+  ],
+  "flows": [
+    {
+      "from": "human_designer",
+      "to": "dss_mcp",
+      "action": "create_spec",
+      "label": "Create/update design spec",
+      "mode": "request",
+      "phase": "spec_validation",
+      "annotations": [
+        {
+          "type": "info",
+          "text": "Human defines principles, components, tokens"
+        }
+      ]
+    },
+    {
+      "from": "dss_mcp",
+      "to": "lint_spec",
+      "action": "lint_spec",
+      "label": "Lint spec for completeness",
+      "mode": "request",
+      "phase": "spec_validation"
+    },
+    {
+      "from": "lint_spec",
+      "to": "dss_mcp",
+      "action": "return_lint_result",
+      "label": "Score, coverage, issues",
+      "mode": "response",
+      "phase": "spec_validation"
+    },
+    {
+      "from": "dss_mcp",
+      "to": "prompt_generator",
+      "action": "generate_prompt",
+      "label": "Generate LLM context",
+      "mode": "request",
+      "phase": "code_generation",
+      "condition": "spec_score >= 80"
+    },
+    {
+      "from": "prompt_generator",
+      "to": "coding_agent",
+      "action": "provide_context",
+      "label": "LLM context (components, tokens, anti-patterns)",
+      "mode": "request",
+      "phase": "code_generation"
+    },
+    {
+      "from": "coding_agent",
+      "to": "dss_mcp",
+      "action": "submit_code",
+      "label": "Generated component code",
+      "mode": "response",
+      "phase": "code_generation",
+      "annotations": [
+        {
+          "type": "info",
+          "text": "LLM: Non-deterministic code generation"
+        }
+      ]
+    },
+    {
+      "from": "dss_mcp",
+      "to": "code_validator",
+      "action": "validate_directory",
+      "label": "Validate against spec",
+      "mode": "request",
+      "phase": "validation"
+    },
+    {
+      "from": "code_validator",
+      "to": "dss_mcp",
+      "action": "return_violations",
+      "label": "Violations list",
+      "mode": "response",
+      "phase": "validation"
+    },
+    {
+      "from": "dss_mcp",
+      "to": "auto_fixer",
+      "action": "run_fix_loop",
+      "label": "Auto-fix violations (max 3 iterations)",
+      "mode": "request",
+      "phase": "fix_loop",
+      "condition": "has_fixable_violations"
+    },
+    {
+      "from": "auto_fixer",
+      "to": "code_validator",
+      "action": "revalidate",
+      "label": "Re-validate after fix",
+      "mode": "request",
+      "phase": "fix_loop"
+    },
+    {
+      "from": "code_validator",
+      "to": "auto_fixer",
+      "action": "return_updated_violations",
+      "label": "Updated violations",
+      "mode": "response",
+      "phase": "fix_loop"
+    },
+    {
+      "from": "auto_fixer",
+      "to": "dss_mcp",
+      "action": "return_fix_result",
+      "label": "Fix result (converged, remaining)",
+      "mode": "response",
+      "phase": "fix_loop"
+    },
+    {
+      "from": "dss_mcp",
+      "to": "semantic_fixer",
+      "action": "fix_anti_patterns",
+      "label": "Fix semantic violations",
+      "mode": "request",
+      "phase": "fix_loop",
+      "condition": "has_semantic_violations",
+      "annotations": [
+        {
+          "type": "info",
+          "text": "LLM: Non-deterministic refactoring"
+        }
+      ]
+    },
+    {
+      "from": "semantic_fixer",
+      "to": "human_reviewer",
+      "action": "request_review",
+      "label": "Proposed refactoring + explanation",
+      "mode": "request",
+      "phase": "human_review"
+    },
+    {
+      "from": "dss_mcp",
+      "to": "human_reviewer",
+      "action": "escalate_unfixable",
+      "label": "Unfixable violations",
+      "mode": "request",
+      "phase": "human_review",
+      "condition": "has_unfixable_violations"
+    },
+    {
+      "from": "human_reviewer",
+      "to": "dss_mcp",
+      "action": "submit_approval",
+      "label": "Approval / rejection",
+      "mode": "response",
+      "phase": "human_review"
+    },
+    {
+      "from": "dss_mcp",
+      "to": "external_validator_a11y",
+      "action": "validate_accessibility",
+      "label": "WCAG validation",
+      "mode": "request",
+      "phase": "validation",
+      "condition": "accessibility_validator_configured"
+    },
+    {
+      "from": "external_validator_a11y",
+      "to": "dss_mcp",
+      "action": "return_a11y_results",
+      "label": "A11y results",
+      "mode": "response",
+      "phase": "validation"
+    },
+    {
+      "from": "dss_mcp",
+      "to": "visual_validator",
+      "action": "check_visual_regression",
+      "label": "Visual regression check",
+      "mode": "request",
+      "phase": "validation",
+      "condition": "visual_validator_configured",
+      "annotations": [
+        {
+          "type": "warning",
+          "text": "Gap: Not yet integrated - currently L0"
+        }
+      ]
+    },
+    {
+      "from": "dss_mcp",
+      "to": "compliance_reporter",
+      "action": "generate_compliance_report",
+      "label": "Generate compliance report",
+      "mode": "request",
+      "phase": "release_decision"
+    },
+    {
+      "from": "compliance_reporter",
+      "to": "release_gate",
+      "action": "check_release_gate",
+      "label": "Compliance report",
+      "mode": "request",
+      "phase": "release_decision"
+    },
+    {
+      "from": "release_gate",
+      "to": "dss_mcp",
+      "action": "return_gate_decision",
+      "label": "Approved/rejected with reason",
+      "mode": "response",
+      "phase": "release_decision"
+    },
+    {
+      "from": "dss_mcp",
+      "to": "human_approver",
+      "action": "request_release_approval",
+      "label": "Request release approval",
+      "mode": "request",
+      "phase": "release_decision",
+      "condition": "gate_approved",
+      "annotations": [
+        {
+          "type": "info",
+          "text": "Human: Final approval always required"
+        }
+      ]
+    },
+    {
+      "from": "human_approver",
+      "to": "certificate_generator",
+      "action": "generate_certificate",
+      "label": "Approved → generate certificate",
+      "mode": "request",
+      "phase": "release_decision",
+      "condition": "human_approved"
+    },
+    {
+      "from": "certificate_generator",
+      "to": "dss_mcp",
+      "action": "return_certificate",
+      "label": "Compliance certificate",
+      "mode": "response",
+      "phase": "release_decision"
+    }
+  ],
+  "alternatives": [
+    {
+      "id": "alt1",
+      "description": "Spec not agent-ready",
+      "condition": "spec_score < 80",
+      "flows": [
+        {
+          "from": "lint_spec",
+          "to": "human_designer",
+          "action": "return_issues",
+          "label": "Issues to fix",
+          "mode": "response"
+        }
+      ]
+    },
+    {
+      "id": "alt2",
+      "description": "Fix loop regression",
+      "condition": "regression_detected",
+      "flows": [
+        {
+          "from": "auto_fixer",
+          "to": "human_reviewer",
+          "action": "escalate_regression",
+          "label": "Regression - needs manual fix",
+          "mode": "request"
+        }
+      ]
+    },
+    {
+      "id": "alt3",
+      "description": "Release gate rejected",
+      "condition": "gate_rejected",
+      "flows": [
+        {
+          "from": "release_gate",
+          "to": "coding_agent",
+          "action": "request_regeneration",
+          "label": "Blocking issues → regenerate",
+          "mode": "request"
+        }
+      ]
+    }
+  ]
+}

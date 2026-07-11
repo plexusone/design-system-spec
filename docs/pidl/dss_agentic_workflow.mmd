@@ -1,0 +1,93 @@
+sequenceDiagram
+    title DSS Agentic Development Workflow
+    autonumber
+
+    participant human_designer as 👤 Human Designer
+    participant coding_agent as 🧠 Coding Agent
+    participant dss_mcp as 🔧 DSS MCP Server
+    participant lint_spec as ⚙️ Spec Linter
+    participant prompt_generator as ⚙️ LLM Prompt Generator
+    participant code_validator as ⚙️ Code Validator
+    participant auto_fixer as ⚙️ Auto Fixer
+    participant semantic_fixer as 🧠 Semantic Fixer
+    participant human_reviewer as 👤 Human Reviewer
+    participant compliance_reporter as ⚙️ Compliance Reporter
+    participant release_gate as ⚙️ Release Gate
+    participant external_validator_a11y as ☁️ Accessibility Validator
+    participant visual_validator as ☁️ Visual Regression Validator
+    participant human_approver as 👤 Release Approver
+    participant certificate_generator as ⚙️ Certificate Generator
+
+    rect rgb(240, 240, 240)
+        note right of human_designer: 1. Spec Validation
+        human_designer->>dss_mcp: Create/update design spec
+        note right of dss_mcp: Human defines principles, components, tokens
+        dss_mcp->>lint_spec: Lint spec for completeness
+        lint_spec-->>dss_mcp: Score, coverage, issues
+    end
+
+    rect rgb(240, 240, 240)
+        note right of human_designer: 2. Code Generation
+        opt spec_score >= 80
+            dss_mcp->>prompt_generator: Generate LLM context
+        end
+        prompt_generator->>coding_agent: LLM context (components, tokens, anti-patterns)
+        coding_agent-->>dss_mcp: Generated component code
+        note right of dss_mcp: LLM&&#35;58; Non-deterministic code generation
+    end
+
+    rect rgb(240, 240, 240)
+        note right of human_designer: 3. Validation
+        dss_mcp->>code_validator: Validate against spec
+        code_validator-->>dss_mcp: Violations list
+    end
+
+    rect rgb(240, 240, 240)
+        note right of human_designer: 4. Fix Loop
+        opt has_fixable_violations
+            dss_mcp->>auto_fixer: Auto-fix violations (max 3 iterations)
+        end
+        auto_fixer->>code_validator: Re-validate after fix
+        code_validator-->>auto_fixer: Updated violations
+        auto_fixer-->>dss_mcp: Fix result (converged, remaining)
+        opt has_semantic_violations
+            dss_mcp->>semantic_fixer: Fix semantic violations
+            note right of semantic_fixer: LLM&&#35;58; Non-deterministic refactoring
+        end
+    end
+
+    rect rgb(240, 240, 240)
+        note right of human_designer: 5. Human Review
+        semantic_fixer->>human_reviewer: Proposed refactoring + explanation
+        opt has_unfixable_violations
+            dss_mcp->>human_reviewer: Unfixable violations
+        end
+        human_reviewer-->>dss_mcp: Approval / rejection
+    end
+
+    rect rgb(240, 240, 240)
+        note right of human_designer: 3. Validation
+        opt accessibility_validator_configured
+            dss_mcp->>external_validator_a11y: WCAG validation
+        end
+        external_validator_a11y-->>dss_mcp: A11y results
+        opt visual_validator_configured
+            dss_mcp->>visual_validator: Visual regression check
+            note right of visual_validator: [WARNING] Gap&&#35;58; Not yet integrated - currently L0
+        end
+    end
+
+    rect rgb(240, 240, 240)
+        note right of human_designer: 6. Release Decision
+        dss_mcp->>compliance_reporter: Generate compliance report
+        compliance_reporter->>release_gate: Compliance report
+        release_gate-->>dss_mcp: Approved/rejected with reason
+        opt gate_approved
+            dss_mcp->>human_approver: Request release approval
+            note right of human_approver: Human&&#35;58; Final approval always required
+        end
+        opt human_approved
+            human_approver->>certificate_generator: Approved → generate certificate
+        end
+        certificate_generator-->>dss_mcp: Compliance certificate
+    end
