@@ -72,6 +72,11 @@ func (s *Skill) Tools() []skill.Tool {
 		s.fixSpacingTool(),
 		s.fixAccessibilityTool(),
 		s.fixDirectoryTool(),
+
+		// Lint tools
+		s.lintSpecTool(),
+		s.listLintRulesTool(),
+		s.checkAgentReadinessTool(),
 	}
 }
 
