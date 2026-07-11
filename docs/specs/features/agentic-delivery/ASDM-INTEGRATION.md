@@ -274,8 +274,20 @@ Design-system-spec provides the **scenario-based validation infrastructure** req
 
 This enables the transition from "human reviews every PR" (Level 5) to "scenarios validate every change" (Level 6), removing the human review bottleneck and enabling true autonomous software delivery for UI components.
 
+## Companion Projects
+
+For complete Level 6 UI validation, combine design-system-spec with:
+
+| Project | Validation Type | Specification |
+|---------|----------------|---------------|
+| **design-system-spec** | Visual regression | Design system spec |
+| **[agent-a11y](https://github.com/plexusone/agent-a11y)** | Accessibility | WCAG 2.x |
+
+Both projects integrate with multi-agent-spec for GO/WARN/NO-GO decision orchestration.
+
 ## References
 
 - [Software Delivery Autonomy Levels](https://productbuildershq.github.io/frameworks/software-delivery-autonomy/) - ASDM framework
+- [agent-a11y ASDM Integration](https://github.com/plexusone/agent-a11y/docs/architecture/asdm-integration.md) - Accessibility validation
 - [Visual Regression Testing TRD](../visual-regression-testing/TRD.md) - Technical implementation
 - [Visual Regression Testing PLAN](../visual-regression-testing/PLAN.md) - Implementation roadmap
