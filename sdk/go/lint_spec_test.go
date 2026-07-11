@@ -523,11 +523,174 @@ func TestAvailableLintRules(t *testing.T) {
 		"component-uses-valid",
 		"accessibility-defined",
 		"theming-contract-valid",
+		"validators-configured",
+		"validator-tool-required",
+		"validator-type-valid",
 	}
 
 	for _, rule := range expectedRules {
 		if _, ok := rules[rule]; !ok {
 			t.Errorf("Expected rule %s in available rules", rule)
+		}
+	}
+}
+
+func TestLintSpec_ValidatorsConfigured_MissingValidator(t *testing.T) {
+	ds := &DesignSystem{
+		Meta: Meta{
+			Name:    "Test System",
+			Version: "1.0.0",
+		},
+		Accessibility: &Accessibility{
+			WCAGLevel: "AA",
+		},
+		// No Validators configured
+	}
+
+	result := ds.Lint()
+
+	// Should have warning for missing accessibility validator
+	hasValidatorWarning := false
+	for _, issue := range result.Issues {
+		if issue.Rule == "validators-configured" {
+			hasValidatorWarning = true
+		}
+	}
+	if !hasValidatorWarning {
+		t.Error("Expected warning for accessibility requirements without validator")
+	}
+}
+
+func TestLintSpec_ValidatorsConfigured_WithValidator(t *testing.T) {
+	ds := &DesignSystem{
+		Meta: Meta{
+			Name:    "Test System",
+			Version: "1.0.0",
+		},
+		Accessibility: &Accessibility{
+			WCAGLevel: "AA",
+		},
+		Validators: &Validators{
+			Accessibility: &AccessibilityValidator{
+				Tool: "agent-a11y",
+				Type: ValidatorTypeMCP,
+			},
+		},
+	}
+
+	result := ds.Lint()
+
+	// Should NOT have warning for missing validator
+	hasValidatorWarning := false
+	for _, issue := range result.Issues {
+		if issue.Rule == "validators-configured" {
+			hasValidatorWarning = true
+		}
+	}
+	if hasValidatorWarning {
+		t.Error("Should not have validator warning when validator is configured")
+	}
+}
+
+func TestLintSpec_ValidatorToolRequired(t *testing.T) {
+	ds := &DesignSystem{
+		Meta: Meta{
+			Name:    "Test System",
+			Version: "1.0.0",
+		},
+		Validators: &Validators{
+			Accessibility: &AccessibilityValidator{
+				// Missing Tool
+				Type: ValidatorTypeMCP,
+			},
+		},
+	}
+
+	result := ds.Lint()
+
+	// Should have error for missing tool
+	hasToolError := false
+	for _, issue := range result.Issues {
+		if issue.Rule == "validator-tool-required" && issue.Severity == "error" {
+			hasToolError = true
+		}
+	}
+	if !hasToolError {
+		t.Error("Expected error for validator missing tool name")
+	}
+}
+
+func TestLintSpec_ValidatorTypeValid(t *testing.T) {
+	ds := &DesignSystem{
+		Meta: Meta{
+			Name:    "Test System",
+			Version: "1.0.0",
+		},
+		Validators: &Validators{
+			Accessibility: &AccessibilityValidator{
+				Tool: "agent-a11y",
+				Type: ValidatorType("invalid"), // Invalid type
+			},
+		},
+	}
+
+	result := ds.Lint()
+
+	// Should have error for invalid type
+	hasTypeError := false
+	for _, issue := range result.Issues {
+		if issue.Rule == "validator-type-valid" && issue.Severity == "error" {
+			hasTypeError = true
+		}
+	}
+	if !hasTypeError {
+		t.Error("Expected error for invalid validator type")
+	}
+}
+
+func TestLintSpec_ValidatorAllValid(t *testing.T) {
+	ds := &DesignSystem{
+		Meta: Meta{
+			Name:    "Test System",
+			Version: "1.0.0",
+		},
+		Accessibility: &Accessibility{
+			WCAGLevel: "AA",
+		},
+		Validators: &Validators{
+			Accessibility: &AccessibilityValidator{
+				Tool:      "agent-a11y",
+				Type:      ValidatorTypeMCP,
+				Command:   "agent-a11y mcp serve",
+				Standards: []string{"WCAG2.1-AA"},
+				Required:  true,
+			},
+			APIStyle: &APIStyleValidator{
+				Tool:    "spectral",
+				Type:    ValidatorTypeCLI,
+				Command: "npx spectral lint",
+				Ruleset: ".spectral.yaml",
+			},
+			Custom: []CustomValidator{
+				{
+					ID:     "security",
+					Name:   "Security Scanner",
+					Domain: "security",
+					Tool:   "snyk",
+					Type:   ValidatorTypeCLI,
+				},
+			},
+		},
+	}
+
+	result := ds.Lint()
+
+	// Should have no validator-related errors
+	for _, issue := range result.Issues {
+		if issue.Rule == "validators-configured" ||
+			issue.Rule == "validator-tool-required" ||
+			issue.Rule == "validator-type-valid" {
+			t.Errorf("Unexpected validator issue: %s - %s", issue.Rule, issue.Message)
 		}
 	}
 }

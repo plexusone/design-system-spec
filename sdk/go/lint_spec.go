@@ -178,6 +178,17 @@ func (l *specLinter) lint(_ context.Context) {
 	if allRules || l.hasRule(rules, "theming-contract-valid") {
 		l.checkThemingContracts()
 	}
+
+	// Validator configuration
+	if allRules || l.hasRule(rules, "validators-configured") {
+		l.checkValidatorsConfigured()
+	}
+	if allRules || l.hasRule(rules, "validator-tool-required") {
+		l.checkValidatorToolRequired()
+	}
+	if allRules || l.hasRule(rules, "validator-type-valid") {
+		l.checkValidatorTypeValid()
+	}
 }
 
 func (l *specLinter) hasRule(rules []string, wanted ...string) bool {
@@ -222,6 +233,9 @@ func (l *specLinter) getSuggestion(rule string) string {
 		"component-uses-valid":      "Ensure uses array references valid component IDs",
 		"accessibility-defined":     "Add accessibility section with WCAG level and requirements",
 		"theming-contract-valid":    "Ensure themingContract has prefix and tokens defined",
+		"validators-configured":     "Add validators section with external validation tools (e.g., agent-a11y for accessibility)",
+		"validator-tool-required":   "Specify tool name for validator (e.g., 'agent-a11y', 'spectral')",
+		"validator-type-valid":      "Use valid validator type: mcp, cli, npm, api, or library",
 	}
 	return suggestions[rule]
 }
@@ -517,6 +531,120 @@ func (l *specLinter) checkThemingContracts() {
 	}
 }
 
+// Validator checks
+func (l *specLinter) checkValidatorsConfigured() {
+	// If accessibility requirements are defined, check for accessibility validator
+	if l.ds.Accessibility != nil && l.ds.Accessibility.WCAGLevel != "" {
+		if l.ds.Validators == nil || l.ds.Validators.Accessibility == nil {
+			l.addIssue(
+				"validators.accessibility",
+				"validators-configured",
+				fmt.Sprintf("Accessibility requirements defined (WCAG %s) but no validator configured", l.ds.Accessibility.WCAGLevel),
+				"warning",
+				"",
+			)
+		}
+	}
+}
+
+func (l *specLinter) checkValidatorToolRequired() {
+	if l.ds.Validators == nil {
+		return
+	}
+
+	// Check accessibility validator
+	if v := l.ds.Validators.Accessibility; v != nil {
+		if v.Tool == "" {
+			l.addIssue(
+				"validators.accessibility.tool",
+				"validator-tool-required",
+				"Accessibility validator missing tool name",
+				"error",
+				"",
+			)
+		}
+	}
+
+	// Check API style validator
+	if v := l.ds.Validators.APIStyle; v != nil {
+		if v.Tool == "" {
+			l.addIssue(
+				"validators.apiStyle.tool",
+				"validator-tool-required",
+				"API style validator missing tool name",
+				"error",
+				"",
+			)
+		}
+	}
+
+	// Check custom validators
+	for i, v := range l.ds.Validators.Custom {
+		if v.Tool == "" {
+			l.addIssue(
+				fmt.Sprintf("validators.custom[%d].tool", i),
+				"validator-tool-required",
+				fmt.Sprintf("Custom validator '%s' missing tool name", v.ID),
+				"error",
+				"",
+			)
+		}
+	}
+}
+
+func (l *specLinter) checkValidatorTypeValid() {
+	if l.ds.Validators == nil {
+		return
+	}
+
+	validTypes := map[ValidatorType]bool{
+		ValidatorTypeMCP:     true,
+		ValidatorTypeCLI:     true,
+		ValidatorTypeNPM:     true,
+		ValidatorTypeAPI:     true,
+		ValidatorTypeLibrary: true,
+	}
+
+	// Check accessibility validator
+	if v := l.ds.Validators.Accessibility; v != nil {
+		if v.Type != "" && !validTypes[v.Type] {
+			l.addIssue(
+				"validators.accessibility.type",
+				"validator-type-valid",
+				fmt.Sprintf("Accessibility validator has invalid type '%s'", v.Type),
+				"error",
+				"",
+			)
+		}
+	}
+
+	// Check API style validator
+	if v := l.ds.Validators.APIStyle; v != nil {
+		if v.Type != "" && !validTypes[v.Type] {
+			l.addIssue(
+				"validators.apiStyle.type",
+				"validator-type-valid",
+				fmt.Sprintf("API style validator has invalid type '%s'", v.Type),
+				"error",
+				"",
+			)
+		}
+	}
+
+	// Check custom validators
+	for i, v := range l.ds.Validators.Custom {
+		if v.Type != "" && !validTypes[v.Type] {
+			l.addIssue(
+				fmt.Sprintf("validators.custom[%d].type", i),
+				"validator-type-valid",
+				fmt.Sprintf("Custom validator '%s' has invalid type '%s'", v.ID, v.Type),
+				"error",
+				"",
+			)
+		}
+	}
+}
+
 // Coverage calculation
 func (l *specLinter) calculateCoverage() {
 	totalComponents := len(l.ds.Components)
@@ -643,5 +771,8 @@ func AvailableLintRules() map[string]string {
 		"component-uses-valid":      "Component uses references must be valid",
 		"accessibility-defined":     "Design system should define accessibility requirements",
 		"theming-contract-valid":    "Theming contracts must be properly configured",
+		"validators-configured":     "External validators should be configured for requirements",
+		"validator-tool-required":   "Validators must specify a tool name",
+		"validator-type-valid":      "Validator type must be mcp, cli, npm, api, or library",
 	}
 }

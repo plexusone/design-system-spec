@@ -31,6 +31,11 @@ type DesignSystem struct {
 
 	// ThemeBindings maps application tokens to component theming contracts.
 	ThemeBindings []ThemeBindings `json:"themeBindings,omitempty"`
+
+	// Validators references external validation tools for requirements delegation.
+	// DSS defines requirements (e.g., WCAG AA in Accessibility); Validators specifies
+	// which external tools perform the actual validation (e.g., agent-a11y, spectral).
+	Validators *Validators `json:"validators,omitempty"`
 }
 
 // Validate performs basic validation on the design system.
