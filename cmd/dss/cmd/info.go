@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -25,57 +26,50 @@ func init() {
 	rootCmd.AddCommand(infoCmd)
 }
 
-func runInfo(cmd *cobra.Command, args []string) error {
+func runInfo(_ *cobra.Command, _ []string) error {
 	dir := getSpecDir()
+	ctx := context.Background()
 
-	// Load design system
+	// Load design system and create service
 	ds, err := dss.LoadDesignSystem(dir)
 	if err != nil {
 		return fmt.Errorf("loading design system: %w", err)
 	}
+	service := dss.NewService(ds)
 
-	fmt.Printf("Design System: %s\n", ds.Meta.Name)
-	fmt.Printf("Version: %s\n", ds.Meta.Version)
-	if ds.Meta.Description != "" {
-		fmt.Printf("Description: %s\n", ds.Meta.Description)
+	// Get metadata via service
+	meta := service.GetMeta(ctx)
+	fmt.Printf("Design System: %s\n", meta.Name)
+	fmt.Printf("Version: %s\n", meta.Version)
+	if meta.Description != "" {
+		fmt.Printf("Description: %s\n", meta.Description)
 	}
 	fmt.Println()
 
-	// Principles
-	if len(ds.Principles) > 0 {
-		fmt.Printf("Principles: %d\n", len(ds.Principles))
-		for _, p := range ds.Principles {
+	// Principles (access underlying DS for now, could add to service later)
+	underlyingDS := service.DesignSystem()
+	if len(underlyingDS.Principles) > 0 {
+		fmt.Printf("Principles: %d\n", len(underlyingDS.Principles))
+		for _, p := range underlyingDS.Principles {
 			fmt.Printf("  - %s\n", p.Name)
 		}
 		fmt.Println()
 	}
 
-	// Foundations
+	// Foundations - show token counts
 	fmt.Println("Foundations:")
-	if len(ds.Foundations.Colors) > 0 {
-		fmt.Printf("  Colors: %d tokens\n", len(ds.Foundations.Colors))
-	}
-	if len(ds.Foundations.Typography.FontFamilies) > 0 {
-		fmt.Printf("  Font Families: %d\n", len(ds.Foundations.Typography.FontFamilies))
-	}
-	if len(ds.Foundations.Typography.FontSizes) > 0 {
-		fmt.Printf("  Font Sizes: %d\n", len(ds.Foundations.Typography.FontSizes))
-	}
-	if len(ds.Foundations.Spacing.Scale) > 0 {
-		fmt.Printf("  Spacing: %d values\n", len(ds.Foundations.Spacing.Scale))
-	}
-	if len(ds.Foundations.BorderRadius) > 0 {
-		fmt.Printf("  Border Radius: %d values\n", len(ds.Foundations.BorderRadius))
-	}
+	printTokenCounts(ctx, service)
 	fmt.Println()
 
-	// Components
-	if len(ds.Components) > 0 {
-		fmt.Printf("Components: %d\n", len(ds.Components))
-		for _, c := range ds.Components {
-			variantCount := len(c.Variants)
-			if variantCount > 0 {
-				fmt.Printf("  - %s (%d variants)\n", c.Name, variantCount)
+	// Components via service
+	components := service.ListComponents(ctx)
+	if len(components) > 0 {
+		fmt.Printf("Components: %d\n", len(components))
+		for _, c := range components {
+			// Get full component for variant count
+			comp, err := service.GetComponent(ctx, c.ID)
+			if err == nil && len(comp.Variants) > 0 {
+				fmt.Printf("  - %s (%d variants)\n", c.Name, len(comp.Variants))
 			} else {
 				fmt.Printf("  - %s\n", c.Name)
 			}
@@ -83,17 +77,50 @@ func runInfo(cmd *cobra.Command, args []string) error {
 		fmt.Println()
 	}
 
+	// Patterns via service
+	patterns := service.ListPatterns(ctx)
+	if len(patterns) > 0 {
+		fmt.Printf("Patterns: %d\n", len(patterns))
+		for _, p := range patterns {
+			fmt.Printf("  - %s\n", p.Name)
+		}
+		fmt.Println()
+	}
+
 	// Accessibility
-	if ds.Accessibility != nil && ds.Accessibility.WCAGLevel != "" {
-		fmt.Printf("Accessibility Target: WCAG %s\n", ds.Accessibility.WCAGLevel)
+	a11y := service.GetAccessibility(ctx)
+	if a11y != nil && a11y.WCAGLevel != "" {
+		fmt.Printf("Accessibility Target: WCAG %s\n", a11y.WCAGLevel)
 	}
 
 	// Validation
-	if err := ds.Validate(); err != nil {
+	if err := underlyingDS.Validate(); err != nil {
 		fmt.Printf("\n⚠ Validation Issues: %v\n", err)
 	} else {
 		fmt.Println("✓ Spec validation passed")
 	}
 
 	return nil
+}
+
+// printTokenCounts displays counts for each token type.
+func printTokenCounts(ctx context.Context, service *dss.Service) {
+	tokenTypes := []struct {
+		name     string
+		typeName string
+	}{
+		{"Colors", "color"},
+		{"Spacing", "spacing"},
+		{"Typography", "typography"},
+		{"Elevation", "elevation"},
+		{"Border Radius", "borderRadius"},
+		{"Breakpoints", "breakpoint"},
+	}
+
+	for _, tt := range tokenTypes {
+		tokens, err := service.ListTokens(ctx, tt.typeName)
+		if err == nil && len(tokens) > 0 {
+			fmt.Printf("  %s: %d tokens\n", tt.name, len(tokens))
+		}
+	}
 }

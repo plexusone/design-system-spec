@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -62,21 +63,24 @@ func init() {
 	rootCmd.AddCommand(generateCmd)
 }
 
-func runGenerate(cmd *cobra.Command, args []string) error {
+func runGenerate(_ *cobra.Command, _ []string) error {
 	dir := getSpecDir()
+	ctx := context.Background()
 
-	// Load the design system
+	// Load the design system and create service
 	ds, err := dss.LoadDesignSystem(dir)
 	if err != nil {
 		return fmt.Errorf("loading design system: %w", err)
 	}
+	service := dss.NewService(ds)
 
 	// Validate
 	if err := ds.Validate(); err != nil {
 		return fmt.Errorf("design system validation failed: %w", err)
 	}
 
-	fmt.Fprintf(os.Stderr, "Loaded design system: %s v%s\n", ds.Meta.Name, ds.Meta.Version)
+	meta := service.GetMeta(ctx)
+	fmt.Fprintf(os.Stderr, "Loaded design system: %s v%s\n", meta.Name, meta.Version)
 
 	// If --package flag is set, generate NPM package
 	if packageOutput != "" {
@@ -114,9 +118,17 @@ func runGenerate(cmd *cobra.Command, args []string) error {
 		fmt.Println(css)
 	}
 
-	// Generate LLM prompt
-	llmOpts := dss.DefaultLLMPromptOptions()
-	llmPrompt, err := ds.GenerateLLMPrompt(llmOpts)
+	// Generate LLM prompt via service
+	llmOpts := &dss.PromptOptions{
+		Format:               "markdown",
+		IncludeFoundations:   true,
+		IncludeComponents:    true,
+		IncludePatterns:      true,
+		IncludeAccessibility: true,
+		IncludeAntiPatterns:  true,
+		MaxExamples:          3,
+	}
+	llmPrompt, err := service.GenerateLLMPrompt(ctx, llmOpts)
 	if err != nil {
 		return fmt.Errorf("generating LLM prompt: %w", err)
 	}
@@ -132,7 +144,8 @@ func runGenerate(cmd *cobra.Command, args []string) error {
 	}
 
 	// Generate TypeScript types
-	if len(ds.Components) > 0 {
+	components := service.ListComponents(ctx)
+	if len(components) > 0 {
 		reactOpts := dss.DefaultReactOptions()
 		types, err := ds.GenerateReactTypes(reactOpts)
 		if err != nil {

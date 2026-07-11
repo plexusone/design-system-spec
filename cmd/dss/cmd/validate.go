@@ -1,12 +1,9 @@
 package cmd
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
-	"os"
-	"path/filepath"
-	"regexp"
-	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -17,14 +14,14 @@ var (
 	jsonOutput bool
 )
 
-// ComplianceReport holds validation results
+// ComplianceReport holds validation results (backward compatible format).
 type ComplianceReport struct {
 	Passed   []string          `json:"passed"`
 	Warnings []ComplianceIssue `json:"warnings"`
 	Errors   []ComplianceIssue `json:"errors"`
 }
 
-// ComplianceIssue represents a single compliance violation
+// ComplianceIssue represents a single compliance violation.
 type ComplianceIssue struct {
 	Component string `json:"component,omitempty"`
 	File      string `json:"file"`
@@ -62,10 +59,10 @@ func init() {
 
 func runValidate(cmd *cobra.Command, args []string) error {
 	componentsDir := args[0]
-	dir := getSpecDir()
+	specDir := getSpecDir()
 
 	// Load design system
-	ds, err := dss.LoadDesignSystem(dir)
+	ds, err := dss.LoadDesignSystem(specDir)
 	if err != nil {
 		return fmt.Errorf("loading design system: %w", err)
 	}
@@ -75,39 +72,22 @@ func runValidate(cmd *cobra.Command, args []string) error {
 		fmt.Printf("Components directory: %s\n\n", componentsDir)
 	}
 
-	report := &ComplianceReport{
-		Passed:   []string{},
-		Warnings: []ComplianceIssue{},
-		Errors:   []ComplianceIssue{},
-	}
-
-	// Build component lookup
-	componentSpecs := make(map[string]dss.Component)
-	for _, c := range ds.Components {
-		componentSpecs[c.ID] = c
-	}
-
-	// Scan component files
-	err = filepath.Walk(componentsDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() || !strings.HasSuffix(path, ".tsx") {
-			return nil
-		}
-
-		validateComponentFile(path, componentSpecs, ds, report)
-		return nil
-	})
-
+	// Create service and validate
+	service := dss.NewService(ds)
+	result, err := service.ValidateDirectory(context.Background(), componentsDir, nil)
 	if err != nil {
-		return fmt.Errorf("scanning components: %w", err)
+		return fmt.Errorf("validating directory: %w", err)
 	}
+
+	// Convert to ComplianceReport for backward compatibility
+	report := convertToComplianceReport(result)
 
 	// Output report
 	if jsonOutput {
-		jsonData, _ := json.MarshalIndent(report, "", "  ")
+		jsonData, err := json.MarshalIndent(report, "", "  ")
+		if err != nil {
+			return fmt.Errorf("marshaling JSON: %w", err)
+		}
 		fmt.Println(string(jsonData))
 	} else {
 		printReport(report)
@@ -121,245 +101,40 @@ func runValidate(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func validateComponentFile(path string, specs map[string]dss.Component, ds *dss.DesignSystem, report *ComplianceReport) {
-	content, err := os.ReadFile(path)
-	if err != nil {
-		report.Errors = append(report.Errors, ComplianceIssue{
-			File:     path,
-			Rule:     "file-read",
-			Message:  fmt.Sprintf("Could not read file: %v", err),
-			Severity: "error",
-		})
-		return
+// convertToComplianceReport converts ValidationResult to ComplianceReport.
+func convertToComplianceReport(result *dss.ValidationResult) *ComplianceReport {
+	report := &ComplianceReport{
+		Passed:   []string{},
+		Warnings: []ComplianceIssue{},
+		Errors:   []ComplianceIssue{},
 	}
 
-	code := string(content)
-	filename := filepath.Base(path)
-	componentName := strings.TrimSuffix(filename, ".tsx")
-
-	// Check for hardcoded colors (should use CSS variables)
-	checkHardcodedColors(path, code, report)
-
-	// Check for hardcoded spacing (should use spacing scale)
-	checkHardcodedSpacing(path, code, report)
-
-	// Check for accessibility issues
-	checkAccessibility(path, code, report)
-
-	// Check against specific component spec if it exists
-	if spec, ok := specs[componentName]; ok {
-		validateAgainstSpec(path, code, spec, report)
-	}
-
-	// Check for anti-pattern violations
-	checkAntiPatterns(path, code, ds, report)
-}
-
-func checkHardcodedColors(path string, code string, report *ComplianceReport) {
-	// Look for hardcoded hex colors
-	hexPattern := regexp.MustCompile(`#[0-9a-fA-F]{3,8}`)
-	matches := hexPattern.FindAllStringIndex(code, -1)
-
-	for _, match := range matches {
-		line := strings.Count(code[:match[0]], "\n") + 1
-		colorValue := code[match[0]:match[1]]
-
-		// Ignore common exceptions (like in comments or SVG paths)
-		context := ""
-		if match[0] > 20 {
-			context = code[match[0]-20 : match[0]]
-		}
-		if strings.Contains(context, "//") || strings.Contains(context, "/*") {
-			continue
+	for _, v := range result.Violations {
+		issue := ComplianceIssue{
+			Component: v.Component,
+			File:      v.File,
+			Line:      v.Line,
+			Rule:      v.Rule,
+			Message:   v.Message,
+			Severity:  v.Severity,
 		}
 
-		report.Warnings = append(report.Warnings, ComplianceIssue{
-			File:     path,
-			Line:     line,
-			Rule:     "no-hardcoded-colors",
-			Message:  fmt.Sprintf("Hardcoded color '%s' - use CSS variable from design system", colorValue),
-			Severity: "warning",
-		})
-	}
-
-	// Look for hardcoded rgb/hsl
-	rgbPattern := regexp.MustCompile(`(?:rgb|hsl)a?\([^)]+\)`)
-	rgbMatches := rgbPattern.FindAllStringIndex(code, -1)
-
-	for _, match := range rgbMatches {
-		line := strings.Count(code[:match[0]], "\n") + 1
-		colorValue := code[match[0]:match[1]]
-
-		// Skip if it's in a CSS variable definition context
-		context := ""
-		if match[0] > 50 {
-			context = code[match[0]-50 : match[0]]
-		}
-		if strings.Contains(context, "--color-") || strings.Contains(context, "var(") {
-			continue
-		}
-
-		report.Warnings = append(report.Warnings, ComplianceIssue{
-			File:     path,
-			Line:     line,
-			Rule:     "no-hardcoded-colors",
-			Message:  fmt.Sprintf("Hardcoded color '%s' - use CSS variable", colorValue),
-			Severity: "warning",
-		})
-	}
-}
-
-func checkHardcodedSpacing(path string, code string, report *ComplianceReport) {
-	// Look for pixel values that should use spacing scale
-	pxPattern := regexp.MustCompile(`:\s*(\d+)px`)
-	matches := pxPattern.FindAllStringSubmatch(code, -1)
-
-	validSpacing := map[string]bool{
-		"0": true, "1": true, "2": true, "4": true, "8": true,
-		"12": true, "16": true, "20": true, "24": true, "32": true,
-		"40": true, "48": true, "64": true, "80": true, "96": true,
-	}
-
-	for _, match := range matches {
-		if len(match) < 2 {
-			continue
-		}
-		value := match[1]
-
-		// Skip if it's a valid spacing value
-		if validSpacing[value] {
-			continue
-		}
-
-		// Skip small values that might be borders
-		if value == "1" || value == "2" || value == "3" {
-			continue
-		}
-
-		idx := strings.Index(code, match[0])
-		line := strings.Count(code[:idx], "\n") + 1
-
-		report.Warnings = append(report.Warnings, ComplianceIssue{
-			File:     path,
-			Line:     line,
-			Rule:     "use-spacing-scale",
-			Message:  fmt.Sprintf("Value '%spx' not in spacing scale - use design system spacing", value),
-			Severity: "warning",
-		})
-	}
-}
-
-func checkAccessibility(path string, code string, report *ComplianceReport) {
-	// Check for images without alt
-	imgPattern := regexp.MustCompile(`<img[^>]*>`)
-	imgMatches := imgPattern.FindAllString(code, -1)
-
-	for _, img := range imgMatches {
-		if !strings.Contains(img, "alt=") && !strings.Contains(img, "alt =") {
-			idx := strings.Index(code, img)
-			line := strings.Count(code[:idx], "\n") + 1
-
-			report.Errors = append(report.Errors, ComplianceIssue{
-				File:     path,
-				Line:     line,
-				Rule:     "img-alt-required",
-				Message:  "Image missing alt attribute",
-				Severity: "error",
-			})
+		switch v.Severity {
+		case "error":
+			report.Errors = append(report.Errors, issue)
+		case "warning":
+			report.Warnings = append(report.Warnings, issue)
+		default:
+			report.Warnings = append(report.Warnings, issue)
 		}
 	}
 
-	// Check for buttons without accessible name
-	buttonPattern := regexp.MustCompile(`<[Bb]utton[^>]*>`)
-	buttonMatches := buttonPattern.FindAllString(code, -1)
-
-	for _, btn := range buttonMatches {
-		// Icon-only buttons need aria-label
-		if strings.Contains(btn, "size=\"icon\"") || strings.Contains(btn, "size='icon'") {
-			if !strings.Contains(btn, "aria-label") {
-				idx := strings.Index(code, btn)
-				line := strings.Count(code[:idx], "\n") + 1
-
-				report.Warnings = append(report.Warnings, ComplianceIssue{
-					File:     path,
-					Line:     line,
-					Rule:     "button-accessible-name",
-					Message:  "Icon-only button should have aria-label",
-					Severity: "warning",
-				})
-			}
-		}
-	}
-}
-
-func validateAgainstSpec(path string, code string, spec dss.Component, report *ComplianceReport) {
-	// Check that variant values match spec
-	if len(spec.Variants) > 0 {
-		validVariants := make(map[string]bool)
-		for _, v := range spec.Variants {
-			validVariants[v.ID] = true
-		}
-
-		// Look for variant prop usage
-		variantPattern := regexp.MustCompile(`variant=["']([^"']+)["']`)
-		matches := variantPattern.FindAllStringSubmatch(code, -1)
-
-		for _, match := range matches {
-			if len(match) < 2 {
-				continue
-			}
-			variant := match[1]
-			if !validVariants[variant] {
-				idx := strings.Index(code, match[0])
-				line := strings.Count(code[:idx], "\n") + 1
-
-				report.Errors = append(report.Errors, ComplianceIssue{
-					Component: spec.Name,
-					File:      path,
-					Line:      line,
-					Rule:      "valid-variant",
-					Message:   fmt.Sprintf("Unknown variant '%s' - valid variants: %v", variant, keys(validVariants)),
-					Severity:  "error",
-				})
-			}
-		}
+	// Add passed count based on files checked
+	if result.Files > 0 && len(report.Errors) == 0 {
+		report.Passed = append(report.Passed, fmt.Sprintf("%d files validated", result.Files))
 	}
 
-	report.Passed = append(report.Passed, fmt.Sprintf("%s: validated against spec", spec.Name))
-}
-
-func checkAntiPatterns(path string, code string, _ *dss.DesignSystem, report *ComplianceReport) {
-	// Check for multiple primary buttons (anti-pattern)
-	primaryBtnPattern := regexp.MustCompile(`<Button[^>]*variant=["'](?:default|primary)["']`)
-	primaryMatches := primaryBtnPattern.FindAllString(code, -1)
-
-	if len(primaryMatches) > 1 {
-		report.Warnings = append(report.Warnings, ComplianceIssue{
-			File:     path,
-			Rule:     "single-primary-button",
-			Message:  fmt.Sprintf("Found %d primary buttons - design system recommends one primary button per view", len(primaryMatches)),
-			Severity: "warning",
-		})
-	}
-
-	// Check for nested cards
-	cardPattern := regexp.MustCompile(`<Card[^>]*>[^<]*<Card`)
-	if cardPattern.MatchString(code) {
-		report.Warnings = append(report.Warnings, ComplianceIssue{
-			File:     path,
-			Rule:     "no-nested-cards",
-			Message:  "Nested cards detected - design system recommends avoiding card nesting",
-			Severity: "warning",
-		})
-	}
-}
-
-func keys(m map[string]bool) []string {
-	result := make([]string, 0, len(m))
-	for k := range m {
-		result = append(result, k)
-	}
-	return result
+	return report
 }
 
 func printReport(report *ComplianceReport) {
