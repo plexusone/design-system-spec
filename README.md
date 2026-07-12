@@ -183,7 +183,7 @@ Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/
 }
 ```
 
-### Available Tools (33 total)
+### Available Tools (36 total)
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
@@ -194,6 +194,7 @@ Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/
 | Lint | `lint_spec`, `list_lint_rules`, `check_agent_readiness` | Spec completeness checking |
 | Validators | `list_validators`, `get_validator`, `get_validation_requirements`, `get_validator_invocation` | External validator delegation |
 | Compliance | `generate_compliance_report`, `check_release_gate`, `run_fix_loop`, `fix_and_verify`, `get_compliance_certificate` | Release workflow |
+| Accessibility | `get_accessibility_requirements`, `get_a11y_anti_patterns`, `suggest_contrast_token`, `get_component_fix_context` | Accessibility integration for agent-a11y |
 
 ### Example Workflows
 
@@ -490,7 +491,7 @@ design-system-spec/
 │   ├── gen_react.go      # TypeScript generator
 │   ├── gen_llm.go        # LLM context generator
 │   └── ...               # Other generators
-├── skills/designsystem/  # MCP skill definition (33 tools)
+├── skills/designsystem/  # MCP skill definition (36 tools)
 │   ├── skill.go          # Skill interface
 │   ├── tools_spec.go     # Spec reading tools
 │   ├── tools_guidance.go # Guidance tools
@@ -498,7 +499,8 @@ design-system-spec/
 │   ├── tools_fix.go      # Fix tools
 │   ├── tools_lint.go     # Lint tools
 │   ├── tools_validators.go # Validator delegation tools
-│   └── tools_compliance.go # Compliance & release tools
+│   ├── tools_compliance.go # Compliance & release tools
+│   └── tools_a11y.go     # Accessibility integration tools
 ├── schema/               # JSON Schemas (generated)
 ├── ui/                   # Web component viewer (Lit)
 └── docs/                 # MkDocs documentation
@@ -514,7 +516,7 @@ design-system-spec/
 - [x] Diagram generators (Mermaid, D2)
 - [x] W3C Design Tokens export
 - [x] Web component viewer (ui/)
-- [x] MCP server for AI assistants (33 tools)
+- [x] MCP server for AI assistants (36 tools)
 - [x] `dss lint-spec` for spec completeness
 - [x] External validator delegation (WCAG, API style)
 - [x] Compliance reporting and release gates
