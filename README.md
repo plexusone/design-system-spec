@@ -183,7 +183,7 @@ Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/
 }
 ```
 
-### Available Tools (36 total)
+### Available Tools (37 total)
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
@@ -491,7 +491,7 @@ design-system-spec/
 │   ├── gen_react.go      # TypeScript generator
 │   ├── gen_llm.go        # LLM context generator
 │   └── ...               # Other generators
-├── skills/designsystem/  # MCP skill definition (36 tools)
+├── skills/designsystem/  # MCP skill definition (37 tools)
 │   ├── skill.go          # Skill interface
 │   ├── tools_spec.go     # Spec reading tools
 │   ├── tools_guidance.go # Guidance tools
@@ -516,7 +516,7 @@ design-system-spec/
 - [x] Diagram generators (Mermaid, D2)
 - [x] W3C Design Tokens export
 - [x] Web component viewer (ui/)
-- [x] MCP server for AI assistants (36 tools)
+- [x] MCP server for AI assistants (37 tools)
 - [x] `dss lint-spec` for spec completeness
 - [x] External validator delegation (WCAG, API style)
 - [x] Compliance reporting and release gates

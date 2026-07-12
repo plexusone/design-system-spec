@@ -4,7 +4,7 @@ The `dss-mcp` command exposes design system operations as an MCP (Model Context 
 
 ## Overview
 
-The MCP server provides 36 tools organized into nine categories:
+The MCP server provides 37 tools organized into nine categories:
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
@@ -814,7 +814,7 @@ Recommendation: Add LLM context to remaining components for best AI generation r
 │  │                  omniskill Runtime                          ││
 │  │  ┌──────────────────────────┐  ┌──────────────────────────┐││
 │  │  │ designsystem skill       │  │ w3pilot skill            │││
-│  │  │ (36 native Go tools)     │  │ (169 browser tools)      │││
+│  │  │ (37 native Go tools)     │  │ (169 browser tools)      │││
 │  │  │ - Spec reading (7)       │  │                          │││
 │  │  │ - Guidance (4)           │  │                          │││
 │  │  │ - Validation (4)         │  │                          │││

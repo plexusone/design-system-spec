@@ -86,7 +86,7 @@ Visual regression testing for design system components.
 
 ```
 dss-mcp (MCP Server)
-├── designsystem skill (36 tools)
+├── designsystem skill (37 tools)
 │   ├── Spec reading: get_component, list_components, get_token, list_tokens, get_pattern, list_patterns, get_meta
 │   ├── Guidance: generate_prompt, get_variants, get_props, get_anti_patterns
 │   ├── Validation: validate_file, validate_directory, check_colors, check_spacing
