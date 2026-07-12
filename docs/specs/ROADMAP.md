@@ -427,8 +427,335 @@ extra_css:
 5. TypeScript types provide autocomplete for all tokens
 6. Package size is reasonable (< 50KB uncompressed)
 
+---
+
+# Accessibility Integration Roadmap
+
+This section tracks integration with agent-a11y for fully agentic accessibility workflows.
+
+## Overview
+
+design-system-spec provides the "source of truth" for accessible UI components. When agent-a11y detects accessibility issues, it can query design-system-spec to:
+
+1. **Match components** - Identify which design system component is affected
+2. **Suggest tokens** - Recommend compliant color/spacing tokens
+3. **Get requirements** - Retrieve accessibility requirements for components
+4. **Avoid anti-patterns** - List accessibility anti-patterns to avoid
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  agent-a11y     │────▶│ design-system   │────▶│  coding agent   │
+│  (finds issues) │     │ -spec (context) │     │  (applies fix)  │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+```
+
+## Current Status
+
+### Completed
+
+- [x] Component schema with `accessibility` field
+- [x] Token definitions (colors, spacing, typography)
+- [x] MCP tools: `get_component`, `get_token`, `validate_file`
+- [x] Basic token suggestion in agent-a11y (`--design-system` flag)
+
+### Gaps
+
+| Gap | Impact | Priority |
+|-----|--------|----------|
+| Component props for a11y | Can't generate required props | High |
+| Accessibility requirements query | No dedicated a11y query tool | High |
+| Anti-patterns database | No way to query what to avoid | Medium |
+| Token contrast validation | No pre-computed contrast ratios | Medium |
+
+---
+
+## Phase 1: Accessibility Requirements API
+
+**Goal**: Enable agents to query accessibility requirements for components.
+
+### New MCP Tool: `get_accessibility_requirements`
+
+```json
+{
+  "name": "get_accessibility_requirements",
+  "description": "Get accessibility requirements for a component",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "component": { "type": "string", "description": "Component ID" },
+      "context": { "type": "string", "enum": ["interactive", "static", "navigation"] }
+    },
+    "required": ["component"]
+  }
+}
+```
+
+**Output:**
+
+```json
+{
+  "component": "Button",
+  "requirements": {
+    "required_props": [
+      { "name": "aria-label", "when": "icon-only", "example": "aria-label=\"Close dialog\"" },
+      { "name": "disabled", "type": "boolean", "aria": "aria-disabled" }
+    ],
+    "keyboard": {
+      "enter": "activates button",
+      "space": "activates button"
+    },
+    "focus": {
+      "visible": true,
+      "order": "natural",
+      "trap": false
+    },
+    "color_contrast": {
+      "text": "4.5:1",
+      "large_text": "3:1",
+      "ui_components": "3:1"
+    }
+  },
+  "wcag_criteria": ["2.1.1", "2.4.7", "4.1.2"]
+}
+```
+
+### Implementation
+
+| Task | Description | Status |
+|------|-------------|--------|
+| Schema extension | Add `accessibility.requirements` to component schema | Pending |
+| Service method | `GetAccessibilityRequirements(componentID)` | Pending |
+| MCP tool | `get_accessibility_requirements` tool | Pending |
+| Requirements database | Pre-defined requirements for common components | Pending |
+
+---
+
+## Phase 2: Anti-Patterns Database
+
+**Goal**: Provide agents with patterns to avoid when fixing accessibility issues.
+
+### New MCP Tool: `get_anti_patterns`
+
+```json
+{
+  "name": "get_anti_patterns",
+  "description": "Get accessibility anti-patterns to avoid for a component or rule",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "component": { "type": "string" },
+      "rule_id": { "type": "string", "description": "WCAG rule ID like color-contrast" }
+    }
+  }
+}
+```
+
+**Output:**
+
+```json
+{
+  "anti_patterns": [
+    {
+      "id": "placeholder-as-label",
+      "description": "Using placeholder text as the only label",
+      "bad_example": "<input placeholder=\"Email\">",
+      "good_example": "<label for=\"email\">Email</label><input id=\"email\">",
+      "wcag": ["1.3.1", "3.3.2"]
+    },
+    {
+      "id": "color-only-error",
+      "description": "Using color alone to indicate errors",
+      "bad_example": "<input style=\"border-color: red\">",
+      "good_example": "<input aria-invalid=\"true\" aria-describedby=\"error\"><span id=\"error\">Error message</span>",
+      "wcag": ["1.4.1"]
+    }
+  ]
+}
+```
+
+### Implementation
+
+| Task | Description | Status |
+|------|-------------|--------|
+| Anti-patterns schema | Define anti-pattern data structure | Pending |
+| Anti-patterns database | Curate common anti-patterns | Pending |
+| MCP tool | `get_anti_patterns` tool | Pending |
+| Component-specific | Link anti-patterns to components | Pending |
+
+---
+
+## Phase 3: Token Contrast Pre-computation
+
+**Goal**: Pre-compute contrast ratios for color tokens to speed up suggestions.
+
+### Enhanced Token Schema
+
+```yaml
+tokens:
+  colors:
+    primary-500:
+      value: "#3B82F6"
+      contrast:
+        white: 4.5    # Contrast ratio vs white
+        black: 8.2    # Contrast ratio vs black
+        gray-100: 4.1 # Contrast ratio vs light background
+        gray-900: 7.8 # Contrast ratio vs dark background
+      wcag:
+        aa_normal: ["white", "gray-900"]  # Passes AA for normal text
+        aa_large: ["white", "gray-100", "gray-900"]  # Passes AA for large text
+        aaa_normal: ["gray-900"]  # Passes AAA for normal text
+```
+
+### New MCP Tool: `suggest_contrast_token`
+
+```json
+{
+  "name": "suggest_contrast_token",
+  "description": "Suggest a color token that meets contrast requirements",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "background": { "type": "string", "description": "Background color or token" },
+      "min_contrast": { "type": "number", "default": 4.5 },
+      "prefer_similar_to": { "type": "string", "description": "Prefer tokens similar to this color" }
+    },
+    "required": ["background"]
+  }
+}
+```
+
+### Implementation
+
+| Task | Description | Status |
+|------|-------------|--------|
+| Contrast pre-computation | Compute on spec load | Pending |
+| Token schema extension | Add `contrast` field to color tokens | Pending |
+| Suggestion algorithm | Find best matching compliant token | Pending |
+| MCP tool | `suggest_contrast_token` tool | Pending |
+
+---
+
+## Phase 4: Component Context for Fixes
+
+**Goal**: Provide full component context so agents can apply fixes at the right level.
+
+### New MCP Tool: `get_component_fix_context`
+
+```json
+{
+  "name": "get_component_fix_context",
+  "description": "Get full context needed to fix accessibility issues in a component",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "component": { "type": "string" },
+      "issue_type": { "type": "string", "enum": ["color-contrast", "missing-label", "keyboard", "focus"] }
+    },
+    "required": ["component", "issue_type"]
+  }
+}
+```
+
+**Output:**
+
+```json
+{
+  "component": "Button",
+  "fix_context": {
+    "file_pattern": "src/components/Button.{tsx,vue,svelte}",
+    "props_to_add": [
+      { "name": "aria-label", "type": "string", "required_when": "children is icon" }
+    ],
+    "styles_to_check": [
+      { "property": "color", "token": "color.text.primary" },
+      { "property": "background-color", "token": "color.bg.primary" }
+    ],
+    "tokens_available": {
+      "foreground": ["color.text.primary", "color.text.on-primary"],
+      "background": ["color.bg.primary", "color.bg.primary-hover"]
+    },
+    "related_components": ["IconButton", "ButtonGroup"]
+  }
+}
+```
+
+---
+
+## Integration with agent-a11y
+
+### Workflow
+
+```
+1. agent-a11y detects: "color-contrast issue on .btn-primary"
+
+2. agent-a11y queries design-system-spec:
+   - get_component("Button") → component definition
+   - get_accessibility_requirements("Button") → required props, contrast
+   - suggest_contrast_token(background: "primary-500") → compliant token
+
+3. agent-a11y returns to coding agent:
+   {
+     "finding": { "ruleId": "color-contrast", ... },
+     "designSystem": {
+       "component": "Button",
+       "suggestedToken": "color.text.on-primary",
+       "requirements": { ... }
+     }
+   }
+
+4. Coding agent applies fix using design system tokens
+```
+
+### MCP Configuration
+
+```json
+{
+  "mcpServers": {
+    "a11y": {
+      "command": "agent-a11y",
+      "args": ["mcp", "serve"]
+    },
+    "design-system": {
+      "command": "dss-mcp",
+      "args": ["--spec", "./design-system/"]
+    }
+  }
+}
+```
+
+---
+
+## Success Criteria
+
+### Phase 1 (Requirements API)
+
+- [ ] `get_accessibility_requirements` returns valid requirements
+- [ ] Requirements cover Button, Input, Select, Dialog, Menu
+- [ ] agent-a11y can query requirements via MCP
+
+### Phase 2 (Anti-Patterns)
+
+- [ ] Database of 20+ common anti-patterns
+- [ ] Anti-patterns linked to WCAG criteria
+- [ ] Coding agents avoid anti-patterns in fixes
+
+### Phase 3 (Contrast Pre-computation)
+
+- [ ] Contrast ratios computed on spec load
+- [ ] Token suggestions return in < 10ms
+- [ ] 95% of color-contrast fixes use suggested tokens
+
+### Phase 4 (Component Context)
+
+- [ ] Full fix context available for all components
+- [ ] File patterns match actual project structure
+- [ ] Related components identified correctly
+
+---
+
 ## Related
 
 - [TASKS.md](../../TASKS.md) - Project task tracking
 - [cli.md](../cli.md) - CLI reference
 - [W3C Design Tokens](https://design-tokens.github.io/community-group/format/) - Standard format
+- [agent-a11y ROADMAP](https://github.com/plexusone/agent-a11y/docs/specs/ROADMAP.md) - Accessibility tool roadmap
