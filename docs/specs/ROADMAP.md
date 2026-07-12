@@ -40,7 +40,8 @@ End-to-end testing of the MCP server.
 |------|--------|-------------|
 | Build verification | ✅ Done | MCP server builds and CLI works correctly |
 | Spec loading | ✅ Done | Loads minimal-system example successfully |
-| MCP Inspector | Pending | `npx @anthropic/mcp-inspector dss-mcp --spec ./examples/minimal-system` |
+| MCP JSON-RPC | ✅ Done | Server responds correctly to initialize, tools/list, tools/call |
+| Tool Count | ✅ Done | 37 tools verified via tools/list |
 | Claude Desktop | Pending | Test with real Claude Desktop configuration |
 
 #### Phase 5: Embedded Filesystem Support ✅
