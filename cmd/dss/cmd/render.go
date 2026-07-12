@@ -16,6 +16,7 @@ var (
 	renderOutput   string
 	renderTitle    string
 	renderEvalFile string
+	renderMkDocs   bool
 )
 
 var renderCmd = &cobra.Command{
@@ -30,11 +31,16 @@ The output includes:
   - Design tokens visualization
   - Evaluation dashboard (if eval data provided)
 
+Output Modes:
+  - Standalone HTML (default): Complete HTML files with embedded CSS
+  - MkDocs mode (--mkdocs): Markdown files with embedded HTML for MkDocs integration
+
 Examples:
   dss render --output ./docs
   dss render -d ./specs/v3 --output ./docs/v3
   dss render --output ./docs --eval ./evals/v3.json
-  dss render --output ./docs --title "Material Design 3"`,
+  dss render --output ./docs --title "Material Design 3"
+  dss render --output ./docs --mkdocs  # MkDocs-compatible Markdown`,
 	RunE: runRender,
 }
 
@@ -42,6 +48,7 @@ func init() {
 	renderCmd.Flags().StringVarP(&renderOutput, "output", "o", "docs", "output directory for HTML files")
 	renderCmd.Flags().StringVar(&renderTitle, "title", "", "documentation title (default: design system name)")
 	renderCmd.Flags().StringVar(&renderEvalFile, "eval", "", "evaluation JSON file to include")
+	renderCmd.Flags().BoolVar(&renderMkDocs, "mkdocs", false, "generate MkDocs-compatible Markdown with embedded HTML")
 
 	rootCmd.AddCommand(renderCmd)
 }
@@ -62,6 +69,7 @@ func runRender(cmd *cobra.Command, args []string) error {
 	opts := &dss.HTMLOptions{
 		OutputDir: renderOutput,
 		Title:     renderTitle,
+		MkDocs:    renderMkDocs,
 	}
 
 	// Load evaluation data if provided
@@ -94,8 +102,13 @@ func runRender(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("generating HTML: %w", err)
 	}
 
-	fmt.Printf("\nGenerated HTML documentation in: %s\n", renderOutput)
-	fmt.Printf("Open %s/index.html in a browser to view.\n", renderOutput)
+	if renderMkDocs {
+		fmt.Printf("\nGenerated MkDocs-compatible documentation in: %s\n", renderOutput)
+		fmt.Printf("Run 'mkdocs serve' to preview, or 'mkdocs build' to generate static site.\n")
+	} else {
+		fmt.Printf("\nGenerated HTML documentation in: %s\n", renderOutput)
+		fmt.Printf("Open %s/index.html in a browser to view.\n", renderOutput)
+	}
 
 	return nil
 }
