@@ -4,7 +4,7 @@ The `dss-mcp` command exposes design system operations as an MCP (Model Context 
 
 ## Overview
 
-The MCP server provides 33 tools organized into eight categories:
+The MCP server provides 36 tools organized into nine categories:
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
@@ -15,6 +15,7 @@ The MCP server provides 33 tools organized into eight categories:
 | Lint | 3 | Check spec completeness and agent-readiness |
 | Validators | 4 | External validator discovery and delegation |
 | Compliance | 5 | Compliance reporting and release gates |
+| Accessibility | 4 | A11y requirements, anti-patterns, contrast suggestions |
 
 ## Installation
 
@@ -553,6 +554,144 @@ Generate a compliance certificate after validation. Provides proof of compliance
 |------|------|----------|-------------|
 | `directory` | string | Yes | Directory that was validated |
 
+### Accessibility Integration Tools
+
+Tools for querying accessibility requirements, anti-patterns, and token contrast. Designed for integration with agent-a11y.
+
+#### `get_accessibility_requirements`
+
+Get accessibility requirements for a component including required props, keyboard interactions, focus management, and WCAG criteria.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `component` | string | Yes | Component ID (e.g., "button", "input", "modal") |
+
+**Returns:**
+
+```json
+{
+  "componentId": "button",
+  "component": "Button",
+  "requiredProps": [
+    { "name": "aria-label", "when": "icon-only", "example": "aria-label=\"Close\"" }
+  ],
+  "keyboard": {
+    "interactions": {
+      "Enter": "activates button",
+      "Space": "activates button"
+    }
+  },
+  "focus": {
+    "visible": true,
+    "order": "natural"
+  },
+  "colorContrast": {
+    "text": "4.5:1",
+    "largeText": "3.0:1",
+    "uiComponents": "3.0:1"
+  },
+  "wcagCriteria": ["2.1.1", "2.4.7", "4.1.2"],
+  "role": "button"
+}
+```
+
+#### `get_a11y_anti_patterns`
+
+Get accessibility anti-patterns to avoid for a component or rule. Returns bad examples, good examples, and WCAG criteria.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `component` | string | No | Component ID to get anti-patterns for |
+| `rule_id` | string | No | Rule ID like "color-contrast", "missing-label", "keyboard", "focus" |
+
+**Returns:**
+
+```json
+{
+  "componentId": "button",
+  "antiPatterns": [
+    {
+      "id": "missing-button-name",
+      "description": "Buttons without accessible names",
+      "badExample": "<button><svg>...</svg></button>",
+      "goodExample": "<button aria-label=\"Close dialog\"><svg>...</svg></button>",
+      "wcagCriteria": ["4.1.2"],
+      "components": ["button", "icon-button"]
+    }
+  ]
+}
+```
+
+#### `suggest_contrast_token`
+
+Suggest color tokens that meet contrast requirements against a background color.
+
+**Parameters:**
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `background` | string | Yes | - | Background color as hex (e.g., "#ffffff") |
+| `min_contrast` | number | No | 4.5 | Minimum contrast ratio (4.5 for AA normal text) |
+
+**Returns:**
+
+```json
+[
+  {
+    "token": "gray-900",
+    "value": "#1a1a2e",
+    "contrastRatio": 12.6,
+    "meetsAA": true,
+    "meetsAAA": true,
+    "meetsAALarge": true
+  },
+  {
+    "token": "primary-700",
+    "value": "#1d4ed8",
+    "contrastRatio": 4.8,
+    "meetsAA": true,
+    "meetsAAA": false,
+    "meetsAALarge": true
+  }
+]
+```
+
+#### `get_component_fix_context`
+
+Get full context needed to fix accessibility issues in a component including file patterns, props to add, styles to check, and available tokens.
+
+**Parameters:**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `component` | string | Yes | Component ID (e.g., "button", "input") |
+| `issue_type` | string | Yes | Issue type: "color-contrast", "missing-label", "keyboard", "focus" |
+
+**Returns:**
+
+```json
+{
+  "componentId": "button",
+  "issueType": "color-contrast",
+  "filePattern": "src/components/Button.{tsx,vue,svelte}",
+  "propsToAdd": [],
+  "stylesToCheck": [
+    { "property": "color", "token": "color.text.*" },
+    { "property": "background-color", "token": "color.bg.*" }
+  ],
+  "tokensAvailable": {
+    "colors": ["primary", "secondary", "gray-900", "white"],
+    "spacing": ["1", "2", "4", "8"]
+  },
+  "relatedComponents": ["icon", "tooltip"],
+  "antiPatterns": ["Using color alone to indicate errors"]
+}
+```
+
 ## Example Workflows
 
 ### Component Implementation
@@ -675,7 +814,7 @@ Recommendation: Add LLM context to remaining components for best AI generation r
 │  │                  omniskill Runtime                          ││
 │  │  ┌──────────────────────────┐  ┌──────────────────────────┐││
 │  │  │ designsystem skill       │  │ w3pilot skill            │││
-│  │  │ (33 native Go tools)     │  │ (169 browser tools)      │││
+│  │  │ (36 native Go tools)     │  │ (169 browser tools)      │││
 │  │  │ - Spec reading (7)       │  │                          │││
 │  │  │ - Guidance (4)           │  │                          │││
 │  │  │ - Validation (4)         │  │                          │││
@@ -683,6 +822,7 @@ Recommendation: Add LLM context to remaining components for best AI generation r
 │  │  │ - Lint (3)               │  │                          │││
 │  │  │ - Validators (4)         │  │                          │││
 │  │  │ - Compliance (5)         │  │                          │││
+│  │  │ - Accessibility (4)      │  │                          │││
 │  │  └──────────┬───────────────┘  └────────────┬─────────────┘││
 │  └─────────────┼───────────────────────────────┼───────────────┘│
 └────────────────┼───────────────────────────────┼────────────────┘
@@ -695,6 +835,7 @@ Recommendation: Add LLM context to remaining components for best AI generation r
 │  - Validation & Fix                │
 │  - Compliance & Release            │
 │  - Spec linting                    │
+│  - Accessibility integration       │
 └────────────────────────────────────┘
 ```
 
