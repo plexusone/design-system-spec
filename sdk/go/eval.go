@@ -121,6 +121,8 @@ func (s *Service) Evaluate(ctx context.Context, opts *EvalOptions) (*rubric.Rubr
 }
 
 // evaluateCompleteness checks for required fields and completeness.
+//
+//nolint:unparam // ctx reserved for future logging/cancellation
 func (s *Service) evaluateCompleteness(ctx context.Context) *rubric.CategoryResult {
 	catResult := rubric.NewCategoryResult("completeness", rubric.ScorePass, "")
 
@@ -277,6 +279,8 @@ func (s *Service) evaluateCompleteness(ctx context.Context) *rubric.CategoryResu
 }
 
 // evaluateAgentReadiness checks for LLM-friendly specifications.
+//
+//nolint:unparam // ctx reserved for future logging/cancellation
 func (s *Service) evaluateAgentReadiness(ctx context.Context) *rubric.CategoryResult {
 	catResult := rubric.NewCategoryResult("agent-readiness", rubric.ScorePass, "")
 
@@ -385,6 +389,8 @@ func (s *Service) evaluateAgentReadiness(ctx context.Context) *rubric.CategoryRe
 }
 
 // evaluateAccessibility checks for accessibility requirements.
+//
+//nolint:unparam // ctx reserved for future logging/cancellation
 func (s *Service) evaluateAccessibility(ctx context.Context) *rubric.CategoryResult {
 	catResult := rubric.NewCategoryResult("accessibility", rubric.ScorePass, "")
 
@@ -515,6 +521,8 @@ func (s *Service) evaluateAccessibility(ctx context.Context) *rubric.CategoryRes
 }
 
 // evaluateDocumentation checks for documentation quality.
+//
+//nolint:unparam // ctx reserved for future logging/cancellation
 func (s *Service) evaluateDocumentation(ctx context.Context) *rubric.CategoryResult {
 	catResult := rubric.NewCategoryResult("documentation", rubric.ScorePass, "")
 
@@ -618,6 +626,8 @@ func (s *Service) evaluateDocumentation(ctx context.Context) *rubric.CategoryRes
 }
 
 // calculateCoverage computes spec coverage metrics using structured-evaluation's CoverageReport.
+//
+//nolint:unparam // ctx reserved for future logging/cancellation
 func (s *Service) calculateCoverage(ctx context.Context) *rubric.CoverageReport {
 	cr := rubric.NewCoverageReport()
 

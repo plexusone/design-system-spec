@@ -563,12 +563,12 @@ func getExampleValue(prop Prop) string {
 
 // AntiPattern describes an accessibility anti-pattern to avoid.
 type AntiPattern struct {
-	ID          string   `json:"id"`
-	Description string   `json:"description"`
-	BadExample  string   `json:"badExample"`
-	GoodExample string   `json:"goodExample"`
+	ID           string   `json:"id"`
+	Description  string   `json:"description"`
+	BadExample   string   `json:"badExample"`
+	GoodExample  string   `json:"goodExample"`
 	WCAGCriteria []string `json:"wcagCriteria,omitempty"`
-	Components  []string `json:"components,omitempty"`
+	Components   []string `json:"components,omitempty"`
 }
 
 // AntiPatternsResult contains anti-patterns for a component or rule.
@@ -588,100 +588,100 @@ func (s *Service) GetAntiPatterns(_ context.Context, componentID, ruleID string)
 	// Built-in anti-patterns database
 	allAntiPatterns := []AntiPattern{
 		{
-			ID:          "placeholder-as-label",
-			Description: "Using placeholder text as the only label",
-			BadExample:  `<input placeholder="Email">`,
-			GoodExample: `<label for="email">Email</label><input id="email">`,
+			ID:           "placeholder-as-label",
+			Description:  "Using placeholder text as the only label",
+			BadExample:   `<input placeholder="Email">`,
+			GoodExample:  `<label for="email">Email</label><input id="email">`,
 			WCAGCriteria: []string{"1.3.1", "3.3.2"},
-			Components:  []string{"input", "textarea", "select"},
+			Components:   []string{"input", "textarea", "select"},
 		},
 		{
-			ID:          "color-only-error",
-			Description: "Using color alone to indicate errors",
-			BadExample:  `<input style="border-color: red">`,
-			GoodExample: `<input aria-invalid="true" aria-describedby="error"><span id="error">Error message</span>`,
+			ID:           "color-only-error",
+			Description:  "Using color alone to indicate errors",
+			BadExample:   `<input style="border-color: red">`,
+			GoodExample:  `<input aria-invalid="true" aria-describedby="error"><span id="error">Error message</span>`,
 			WCAGCriteria: []string{"1.4.1"},
-			Components:  []string{"input", "form", "alert"},
+			Components:   []string{"input", "form", "alert"},
 		},
 		{
-			ID:          "missing-alt-text",
-			Description: "Images without alternative text",
-			BadExample:  `<img src="photo.jpg">`,
-			GoodExample: `<img src="photo.jpg" alt="Description of the image">`,
+			ID:           "missing-alt-text",
+			Description:  "Images without alternative text",
+			BadExample:   `<img src="photo.jpg">`,
+			GoodExample:  `<img src="photo.jpg" alt="Description of the image">`,
 			WCAGCriteria: []string{"1.1.1"},
-			Components:  []string{"image", "avatar"},
+			Components:   []string{"image", "avatar"},
 		},
 		{
-			ID:          "non-focusable-interactive",
-			Description: "Interactive elements that cannot receive keyboard focus",
-			BadExample:  `<div onclick="handleClick()">Click me</div>`,
-			GoodExample: `<button type="button" onclick="handleClick()">Click me</button>`,
+			ID:           "non-focusable-interactive",
+			Description:  "Interactive elements that cannot receive keyboard focus",
+			BadExample:   `<div onclick="handleClick()">Click me</div>`,
+			GoodExample:  `<button type="button" onclick="handleClick()">Click me</button>`,
 			WCAGCriteria: []string{"2.1.1", "4.1.2"},
-			Components:  []string{"button", "link"},
+			Components:   []string{"button", "link"},
 		},
 		{
-			ID:          "missing-button-name",
-			Description: "Buttons without accessible names",
-			BadExample:  `<button><svg>...</svg></button>`,
-			GoodExample: `<button aria-label="Close dialog"><svg>...</svg></button>`,
+			ID:           "missing-button-name",
+			Description:  "Buttons without accessible names",
+			BadExample:   `<button><svg>...</svg></button>`,
+			GoodExample:  `<button aria-label="Close dialog"><svg>...</svg></button>`,
 			WCAGCriteria: []string{"4.1.2"},
-			Components:  []string{"button", "icon-button"},
+			Components:   []string{"button", "icon-button"},
 		},
 		{
-			ID:          "focus-not-visible",
-			Description: "Focus indicator removed or invisible",
-			BadExample:  `button:focus { outline: none; }`,
-			GoodExample: `button:focus { outline: 2px solid var(--focus-ring); outline-offset: 2px; }`,
+			ID:           "focus-not-visible",
+			Description:  "Focus indicator removed or invisible",
+			BadExample:   `button:focus { outline: none; }`,
+			GoodExample:  `button:focus { outline: 2px solid var(--focus-ring); outline-offset: 2px; }`,
 			WCAGCriteria: []string{"2.4.7"},
-			Components:  []string{"button", "input", "link", "select"},
+			Components:   []string{"button", "input", "link", "select"},
 		},
 		{
-			ID:          "low-contrast-text",
-			Description: "Text with insufficient color contrast",
-			BadExample:  `<p style="color: #999; background: #fff">Light gray text</p>`,
-			GoodExample: `<p style="color: #595959; background: #fff">Accessible gray text</p>`,
+			ID:           "low-contrast-text",
+			Description:  "Text with insufficient color contrast",
+			BadExample:   `<p style="color: #999; background: #fff">Light gray text</p>`,
+			GoodExample:  `<p style="color: #595959; background: #fff">Accessible gray text</p>`,
 			WCAGCriteria: []string{"1.4.3", "1.4.6"},
-			Components:  []string{"text", "label", "button"},
+			Components:   []string{"text", "label", "button"},
 		},
 		{
-			ID:          "auto-playing-media",
-			Description: "Media that plays automatically without user consent",
-			BadExample:  `<video autoplay>...</video>`,
-			GoodExample: `<video controls>...</video>`,
+			ID:           "auto-playing-media",
+			Description:  "Media that plays automatically without user consent",
+			BadExample:   `<video autoplay>...</video>`,
+			GoodExample:  `<video controls>...</video>`,
 			WCAGCriteria: []string{"1.4.2"},
-			Components:  []string{"video", "audio"},
+			Components:   []string{"video", "audio"},
 		},
 		{
-			ID:          "missing-form-labels",
-			Description: "Form inputs without associated labels",
-			BadExample:  `Name: <input type="text">`,
-			GoodExample: `<label for="name">Name:</label><input id="name" type="text">`,
+			ID:           "missing-form-labels",
+			Description:  "Form inputs without associated labels",
+			BadExample:   `Name: <input type="text">`,
+			GoodExample:  `<label for="name">Name:</label><input id="name" type="text">`,
 			WCAGCriteria: []string{"1.3.1", "3.3.2", "4.1.2"},
-			Components:  []string{"input", "select", "textarea", "checkbox", "radio"},
+			Components:   []string{"input", "select", "textarea", "checkbox", "radio"},
 		},
 		{
-			ID:          "keyboard-trap",
-			Description: "Content that traps keyboard focus",
-			BadExample:  `// Modal with no escape key handling`,
-			GoodExample: `// Modal with Escape key to close and focus return to trigger`,
+			ID:           "keyboard-trap",
+			Description:  "Content that traps keyboard focus",
+			BadExample:   `// Modal with no escape key handling`,
+			GoodExample:  `// Modal with Escape key to close and focus return to trigger`,
 			WCAGCriteria: []string{"2.1.2"},
-			Components:  []string{"modal", "dialog", "dropdown"},
+			Components:   []string{"modal", "dialog", "dropdown"},
 		},
 		{
-			ID:          "missing-skip-link",
-			Description: "Page without skip navigation link",
-			BadExample:  `<body><nav>Long navigation...</nav><main>Content</main></body>`,
-			GoodExample: `<body><a href="#main" class="skip-link">Skip to content</a><nav>...</nav><main id="main">Content</main></body>`,
+			ID:           "missing-skip-link",
+			Description:  "Page without skip navigation link",
+			BadExample:   `<body><nav>Long navigation...</nav><main>Content</main></body>`,
+			GoodExample:  `<body><a href="#main" class="skip-link">Skip to content</a><nav>...</nav><main id="main">Content</main></body>`,
 			WCAGCriteria: []string{"2.4.1"},
-			Components:  []string{"navigation", "layout"},
+			Components:   []string{"navigation", "layout"},
 		},
 		{
-			ID:          "improper-heading-structure",
-			Description: "Skipping heading levels or using headings for styling",
-			BadExample:  `<h1>Title</h1><h3>Subtitle</h3>`,
-			GoodExample: `<h1>Title</h1><h2>Subtitle</h2>`,
+			ID:           "improper-heading-structure",
+			Description:  "Skipping heading levels or using headings for styling",
+			BadExample:   `<h1>Title</h1><h3>Subtitle</h3>`,
+			GoodExample:  `<h1>Title</h1><h2>Subtitle</h2>`,
 			WCAGCriteria: []string{"1.3.1", "2.4.6"},
-			Components:  []string{"heading", "text"},
+			Components:   []string{"heading", "text"},
 		},
 	}
 
@@ -736,13 +736,13 @@ func (s *Service) GetAntiPatterns(_ context.Context, componentID, ruleID string)
 // matchesRule checks if an anti-pattern ID matches a rule ID pattern.
 func matchesRule(antiPatternID, ruleID string) bool {
 	ruleMap := map[string][]string{
-		"color-contrast":   {"low-contrast-text", "color-only-error"},
-		"missing-label":    {"placeholder-as-label", "missing-form-labels", "missing-button-name"},
-		"keyboard":         {"non-focusable-interactive", "keyboard-trap"},
-		"focus":            {"focus-not-visible"},
-		"image-alt":        {"missing-alt-text"},
-		"heading-order":    {"improper-heading-structure"},
-		"bypass":           {"missing-skip-link"},
+		"color-contrast": {"low-contrast-text", "color-only-error"},
+		"missing-label":  {"placeholder-as-label", "missing-form-labels", "missing-button-name"},
+		"keyboard":       {"non-focusable-interactive", "keyboard-trap"},
+		"focus":          {"focus-not-visible"},
+		"image-alt":      {"missing-alt-text"},
+		"heading-order":  {"improper-heading-structure"},
+		"bypass":         {"missing-skip-link"},
 	}
 
 	if patterns, ok := ruleMap[ruleID]; ok {
@@ -757,12 +757,12 @@ func matchesRule(antiPatternID, ruleID string) bool {
 
 // ContrastSuggestion suggests a color token that meets contrast requirements.
 type ContrastSuggestion struct {
-	Token           string  `json:"token"`
-	Value           string  `json:"value"`
-	ContrastRatio   float64 `json:"contrastRatio"`
-	MeetsAA         bool    `json:"meetsAA"`
-	MeetsAAA        bool    `json:"meetsAAA"`
-	MeetsAALarge    bool    `json:"meetsAALarge"`
+	Token         string  `json:"token"`
+	Value         string  `json:"value"`
+	ContrastRatio float64 `json:"contrastRatio"`
+	MeetsAA       bool    `json:"meetsAA"`
+	MeetsAAA      bool    `json:"meetsAAA"`
+	MeetsAALarge  bool    `json:"meetsAALarge"`
 }
 
 // SuggestContrastToken suggests color tokens that meet contrast requirements.
@@ -857,7 +857,7 @@ func trimHash(s string) string {
 
 func hexToDecimal(hex string) int {
 	var result int
-	fmt.Sscanf(hex, "%x", &result)
+	_, _ = fmt.Sscanf(hex, "%x", &result) // Ignore error; invalid hex returns 0
 	return result
 }
 
@@ -924,6 +924,7 @@ func (s *Service) GetComponentFixContext(ctx context.Context, componentID, issue
 	// Issue-specific context
 	switch issueType {
 	case "color-contrast":
+		//nolint:gosec // G101 false positive: these are CSS property names, not credentials
 		context.StylesToCheck = []StyleCheck{
 			{Property: "color", Token: "color.text.*"},
 			{Property: "background-color", Token: "color.bg.*"},

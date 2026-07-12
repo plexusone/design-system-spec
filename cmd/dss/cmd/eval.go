@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 
@@ -259,18 +258,4 @@ func intScoreBar(score int) string {
 	bar += "]"
 
 	return bar
-}
-
-// writeEvalJSON writes the evaluation result to a JSON file.
-func writeEvalJSON(result *rubric.Rubric, path string) error {
-	data, err := json.MarshalIndent(result, "", "  ")
-	if err != nil {
-		return fmt.Errorf("marshaling JSON: %w", err)
-	}
-
-	if err := os.WriteFile(path, data, 0644); err != nil {
-		return fmt.Errorf("writing file: %w", err)
-	}
-
-	return nil
 }

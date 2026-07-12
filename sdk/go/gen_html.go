@@ -153,6 +153,7 @@ func (ds *DesignSystem) generatePage(tmpl *template.Template, outputDir, filenam
 	}
 
 	// Render layout
+	//nolint:gosec // G203: CSS/HTML are from embedded templates, not user input
 	page := HTMLPage{
 		Title:            ds.Meta.Name,
 		DesignSystemName: ds.Meta.Name,
