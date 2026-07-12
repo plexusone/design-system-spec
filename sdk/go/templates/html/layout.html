@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - {{.DesignSystemName}}</title>
+    <style>
+{{.CSS}}
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h1>{{.DesignSystemName}}</h1>
+            <span class="version">v{{.Version}}</span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="index.html" {{if eq .ActivePage "index"}}class="active"{{end}}>Overview</a></li>
+            <li><a href="components.html" {{if eq .ActivePage "components"}}class="active"{{end}}>Components</a></li>
+            <li><a href="tokens.html" {{if eq .ActivePage "tokens"}}class="active"{{end}}>Tokens</a></li>
+            <li><a href="eval.html" {{if eq .ActivePage "eval"}}class="active"{{end}}>Evaluation</a></li>
+        </ul>
+    </nav>
+    <main class="content">
+        {{.Content}}
+    </main>
+</body>
+</html>

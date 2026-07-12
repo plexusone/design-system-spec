@@ -1,0 +1,98 @@
+<div class="page-header">
+    <h1>Evaluation</h1>
+    <p class="description">Design system spec completeness and quality</p>
+</div>
+
+{{if .Eval}}
+<div class="eval-header">
+    <div class="score-circle {{.EvalGradeClass}}">
+        <span class="score">{{.Eval.IntScore}}/5</span>
+        <span class="grade">{{.Eval.Grade}}</span>
+    </div>
+    <div class="eval-meta">
+        <p>{{.Eval.ScoreLabel}}</p>
+        <p>Evaluated: {{.EvalTimestamp}}</p>
+        {{if .Eval.Decision}}<p>Decision: {{.Eval.Decision}}</p>{{end}}
+    </div>
+</div>
+
+<section class="section">
+    <h2>Category Breakdown</h2>
+    <div class="categories-grid">
+        {{range .Eval.Categories}}
+        <div class="category-card">
+            <h3>{{.Name}}</h3>
+            <div class="score-bar">
+                <div class="score-fill" style="width: {{.Score}}%;"></div>
+            </div>
+            <div class="category-meta">
+                <span class="score">{{.IntScore}}/5 ({{.ScoreLabel}})</span>
+                <span class="weight">Weight: {{printf "%.0f" (mul .Weight 100)}}%</span>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</section>
+
+{{if .Eval.Coverage}}
+<section class="section">
+    <h2>Coverage</h2>
+    <div class="coverage-grid">
+        <div class="coverage-item">
+            <h4>Components</h4>
+            <div class="coverage-bar">
+                <div class="coverage-fill" style="width: {{.Eval.Coverage.Components.Percentage}}%;"></div>
+            </div>
+            <span>{{.Eval.Coverage.Components.Complete}}/{{.Eval.Coverage.Components.Total}} ({{.Eval.Coverage.Components.Percentage}}%)</span>
+        </div>
+        <div class="coverage-item">
+            <h4>Foundations</h4>
+            <div class="coverage-bar">
+                <div class="coverage-fill" style="width: {{.Eval.Coverage.Foundations.Percentage}}%;"></div>
+            </div>
+            <span>{{.Eval.Coverage.Foundations.Complete}}/{{.Eval.Coverage.Foundations.Total}} ({{.Eval.Coverage.Foundations.Percentage}}%)</span>
+        </div>
+        <div class="coverage-item">
+            <h4>Patterns</h4>
+            <div class="coverage-bar">
+                <div class="coverage-fill" style="width: {{.Eval.Coverage.Patterns.Percentage}}%;"></div>
+            </div>
+            <span>{{.Eval.Coverage.Patterns.Complete}}/{{.Eval.Coverage.Patterns.Total}} ({{.Eval.Coverage.Patterns.Percentage}}%)</span>
+        </div>
+    </div>
+</section>
+{{end}}
+
+{{if .Eval.Summary}}
+<section class="section">
+    <h2>Summary</h2>
+    <p>{{.Eval.Summary}}</p>
+</section>
+{{end}}
+
+{{if .Eval.Findings}}
+<section class="section">
+    <h2>Findings ({{len .Eval.Findings}})</h2>
+    <div class="issues-list">
+        {{range .Eval.Findings}}
+        <div class="issue-card {{.SeverityClass}}">
+            <div class="issue-header">
+                <span class="severity-badge {{.SeverityClass}}">{{.Severity}}</span>
+                <code class="rule">{{.ID}}</code>
+            </div>
+            <p class="message">{{.Title}}</p>
+            {{if .Location}}<code class="path">{{.Location}}</code>{{end}}
+            {{if .Description}}<p class="description">{{.Description}}</p>{{end}}
+            {{if .Recommendation}}<p class="suggestion">{{.Recommendation}}</p>{{end}}
+        </div>
+        {{end}}
+    </div>
+</section>
+{{end}}
+
+{{else}}
+<div class="no-eval">
+    <p>No evaluation data available.</p>
+    <p>Run <code>dss eval --json > evals/v3.json</code> to generate evaluation data.</p>
+</div>
+{{end}}

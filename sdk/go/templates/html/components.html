@@ -1,0 +1,18 @@
+<div class="page-header">
+    <h1>Components</h1>
+    <p class="description">All {{len .Components}} components in the design system</p>
+</div>
+
+<div class="component-grid">
+    {{range .Components}}
+    <a href="component-{{.ID}}.html" class="component-card">
+        <h3>{{.Name}}</h3>
+        {{if .Category}}<span class="badge">{{.Category}}</span>{{end}}
+        <p>{{.Description}}</p>
+        <div class="component-meta">
+            {{if .Props}}<span>{{len .Props}} props</span>{{end}}
+            {{if .Variants}}<span>{{len .Variants}} variants</span>{{end}}
+        </div>
+    </a>
+    {{end}}
+</div>

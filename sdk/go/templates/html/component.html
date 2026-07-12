@@ -1,0 +1,124 @@
+<div class="page-header">
+    <nav class="breadcrumb">
+        <a href="components.html">Components</a> / {{.Name}}
+    </nav>
+    <h1>{{.Name}}</h1>
+    {{if .Category}}<span class="badge large">{{.Category}}</span>{{end}}
+    <p class="description">{{.Description}}</p>
+</div>
+
+{{if .Variants}}
+<section class="section">
+    <h2>Variants</h2>
+    <div class="variants-grid">
+        {{range .Variants}}
+        <div class="variant-card {{if .IsDefault}}default{{end}}">
+            <h4>{{.Name}}</h4>
+            {{if .IsDefault}}<span class="badge">Default</span>{{end}}
+            <p>{{.Description}}</p>
+        </div>
+        {{end}}
+    </div>
+</section>
+{{end}}
+
+{{if .Props}}
+<section class="section">
+    <h2>Properties</h2>
+    <table class="props-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Props}}
+            <tr>
+                <td><code>{{.Name}}</code></td>
+                <td><code>{{.Type}}</code></td>
+                <td>{{if .Required}}Yes{{else}}-{{end}}</td>
+                <td>{{if .Default}}<code>{{.Default}}</code>{{else}}-{{end}}</td>
+                <td>{{.Description}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</section>
+{{end}}
+
+{{if .States}}
+<section class="section">
+    <h2>States</h2>
+    <div class="states-grid">
+        {{range .States}}
+        <div class="state-card">
+            <h4>{{.ID}}</h4>
+            <p>{{.Description}}</p>
+        </div>
+        {{end}}
+    </div>
+</section>
+{{end}}
+
+{{if .Accessibility}}
+<section class="section">
+    <h2>Accessibility</h2>
+    <div class="a11y-info">
+        {{if .Accessibility.Role}}
+        <div class="a11y-item">
+            <strong>Role:</strong> <code>{{.Accessibility.Role}}</code>
+        </div>
+        {{end}}
+        {{if .Accessibility.KeyboardSupport}}
+        <div class="a11y-item">
+            <strong>Keyboard Support:</strong>
+            <ul>
+                {{range .Accessibility.KeyboardSupport}}
+                <li><kbd>{{.Key}}</kbd> - {{.Action}}</li>
+                {{end}}
+            </ul>
+        </div>
+        {{end}}
+        {{if .Accessibility.ScreenReaderNotes}}
+        <div class="a11y-item">
+            <strong>Screen Reader Notes:</strong> {{.Accessibility.ScreenReaderNotes}}
+        </div>
+        {{end}}
+    </div>
+</section>
+{{end}}
+
+{{if .LLM}}
+<section class="section">
+    <h2>LLM Context</h2>
+    <div class="llm-info">
+        {{if .LLM.Intent}}
+        <div class="llm-item">
+            <strong>Intent:</strong> {{.LLM.Intent}}
+        </div>
+        {{end}}
+        {{if .LLM.AntiPatterns}}
+        <div class="llm-item">
+            <strong>Anti-Patterns:</strong>
+            <ul class="anti-patterns">
+                {{range .LLM.AntiPatterns}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+        </div>
+        {{end}}
+        {{if .LLM.ExampleUsage}}
+        <div class="llm-item">
+            <strong>Example Usage:</strong>
+            {{range .LLM.ExampleUsage}}
+            <pre><code>{{.}}</code></pre>
+            {{end}}
+        </div>
+        {{end}}
+    </div>
+</section>
+{{end}}
