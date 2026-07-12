@@ -73,14 +73,27 @@ Auto-fix design system violations for agent-ready workflows.
 | `README.md` | ✅ Done | Add MCP server section |
 | `mkdocs.yml` | ✅ Done | Added to navigation |
 
+#### Phase 7: Visual Regression Testing ✅
+
+Visual regression testing for design system components.
+
+| File | Status | Description |
+|------|--------|-------------|
+| `sdk/go/visual/` | ✅ Done | Full visual testing package (service, executor, baseline, compare) |
+| `cmd/dss/cmd/visual.go` | ✅ Done | CLI commands: test, baseline generate/update/list/prune |
+
 ### Architecture
 
 ```
 dss-mcp (MCP Server)
-├── designsystem skill (15 tools)
-│   ├── Spec reading: get_component, list_components, get_token, etc.
+├── designsystem skill (32 tools)
+│   ├── Spec reading: get_component, list_components, get_token, list_tokens, get_pattern, list_patterns, get_meta
 │   ├── Guidance: generate_prompt, get_variants, get_props, get_anti_patterns
-│   └── Validation: validate_file, validate_directory, check_colors, check_spacing
+│   ├── Validation: validate_file, validate_directory, check_colors, check_spacing
+│   ├── Fix: fix_file, suggest_fixes, fix_colors, fix_spacing, fix_accessibility, fix_directory
+│   ├── Lint: lint_spec, list_lint_rules, check_agent_readiness
+│   ├── Validators: list_validators, get_validator, get_validation_requirements, get_validator_invocation
+│   └── Compliance: generate_compliance_report, check_release_gate, run_fix_loop, fix_and_verify, get_compliance_certificate
 │
 └── w3pilot skill (optional, via --browser)
     └── 169 browser automation tools (auto-discovered)
@@ -111,9 +124,11 @@ dss-mcp --spec ./design-system/ --browser
 
 ---
 
-# NPM Package Generation Roadmap
+# NPM Package Generation ✅
 
-This document specifies the NPM package generation feature for design-system-spec.
+**Status: Complete** - Implemented in `sdk/go/gen_package.go` and `cmd/dss/cmd/generate.go`
+
+This section documents the NPM package generation feature for design-system-spec.
 
 ## Overview
 
