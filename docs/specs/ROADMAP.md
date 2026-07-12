@@ -444,9 +444,11 @@ extra_css:
 
 ---
 
-# Accessibility Integration Roadmap
+# Accessibility Integration ✅
 
-This section tracks integration with agent-a11y for fully agentic accessibility workflows.
+**Status: Complete** - All four phases implemented in `sdk/go/service.go` and `skills/designsystem/tools_a11y.go`
+
+This section documents integration with agent-a11y for fully agentic accessibility workflows.
 
 ## Overview
 
@@ -464,23 +466,21 @@ design-system-spec provides the "source of truth" for accessible UI components. 
 └─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
 
-## Current Status
+## Implementation Status
 
-### Completed
+| Phase | Tool | Status |
+|-------|------|--------|
+| Phase 1 | `get_accessibility_requirements` | ✅ Done |
+| Phase 2 | `get_a11y_anti_patterns` | ✅ Done |
+| Phase 3 | `suggest_contrast_token` | ✅ Done |
+| Phase 4 | `get_component_fix_context` | ✅ Done |
 
-- [x] Component schema with `accessibility` field
-- [x] Token definitions (colors, spacing, typography)
-- [x] MCP tools: `get_component`, `get_token`, `validate_file`
-- [x] Basic token suggestion in agent-a11y (`--design-system` flag)
+### New MCP Tools
 
-### Gaps
-
-| Gap | Impact | Priority |
-|-----|--------|----------|
-| Component props for a11y | Can't generate required props | High |
-| Accessibility requirements query | No dedicated a11y query tool | High |
-| Anti-patterns database | No way to query what to avoid | Medium |
-| Token contrast validation | No pre-computed contrast ratios | Medium |
+- `get_accessibility_requirements` - Returns required props, keyboard interactions, focus management, WCAG criteria
+- `get_a11y_anti_patterns` - Returns anti-patterns with bad/good examples for components or rules
+- `suggest_contrast_token` - Suggests color tokens that meet contrast requirements
+- `get_component_fix_context` - Returns full context for fixing accessibility issues
 
 ---
 
