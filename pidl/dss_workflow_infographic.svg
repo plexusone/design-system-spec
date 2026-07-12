@@ -1,0 +1,253 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <style>
+    .node { filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.6)); }
+    .label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; fill: #c9d1d9; }
+    .title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; fill: #58a6ff; }
+    .icon { font-size: 26px; }
+    .edge { fill: none; stroke: #484f58; stroke-width: 3; stroke-linecap: round; }
+    .dot { fill: #39d353; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#484f58"/>
+    </marker>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="1200" fill="#0d1117"/>
+  <text x="600" y="60" text-anchor="middle" class="title" font-size="28">DSS Agentic Workflow</text>
+  <!-- Edges -->
+  <path id="edge0" class="edge" d="M255,624 C305,624 355,624 405,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge0"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge0"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge0"/>
+    </animateMotion>
+  </circle>
+  <path id="edge1" class="edge" d="M525,624 C530,624 535,624 540,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge1"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge1"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge1"/>
+    </animateMotion>
+  </circle>
+  <path id="edge2" class="edge" d="M660,624 C575,624 490,624 405,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge2"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge2"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge2"/>
+    </animateMotion>
+  </circle>
+  <path id="edge3" class="edge" d="M525,624 C575,624 625,624 675,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge3"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge3"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge3"/>
+    </animateMotion>
+  </circle>
+  <path id="edge4" class="edge" d="M795,624 C620,624 445,624 270,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge4"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge4"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge4"/>
+    </animateMotion>
+  </circle>
+  <path id="edge5" class="edge" d="M390,624 C395,624 400,624 405,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge5"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge5"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge5"/>
+    </animateMotion>
+  </circle>
+  <path id="edge6" class="edge" d="M525,624 C620,624 715,624 810,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge6"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge6"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge6"/>
+    </animateMotion>
+  </circle>
+  <path id="edge7" class="edge" d="M930,624 C755,624 580,624 405,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge7"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge7"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge7"/>
+    </animateMotion>
+  </circle>
+  <path id="edge8" class="edge" d="M525,624 C665,624 805,624 945,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge8"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge8"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge8"/>
+    </animateMotion>
+  </circle>
+  <path id="edge9" class="edge" d="M1065,624 C980,624 895,624 810,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge9"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge9"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge9"/>
+    </animateMotion>
+  </circle>
+  <path id="edge10" class="edge" d="M930,624 C935,624 940,624 945,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge10"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge10"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge10"/>
+    </animateMotion>
+  </circle>
+  <path id="edge11" class="edge" d="M1065,624 C845,624 625,624 405,624" marker-end="url(#arrowhead)"/>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.0s">
+      <mpath href="#edge11"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="0.7s">
+      <mpath href="#edge11"/>
+    </animateMotion>
+  </circle>
+  <circle r="5" class="dot" filter="url(#glow)">
+    <animateMotion dur="2.0s" repeatCount="indefinite" begin="1.3s">
+      <mpath href="#edge11"/>
+    </animateMotion>
+  </circle>
+  <!-- Nodes -->
+  <g class="node" transform="translate(135,584)">
+    <ellipse cx="60" cy="40" rx="58" ry="38" fill="#161b22" stroke="#388E3C" stroke-width="3"/>
+    <text x="60" y="35" text-anchor="middle" class="icon">👤</text>
+    <text x="60" y="72" text-anchor="middle" class="label" font-size="18">Human Desig…</text>
+  </g>
+  <g class="node" transform="translate(270,584)">
+    <polygon points="60.0,1.5 118.5,20.8 118.5,59.2 60.0,78.5 1.5,59.2 1.5,20.8" fill="#161b22" stroke="#7B1FA2" stroke-width="3"/>
+    <text x="60" y="35" text-anchor="middle" class="icon">🧠</text>
+    <text x="60" y="68" text-anchor="middle" class="label" font-size="18">Coding Agent</text>
+  </g>
+  <g class="node" transform="translate(405,584)">
+    <polygon points="60,1 119,40 60,79 1,40" fill="#161b22" stroke="#607D8B" stroke-width="3"/>
+    <text x="60" y="35" text-anchor="middle" class="icon">🔧</text>
+    <text x="60" y="68" text-anchor="middle" class="label" font-size="18">DSS MCP Ser…</text>
+  </g>
+  <g class="node" transform="translate(540,584)">
+    <rect width="120" height="80" rx="12" fill="#161b22" stroke="#1976D2" stroke-width="3"/>
+    <text x="60" y="35" text-anchor="middle" class="icon">⚙️</text>
+    <text x="60" y="68" text-anchor="middle" class="label" font-size="18">Spec Linter</text>
+  </g>
+  <g class="node" transform="translate(675,584)">
+    <rect width="120" height="80" rx="12" fill="#161b22" stroke="#1976D2" stroke-width="3"/>
+    <text x="60" y="35" text-anchor="middle" class="icon">⚙️</text>
+    <text x="60" y="68" text-anchor="middle" class="label" font-size="18">LLM Prompt …</text>
+  </g>
+  <g class="node" transform="translate(810,584)">
+    <rect width="120" height="80" rx="12" fill="#161b22" stroke="#1976D2" stroke-width="3"/>
+    <text x="60" y="35" text-anchor="middle" class="icon">⚙️</text>
+    <text x="60" y="68" text-anchor="middle" class="label" font-size="18">Code Valida…</text>
+  </g>
+  <g class="node" transform="translate(945,584)">
+    <rect width="120" height="80" rx="12" fill="#161b22" stroke="#1976D2" stroke-width="3"/>
+    <text x="60" y="35" text-anchor="middle" class="icon">⚙️</text>
+    <text x="60" y="68" text-anchor="middle" class="label" font-size="18">Auto Fixer</text>
+  </g>
+</svg>
