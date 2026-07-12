@@ -278,11 +278,12 @@ func (ds *DesignSystem) generateMkDocsPage(tmpl *template.Template, outputPath, 
 	defer f.Close()
 
 	// Write Markdown frontmatter and embedded HTML
+	// Note: Do NOT use markdown attribute - we're embedding raw HTML, not Markdown
 	fmt.Fprintf(f, "# %s\n\n", title)
-	fmt.Fprintf(f, "<div class=\"dss-content\" markdown>\n\n")
+	fmt.Fprintf(f, "<div class=\"dss-content\">\n")
 	//nolint:gosec // G203: HTML is from embedded templates, not user input
 	fmt.Fprintf(f, "%s\n", contentBuf.String())
-	fmt.Fprintf(f, "\n</div>\n")
+	fmt.Fprintf(f, "</div>\n")
 
 	return nil
 }
