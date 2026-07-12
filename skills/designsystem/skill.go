@@ -90,6 +90,12 @@ func (s *Skill) Tools() []skill.Tool {
 		s.runFixLoopTool(),
 		s.fixAndVerifyTool(),
 		s.getComplianceCertificateTool(),
+
+		// Accessibility integration tools (Phase 1-4)
+		s.getAccessibilityRequirementsTool(),
+		s.getA11yAntiPatternsTool(),
+		s.suggestContrastTokenTool(),
+		s.getComponentFixContextTool(),
 	}
 }
 
