@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Title}} - {{.DesignSystemName}}</title>
     <link rel="stylesheet" href="https://plexusone.dev/css/plexusone-mkdocs.css">
+    <!-- Material Web Components via CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web/"
+      }
+    }
+    </script>
+    <script type="module">
+      import '@material/web/all.js';
+      import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+      document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+    </script>
     <style>
 {{.CSS}}
     </style>
@@ -86,6 +101,134 @@
                 const text = link.textContent.toLowerCase();
                 link.parentElement.style.display = text.includes(query) ? '' : 'none';
             });
+        });
+
+        // Material Web Demo System
+        const componentDemos = {
+            'button': {
+                'filled': '<md-filled-button>Filled Button</md-filled-button>',
+                'outlined': '<md-outlined-button>Outlined Button</md-outlined-button>',
+                'text': '<md-text-button>Text Button</md-text-button>',
+                'elevated': '<md-elevated-button>Elevated Button</md-elevated-button>',
+                'tonal': '<md-filled-tonal-button>Tonal Button</md-filled-tonal-button>',
+            },
+            'checkbox': {
+                'default': '<md-checkbox></md-checkbox><md-checkbox checked></md-checkbox><md-checkbox indeterminate></md-checkbox>',
+            },
+            'switch': {
+                'default': '<md-switch></md-switch><md-switch selected></md-switch>',
+            },
+            'radio': {
+                'default': '<md-radio name="demo-radio"></md-radio><md-radio name="demo-radio" checked></md-radio><md-radio name="demo-radio"></md-radio>',
+            },
+            'textfield': {
+                'filled': '<md-filled-text-field label="Label" value="Input text"></md-filled-text-field>',
+                'outlined': '<md-outlined-text-field label="Label" value="Input text"></md-outlined-text-field>',
+            },
+            'select': {
+                'filled': '<md-filled-select label="Select"><md-select-option value="1">Option 1</md-select-option><md-select-option value="2">Option 2</md-select-option></md-filled-select>',
+                'outlined': '<md-outlined-select label="Select"><md-select-option value="1">Option 1</md-select-option><md-select-option value="2">Option 2</md-select-option></md-outlined-select>',
+            },
+            'slider': {
+                'continuous': '<md-slider value="50"></md-slider>',
+                'discrete': '<md-slider ticks step="10" value="50"></md-slider>',
+                'range': '<md-slider range value-start="25" value-end="75"></md-slider>',
+            },
+            'iconbutton': {
+                'standard': '<md-icon-button><md-icon>settings</md-icon></md-icon-button>',
+                'filled': '<md-filled-icon-button><md-icon>settings</md-icon></md-filled-icon-button>',
+                'filled-tonal': '<md-filled-tonal-icon-button><md-icon>settings</md-icon></md-filled-tonal-icon-button>',
+                'outlined': '<md-outlined-icon-button><md-icon>settings</md-icon></md-outlined-icon-button>',
+            },
+            'fab': {
+                'surface': '<md-fab><md-icon slot="icon">add</md-icon></md-fab>',
+                'primary': '<md-fab variant="primary"><md-icon slot="icon">add</md-icon></md-fab>',
+                'secondary': '<md-fab variant="secondary"><md-icon slot="icon">add</md-icon></md-fab>',
+                'tertiary': '<md-fab variant="tertiary"><md-icon slot="icon">add</md-icon></md-fab>',
+            },
+            'chips': {
+                'assist': '<md-assist-chip label="Assist chip"></md-assist-chip>',
+                'filter': '<md-filter-chip label="Filter chip"></md-filter-chip><md-filter-chip label="Selected" selected></md-filter-chip>',
+                'input': '<md-input-chip label="Input chip"></md-input-chip>',
+                'suggestion': '<md-suggestion-chip label="Suggestion"></md-suggestion-chip>',
+            },
+            'dialog': {
+                'basic': '<md-dialog open><div slot="headline">Dialog Title</div><form slot="content" method="dialog">Dialog content goes here.</form><div slot="actions"><md-text-button form="dialog">Cancel</md-text-button><md-filled-button form="dialog">OK</md-filled-button></div></md-dialog>',
+            },
+            'progress': {
+                'linear': '<md-linear-progress value="0.5"></md-linear-progress><br><md-linear-progress indeterminate></md-linear-progress>',
+                'circular': '<md-circular-progress value="0.5"></md-circular-progress><md-circular-progress indeterminate></md-circular-progress>',
+            },
+            'tabs': {
+                'primary': '<md-tabs><md-primary-tab>Tab 1</md-primary-tab><md-primary-tab active>Tab 2</md-primary-tab><md-primary-tab>Tab 3</md-primary-tab></md-tabs>',
+                'secondary': '<md-tabs><md-secondary-tab>Tab 1</md-secondary-tab><md-secondary-tab active>Tab 2</md-secondary-tab><md-secondary-tab>Tab 3</md-secondary-tab></md-tabs>',
+            },
+            'list': {
+                'single-line': '<md-list style="max-width:300px"><md-list-item>List item 1</md-list-item><md-divider></md-divider><md-list-item>List item 2</md-list-item><md-divider></md-divider><md-list-item>List item 3</md-list-item></md-list>',
+                'two-line': '<md-list style="max-width:300px"><md-list-item><div slot="headline">Headline</div><div slot="supporting-text">Supporting text</div></md-list-item></md-list>',
+            },
+            'menu': {
+                'basic': '<span style="position:relative"><md-filled-button id="demo-menu-anchor">Open Menu</md-filled-button><md-menu id="demo-menu" anchor="demo-menu-anchor"><md-menu-item><div slot="headline">Item 1</div></md-menu-item><md-menu-item><div slot="headline">Item 2</div></md-menu-item></md-menu></span><script>document.getElementById("demo-menu-anchor")?.addEventListener("click",()=>{document.getElementById("demo-menu").open=!document.getElementById("demo-menu").open})</script>',
+            },
+            'divider': {
+                'full-width': '<md-divider></md-divider>',
+                'inset': '<md-divider inset></md-divider>',
+            },
+            'icon': {
+                'outlined': '<md-icon>home</md-icon> <md-icon>settings</md-icon> <md-icon>favorite</md-icon> <md-icon>search</md-icon>',
+            },
+            'card': {
+                'elevated': '<div style="padding:16px;background:var(--md-sys-color-surface-container-low,#f5f5f5);border-radius:12px;max-width:300px"><h3 style="margin:0 0 8px">Card Title</h3><p style="margin:0">Card content goes here.</p></div>',
+                'filled': '<div style="padding:16px;background:var(--md-sys-color-surface-container-highest,#e0e0e0);border-radius:12px;max-width:300px"><h3 style="margin:0 0 8px">Card Title</h3><p style="margin:0">Card content goes here.</p></div>',
+                'outlined': '<div style="padding:16px;border:1px solid var(--md-sys-color-outline,#ccc);border-radius:12px;max-width:300px"><h3 style="margin:0 0 8px">Card Title</h3><p style="margin:0">Card content goes here.</p></div>',
+            },
+            'snackbar': {
+                'single-line': '<div style="padding:14px 16px;background:#323232;color:white;border-radius:4px;display:inline-block">Message sent</div>',
+            },
+            'navigationbar': {
+                'default': '<div style="display:flex;gap:8px;padding:12px;background:var(--md-sys-color-surface-container,#f0f0f0);border-radius:8px"><md-icon>home</md-icon><md-icon>search</md-icon><md-icon>notifications</md-icon><md-icon>account_circle</md-icon></div>',
+            },
+            'topappbar': {
+                'small': '<div style="display:flex;align-items:center;gap:16px;padding:8px 16px;background:var(--md-sys-color-surface,#fff)"><md-icon-button><md-icon>menu</md-icon></md-icon-button><span style="flex:1;font-size:22px">Title</span><md-icon-button><md-icon>search</md-icon></md-icon-button></div>',
+            },
+        };
+
+        function initDemo(componentId) {
+            const container = document.getElementById(`demo-${componentId}`);
+            if (!container) return;
+
+            const config = window.demoConfig?.[componentId];
+            const defaultVariant = config?.defaultVariant || config?.variants?.[0] || 'default';
+
+            updateDemo(componentId, defaultVariant);
+        }
+
+        function updateDemo(componentId, variant) {
+            const container = document.getElementById(`demo-${componentId}`);
+            if (!container) return;
+
+            const variantSelect = document.getElementById(`variant-select-${componentId}`);
+            const disabledCheckbox = document.getElementById(`disabled-${componentId}`);
+
+            variant = variant || variantSelect?.value || 'default';
+            const isDisabled = disabledCheckbox?.checked || false;
+
+            const demos = componentDemos[componentId];
+            let html = demos?.[variant] || demos?.['default'] || `<p>Demo not available for ${componentId}</p>`;
+
+            // Add disabled attribute if needed
+            if (isDisabled) {
+                html = html.replace(/<(md-[^>]+)>/g, '<$1 disabled>');
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Initialize all demos on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.demoConfig) {
+                Object.keys(window.demoConfig).forEach(initDemo);
+            }
         });
     </script>
 </body>

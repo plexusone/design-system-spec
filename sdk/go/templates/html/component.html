@@ -7,6 +7,39 @@
     <p class="description">{{.Description}}</p>
 </div>
 
+<!-- Live Demo Section -->
+<section class="section demo-section">
+    <h2>Live Demo</h2>
+    <div class="demo-container">
+        <div class="demo-preview" id="demo-{{.ID}}">
+            <!-- Material Web component renders here -->
+            <div class="demo-loading">Loading component...</div>
+        </div>
+        {{if .Variants}}
+        <div class="demo-controls">
+            <label>Variant:</label>
+            <select id="variant-select-{{.ID}}" onchange="updateDemo('{{.ID}}', this.value)">
+                {{range .Variants}}
+                <option value="{{.ID}}" {{if .IsDefault}}selected{{end}}>{{.Name}}</option>
+                {{end}}
+            </select>
+            <label><input type="checkbox" id="disabled-{{.ID}}" onchange="updateDemo('{{.ID}}')"> Disabled</label>
+        </div>
+        {{end}}
+    </div>
+    <script type="module">
+        // Demo initialization for {{.ID}}
+        window.demoConfig = window.demoConfig || {};
+        window.demoConfig['{{.ID}}'] = {
+            variants: [{{range $i, $v := .Variants}}{{if $i}},{{end}}"{{$v.ID}}"{{end}}],
+            defaultVariant: "{{range .Variants}}{{if .IsDefault}}{{.ID}}{{end}}{{end}}"
+        };
+        if (typeof initDemo === 'function') {
+            initDemo('{{.ID}}');
+        }
+    </script>
+</section>
+
 {{if .Variants}}
 <section class="section">
     <h2>Variants</h2>
