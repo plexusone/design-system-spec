@@ -295,6 +295,243 @@ Warnings:
 
 ---
 
+### dss eval
+
+Evaluate design system spec completeness and quality using rubric-based scoring.
+
+```bash
+dss eval [flags]
+```
+
+**Flags:**
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--dir` | `-d` | Directory containing the design system spec |
+| `--json` | | Output as JSON |
+| `--min-score` | | Minimum acceptable score (1-5) |
+
+**Examples:**
+
+```bash
+# Evaluate current directory
+dss eval
+
+# Output as JSON
+dss eval --json > eval.json
+
+# Require minimum score
+dss eval --min-score 4
+```
+
+**Evaluation Categories (weighted):**
+
+| Category | Weight | Description |
+|----------|--------|-------------|
+| Completeness | 25% | Required fields, no gaps |
+| Agent-Readiness | 30% | LLM context, anti-patterns, examples |
+| Accessibility | 25% | WCAG, keyboard, screen reader support |
+| Documentation | 20% | Descriptions, usage guidance |
+
+**Output:**
+
+```
+Design System Evaluation: My Design System v1.0.0
+
+Overall Score: 4/5 (Good)
+
+Categories:
+  Completeness:    4/5 (25%)
+  Agent-Readiness: 5/5 (30%)
+  Accessibility:   3/5 (25%)
+  Documentation:   4/5 (20%)
+
+Coverage:
+  Components: 12
+  Foundations: 45 tokens
+  Patterns: 3
+```
+
+---
+
+### dss render
+
+Generate HTML documentation for the design system with live component demos.
+
+```bash
+dss render [flags]
+```
+
+**Flags:**
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--dir` | `-d` | Directory containing the design system spec |
+| `--output` | `-o` | Output directory for HTML files |
+| `--title` | | Custom site title |
+| `--eval` | | Path to evaluation JSON file |
+| `--mkdocs` | | Generate MkDocs-compatible markdown |
+
+**Examples:**
+
+```bash
+# Generate HTML documentation
+dss render --output ./docs
+
+# With custom title
+dss render --output ./docs --title "Material Design 3"
+
+# Include evaluation data
+dss render --output ./docs --eval ./evals/v3.json
+
+# Generate MkDocs-compatible output
+dss render --output ./docs/specs --mkdocs
+```
+
+**Generated Files:**
+
+| File | Description |
+|------|-------------|
+| `index.html` | Dashboard landing page |
+| `components.html` | Component gallery |
+| `component-{id}.html` | Individual component pages with live demos |
+| `tokens.html` | Token palette visualization |
+| `eval.html` | Evaluation dashboard |
+
+**Features:**
+
+- Material Web CDN integration for live component demos
+- Dark/light theme toggle
+- Variant selector and disabled state controls
+- PlexusOne unified navigation integration
+- Self-contained CSS (no external dependencies)
+
+---
+
+### dss visual
+
+Visual regression testing commands using w3pilot for browser automation.
+
+```bash
+dss visual <subcommand> [flags]
+```
+
+**Subcommands:**
+
+#### dss visual test
+
+Run visual regression tests against baselines.
+
+```bash
+dss visual test [flags]
+```
+
+**Flags:**
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--tests` | | Filter tests by ID (comma-separated) |
+| `--viewports` | | Filter by viewport (e.g., "1920x1080") |
+| `--threshold` | | Diff threshold percentage (default: 0.1) |
+| `--parallel` | `-p` | Number of parallel workers (default: 4) |
+| `--json` | | Output results as JSON |
+
+**Examples:**
+
+```bash
+# Run all tests
+dss visual test
+
+# Run specific tests
+dss visual test --tests button-primary,card-elevated
+
+# Specific viewport
+dss visual test --viewports 375x812
+
+# JSON output for CI
+dss visual test --json
+```
+
+#### dss visual baseline generate
+
+Generate new baselines for a version.
+
+```bash
+dss visual baseline generate <version> [flags]
+```
+
+**Examples:**
+
+```bash
+# Generate baselines for v1.0.0
+dss visual baseline generate v1.0.0
+```
+
+#### dss visual baseline update
+
+Update specific test baselines.
+
+```bash
+dss visual baseline update <version> [flags]
+```
+
+**Flags:**
+
+| Flag | Description |
+|------|-------------|
+| `--tests` | Tests to update (comma-separated) |
+
+**Examples:**
+
+```bash
+# Update specific tests
+dss visual baseline update v1.0.0 --tests button-primary
+```
+
+#### dss visual baseline list
+
+List available baseline versions.
+
+```bash
+dss visual baseline list
+```
+
+#### dss visual baseline prune
+
+Remove old baseline versions.
+
+```bash
+dss visual baseline prune <version>
+```
+
+**Test Definition Format:**
+
+Create `visual-tests.yaml` in your project:
+
+```yaml
+version: "1.0"
+name: "Component Visual Tests"
+defaults:
+  threshold: 0.1
+  viewports:
+    - { width: 1920, height: 1080 }
+    - { width: 375, height: 812 }
+
+tests:
+  - id: button-primary
+    url: http://localhost:3000/components/button
+    selector: ".button-primary"
+
+  - id: card-elevated
+    url: http://localhost:3000/components/card
+    selector: ".card-elevated"
+    stabilization:
+      waitForSelector: ".card-content"
+      delay: 100
+```
+
+---
+
 ### dss bind
 
 Generate theme bindings from design system token mappings.
@@ -614,39 +851,17 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ### Available Tools
 
-The MCP server exposes 21 tools organized into four categories:
+The MCP server exposes 37 tools organized into eight categories:
 
-**Spec Reading (7 tools):**
-
-- `get_component` - Get component definition
-- `list_components` - List all components
-- `get_token` - Get design token value
-- `list_tokens` - List tokens by type
-- `get_pattern` - Get pattern definition
-- `list_patterns` - List all patterns
-- `get_meta` - Get design system metadata
-
-**Guidance (4 tools):**
-
-- `generate_prompt` - Generate LLM context prompt
-- `get_variants` - Get component variants
-- `get_props` - Get component props
-- `get_anti_patterns` - Get anti-patterns to avoid
-
-**Validation (4 tools):**
-
-- `validate_file` - Validate a file
-- `validate_directory` - Validate all files in directory
-- `check_colors` - Check for hardcoded colors
-- `check_spacing` - Check for hardcoded spacing
-
-**Fix (6 tools):**
-
-- `fix_file` - Auto-fix violations in a file
-- `suggest_fixes` - Suggest fixes without applying (dry run)
-- `fix_colors` - Fix hardcoded colors to use tokens
-- `fix_spacing` - Fix hardcoded spacing to use scale
-- `fix_accessibility` - Add missing alt/aria-label attributes
-- `fix_directory` - Fix all files in a directory
+| Category | Tools | Purpose |
+|----------|-------|---------|
+| Spec Reading | 7 | Query components, tokens, patterns, metadata |
+| Guidance | 4 | Generate prompts, get variants, props, anti-patterns |
+| Validation | 4 | Validate files/directories, check colors/spacing |
+| Fix | 6 | Auto-fix colors, spacing, accessibility violations |
+| Lint | 3 | Spec completeness and agent-readiness checking |
+| Validators | 4 | External validator discovery and delegation |
+| Compliance | 5 | Release gates, compliance reports, certificates |
+| Accessibility | 4 | A11y requirements, contrast suggestions, fix context |
 
 See [MCP Server](mcp-server.md) for full documentation.

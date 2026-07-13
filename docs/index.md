@@ -16,6 +16,9 @@ Design System Spec (DSS) provides a canonical framework for expressing design sy
 - **Theming contracts** - Formal theming API between component libraries and applications
 - **Diagram generation** - Mermaid and D2 diagrams for architecture visualization
 - **Compliance validation** - Validate implementations against the spec
+- **Visual regression testing** - Screenshot-based testing with w3pilot integration
+- **Evaluation system** - Rubric-based spec evaluation and coverage metrics
+- **HTML documentation** - Generate static docs with Material Web live demos
 - **Go-first approach** - Go structs as source of truth, generating JSON Schema
 - **Embedded specs** - Bundle specs into binaries with Go's embed package
 
@@ -46,6 +49,15 @@ dss contract validate
 
 # Validate component implementations
 dss validate ./src/components
+
+# Evaluate spec completeness
+dss eval --json > eval.json
+
+# Generate HTML documentation with live demos
+dss render --output ./docs --title "My Design System"
+
+# Run visual regression tests
+dss visual test
 
 # Start MCP server for AI assistant integration
 dss-mcp --spec ./design-system
