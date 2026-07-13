@@ -521,9 +521,12 @@ design-system-spec/
 - [x] External validator delegation (WCAG, API style)
 - [x] Compliance reporting and release gates
 - [x] Fix-validate loop with convergence detection
+- [x] Visual regression testing with w3pilot integration
+- [x] Evaluation system with rubric-based scoring
+- [x] HTML documentation generator with Material Web demos
 - [ ] `dss init` scaffolding
 - [ ] CI/CD GitHub Actions integration
-- [ ] Advanced validation (color contrast, visual regression)
+- [ ] Color contrast validation
 - [ ] Figma tokens import/export (for transitioning teams)
 
 ## License

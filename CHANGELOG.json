@@ -6,34 +6,77 @@
   "commitConvention": "conventional",
   "maintainers": ["plexusone"],
   "unreleased": {
-    "highlights": [
-      { "description": "MCP server (`dss-mcp`) exposing 21 tools for AI assistant integration" },
-      { "description": "Auto-fix tools for design system violations (colors, spacing, accessibility)" },
-      { "description": "Embedded filesystem support for single-binary distribution" }
-    ],
-    "added": [
-      { "description": "`dss-mcp` MCP server with 21 tools for spec reading, guidance, validation, and fixing", "commit": "df235ca" },
-      { "description": "`Service` type wrapping `DesignSystem` for unified CLI/MCP/SDK operations", "commit": "c4a54a6" },
-      { "description": "`ValidateFile()` and `ValidateDirectory()` methods with 7 validation rules", "commit": "8fb5996" },
-      { "description": "`LoadDesignSystemFromFS()` for loading from `embed.FS` and `fs.FS` interfaces", "commit": "7e56e26" },
-      { "description": "`FixFile()`, `SuggestFixes()`, `FixDirectory()` methods for auto-fixing violations", "commit": "0932eda" },
-      { "description": "Fix tools: `fix_file`, `suggest_fixes`, `fix_colors`, `fix_spacing`, `fix_accessibility`, `fix_directory`", "commit": "df235ca" },
-      { "description": "Design compliance and fixer agent specifications", "commit": "ba0ea0c" }
-    ],
-    "changed": [
-      { "description": "CLI commands (`validate`, `info`, `generate`) refactored to use service layer", "commit": "bd695ec" }
-    ],
-    "documentation": [
-      { "description": "MCP server documentation with all 21 tools, parameters, and example workflows", "commit": "a2c6f59" },
-      { "description": "SDK documentation for `Service` layer and `LoadDesignSystemFromFS`", "commit": "a2c6f59" },
-      { "description": "CLI reference updated with `dss-mcp` command", "commit": "a2c6f59" },
-      { "description": "Embedded MCP server example for single-binary distribution", "commit": "a2c6f59" }
-    ],
-    "build": [
-      { "description": "Add MCP SDK dependency (`github.com/modelcontextprotocol/go-sdk`)", "commit": "e1e3323" }
-    ]
+    "highlights": [],
+    "added": [],
+    "changed": [],
+    "fixed": [],
+    "documentation": [],
+    "build": []
   },
   "releases": [
+    {
+      "version": "v0.5.0",
+      "date": "2026-07-13",
+      "highlights": [
+        { "description": "MCP server (`dss-mcp`) exposing 37 tools for AI assistant integration" },
+        { "description": "Visual regression testing with w3pilot integration and ImageMagick comparison" },
+        { "description": "Evaluation system with rubric-based scoring via structured-evaluation" },
+        { "description": "HTML documentation generator with Material Web live component demos" },
+        { "description": "Accessibility integration tools for agent-a11y compatibility" },
+        { "description": "Compliance and release gate workflow with fix-validate loops" }
+      ],
+      "added": [
+        { "description": "`dss-mcp` MCP server with 37 tools for spec reading, guidance, validation, fixing, and compliance", "commit": "df235ca" },
+        { "description": "`Service` type wrapping `DesignSystem` for unified CLI/MCP/SDK operations", "commit": "c4a54a6" },
+        { "description": "`ValidateFile()` and `ValidateDirectory()` methods with 7 validation rules", "commit": "8fb5996" },
+        { "description": "`LoadDesignSystemFromFS()` for loading from `embed.FS` and `fs.FS` interfaces", "commit": "7e56e26" },
+        { "description": "`FixFile()`, `SuggestFixes()`, `FixDirectory()` methods for auto-fixing violations", "commit": "0932eda" },
+        { "description": "Fix tools: `fix_file`, `suggest_fixes`, `fix_colors`, `fix_spacing`, `fix_accessibility`, `fix_directory`", "commit": "df235ca" },
+        { "description": "Spec lint with 13 rules for completeness verification", "commit": "028ec20" },
+        { "description": "MCP lint tools: `lint_spec`, `list_lint_rules`, `check_agent_readiness`", "commit": "13a1ae5" },
+        { "description": "Validators section for external validation delegation (WCAG, API style)", "commit": "d2ace87" },
+        { "description": "MCP validator tools: `list_validators`, `get_validator`, `get_validation_requirements`, `get_validator_invocation`", "commit": "1d02ead" },
+        { "description": "Compliance reporting with `ComplianceReport`, `ReleaseGate`, `ComplianceCertificate` types", "commit": "8e7c5f0" },
+        { "description": "MCP compliance tools: `generate_compliance_report`, `check_release_gate`, `run_fix_loop`, `fix_and_verify`, `get_compliance_certificate`", "commit": "ac1f375" },
+        { "description": "Accessibility integration phases 1-4: requirements, anti-patterns, contrast, fix context", "commit": "64e6b0f" },
+        { "description": "MCP accessibility tools: `get_accessibility_requirements`, `get_a11y_anti_patterns`, `suggest_contrast_token`, `get_component_fix_context`", "commit": "64e6b0f" },
+        { "description": "Visual regression testing package (`sdk/go/visual/`) with w3pilot MCP client", "commit": "d752bce" },
+        { "description": "Visual test types, loader, baseline manager, comparator, executor, and service", "commit": "9f3f161" },
+        { "description": "`dss visual` CLI commands: test, baseline generate/update/list/prune", "commit": "cfce58f" },
+        { "description": "Evaluation system with rubric-based scoring using structured-evaluation", "commit": "74ca38c" },
+        { "description": "`dss eval` and `dss render` CLI commands", "commit": "f889b04" },
+        { "description": "HTML documentation generator with embedded templates", "commit": "6aa068a" },
+        { "description": "Material Web CDN integration for live component demos", "commit": "9a5992b" },
+        { "description": "MkDocs support for all 9 DSS canonical layers", "commit": "1449f6d" },
+        { "description": "PlexusOne theme integration for HTML sub-site", "commit": "83536aa" },
+        { "description": "Design compliance and fixer agent specifications", "commit": "ba0ea0c" },
+        { "description": "`dss lint-spec` command for spec completeness checking", "commit": "9f6bd89" }
+      ],
+      "changed": [
+        { "description": "CLI commands (`validate`, `info`, `generate`) refactored to use service layer", "commit": "bd695ec" }
+      ],
+      "fixed": [
+        { "description": "Remove markdown attribute from HTML wrapper causing MkDocs parsing issues", "commit": "cf6f6a8" },
+        { "description": "Resolve lint issues (gofmt, gosec G101/G203, unparam) and remove unused code", "commit": "019d0b4" }
+      ],
+      "documentation": [
+        { "description": "MCP server documentation with all 37 tools, parameters, and example workflows", "commit": "a2c6f59" },
+        { "description": "Visual regression testing specification (PRD, TRD, PLAN, ROADMAP)", "commit": "14e4b99" },
+        { "description": "Rendering components feature documentation (PRD, TRD, PLAN, ROADMAP)", "commit": "3fba5ba" },
+        { "description": "ASDM integration and agentic delivery loop documentation", "commit": "67f5c56" },
+        { "description": "PIDL agentic workflow specification with 16 entities and 25 flows", "commit": "530b2b2" },
+        { "description": "Workflow automation analysis (71.3% automation score)", "commit": "2d470a6" },
+        { "description": "Agentic development maturity assessment (L2.8 current)", "commit": "8eee6ed" },
+        { "description": "Design systems catalog for future DSS implementations", "commit": "6bbb7bf" },
+        { "description": "Accessibility integration roadmap (phases 1-4)", "commit": "4fd764e" },
+        { "description": "Updated README with MCP server section and 37 tools", "commit": "96fb53a" },
+        { "description": "Updated CLI reference with lint-spec, visual, eval, render commands", "commit": "96fb53a" }
+      ],
+      "build": [
+        { "description": "Add MCP SDK dependency (`github.com/modelcontextprotocol/go-sdk`)", "commit": "e1e3323" },
+        { "description": "Add structured-evaluation v0.9.0 dependency", "commit": "2744911" }
+      ]
+    },
     {
       "version": "v0.4.0",
       "date": "2026-06-29",
