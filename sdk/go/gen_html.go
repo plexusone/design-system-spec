@@ -40,6 +40,7 @@ type HTMLPage struct {
 	ActivePage       string
 	CSS              template.CSS
 	Content          template.HTML
+	Components       []Component // For sidebar navigation
 }
 
 // HTMLEvalCategory is a template-friendly category representation.
@@ -740,7 +741,8 @@ func (ds *DesignSystem) generatePage(tmpl *template.Template, outputDir, filenam
 	// Determine active page
 	activePage := strings.TrimSuffix(filename, ".html")
 	if strings.HasPrefix(activePage, "component-") {
-		activePage = "components"
+		// For individual component pages, use component ID for highlighting
+		activePage = strings.TrimPrefix(activePage, "component-")
 	}
 
 	// Render layout
@@ -752,6 +754,7 @@ func (ds *DesignSystem) generatePage(tmpl *template.Template, outputDir, filenam
 		ActivePage:       activePage,
 		CSS:              template.CSS(css),
 		Content:          template.HTML(contentBuf.String()),
+		Components:       ds.Components,
 	}
 
 	// Create output file

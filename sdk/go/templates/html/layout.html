@@ -1,28 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Title}} - {{.DesignSystemName}}</title>
+    <link rel="stylesheet" href="https://plexusone.dev/css/plexusone-mkdocs.css">
     <style>
 {{.CSS}}
     </style>
 </head>
 <body>
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <h1>{{.DesignSystemName}}</h1>
-            <span class="version">v{{.Version}}</span>
-        </div>
-        <ul class="nav-list">
-            <li><a href="index.html" {{if eq .ActivePage "index"}}class="active"{{end}}>Overview</a></li>
-            <li><a href="components.html" {{if eq .ActivePage "components"}}class="active"{{end}}>Components</a></li>
-            <li><a href="tokens.html" {{if eq .ActivePage "tokens"}}class="active"{{end}}>Tokens</a></li>
-            <li><a href="eval.html" {{if eq .ActivePage "eval"}}class="active"{{end}}>Evaluation</a></li>
-        </ul>
-    </nav>
-    <main class="content">
-        {{.Content}}
-    </main>
+    <!-- PlexusOne Unified Navigation -->
+    <div id="plexus-nav-root"></div>
+    <script src="https://plexusone.dev/js/plexus-nav.js"></script>
+
+    <div class="dss-app">
+        <nav class="dss-sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">◇</span>
+                    <span class="logo-text">{{.DesignSystemName}}</span>
+                </a>
+                <span class="version-badge">v{{.Version}}</span>
+            </div>
+
+            <div class="sidebar-search">
+                <input type="search" id="dss-search" placeholder="Search specs..." autocomplete="off">
+            </div>
+
+            <ul class="nav-list">
+                <li class="nav-section">
+                    <span class="nav-section-title">Overview</span>
+                    <ul>
+                        <li><a href="index.html" {{if eq .ActivePage "index"}}class="active"{{end}}>Dashboard</a></li>
+                        <li><a href="eval.html" {{if eq .ActivePage "eval"}}class="active"{{end}}>Evaluation</a></li>
+                    </ul>
+                </li>
+                <li class="nav-section">
+                    <span class="nav-section-title">Foundations</span>
+                    <ul>
+                        <li><a href="tokens.html" {{if eq .ActivePage "tokens"}}class="active"{{end}}>Design Tokens</a></li>
+                    </ul>
+                </li>
+                <li class="nav-section">
+                    <span class="nav-section-title">Components</span>
+                    <ul>
+                        <li><a href="components.html" {{if eq .ActivePage "components"}}class="active"{{end}}>All Components</a></li>
+                        {{range .Components}}
+                        <li><a href="component-{{.ID}}.html" {{if eq $.ActivePage .ID}}class="active"{{end}}>{{.Name}}</a></li>
+                        {{end}}
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="../index.html" class="back-link">← Back to Docs</a>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+                    <span class="theme-icon">◐</span>
+                </button>
+            </div>
+        </nav>
+
+        <main class="dss-content">
+            {{.Content}}
+        </main>
+    </div>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+            localStorage.setItem('dss-theme', html.getAttribute('data-theme'));
+        }
+
+        // Restore theme
+        const savedTheme = localStorage.getItem('dss-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Simple search
+        document.getElementById('dss-search')?.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('.nav-list a').forEach(link => {
+                const text = link.textContent.toLowerCase();
+                link.parentElement.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+    </script>
 </body>
 </html>
