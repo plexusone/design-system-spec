@@ -197,6 +197,11 @@ type Constraints struct {
 
 // ComponentA11y defines accessibility requirements for a component.
 type ComponentA11y struct {
+	// AriaPattern references a WAI-ARIA Authoring Practices pattern.
+	// Examples: "dialog", "tabs", "combobox", "menu-button", "accordion", "disclosure".
+	// See https://www.w3.org/WAI/ARIA/apg/patterns/{pattern}/
+	AriaPattern string `json:"ariaPattern,omitempty"`
+
 	// Role is the ARIA role for the component.
 	Role string `json:"role,omitempty"`
 
